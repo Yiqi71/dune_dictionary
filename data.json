@@ -1,0 +1,24 @@
+{
+  "words": [
+    {
+      "id": "parapraxis",
+      "name": "行为倒错",
+      "definition": "指源自潜意识层面的，由于压抑某种冲动和意图造成的，在言语、记忆或肢体动作上出现的失误行为。",
+      "image": "images/bg.png",
+      "quote": "瞎写的Serendipity is looking in a haystack for a needle and discovering a farmer's daughter.",
+      "originator": "Sigmund Freud",
+      "coordinates": { "x": 0.5, "y": 0.3, "z": 0 },
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "event-horizon",
+      "name": "事件视界",
+      "definition": "与外界没有因果联系的时空区域的边界面，常见于黑洞的表面。",
+      "image": "images/prism_trimmed.png",
+      "quote": "瞎写的I am because we are.",
+      "originator": "Wolfgang Rindler",
+      "coordinates": { "x": 0.8, "y": 0.6, "z": 0.2 },
+      "color": "#F9CB40"
+    }
+  ]
+}
