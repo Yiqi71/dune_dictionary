@@ -403,6 +403,7 @@ function renderWordUniverse(wordsData) {
         const contentX = (mouseX - panX) / currentScale;
         const contentY = (mouseY - panY) / currentScale;
 
+
         // 更新缩放
         const prevScale = currentScale;
         currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold + 0.5));
