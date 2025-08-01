@@ -23,7 +23,7 @@ function renderWordUniverse(wordsData) {
         node.className = 'word-node';
 
         // 基础信息
-        node.textContent = word.name;
+        node.textContent = word.term;
         node.style.backgroundColor = word.color;
 
         // 详细信息（zoom in后显示）
@@ -35,23 +35,23 @@ function renderWordUniverse(wordsData) {
                 tag: 'img',
                 content: '',
                 attrs: {
-                    src: word.image,
-                    alt: word.name
+                    src: word.diagrams[0],
+                    alt: word.term
                 }
             },
             {
                 tag: 'p',
-                content: word.definition,
+                content: word.brief_definition,
                 class: 'definition'
             },
             {
                 tag: 'p',
-                content: `"${word.quote}"`,
+                content: `"${word.extended_definition}"`,
                 class: 'quote'
             },
             {
                 tag: 'p',
-                content: `${word.originator}`,
+                content: `${word.proposer}`,
                 class: 'originator'
             }
         ];
@@ -182,7 +182,21 @@ function renderWordUniverse(wordsData) {
 
         function updateCommentContent() {
             if (!currentWord) return;
-            commentScroll.innerHTML = `<p>暂无评论，欢迎补充！</p>`;
+            if (currentWord.comments && currentWord.comments.length > 0) {
+                let commentsHtml = '';
+                currentWord.comments.forEach(comment => {
+                    commentsHtml += `
+                        <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                            <div style="font-weight: bold; color: #333; margin-bottom: 5px;">${comment.author}</div>
+                            <div style="color: #666; line-height: 1.5;">${comment.content}</div>
+                            <div style="font-size: 12px; color: #999; margin-top: 5px;">${comment.date}</div>
+                        </div>
+                    `;
+                });
+                commentScroll.innerHTML = commentsHtml;
+            } else {
+                commentScroll.innerHTML = `<p>暂无评论，欢迎补充！</p>`;
+            }
         }
 
         function updateTabContent(tabType) {
@@ -190,22 +204,22 @@ function renderWordUniverse(wordsData) {
             switch (tabType) {
                 case 'comment':
                     // 评论标签选中时，下半部分保留图片内容
-                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.image}' alt='${currentWord.name}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.name}</p>`;
+                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
                     break;
                 case 'image':
-                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.image}' alt='${currentWord.name}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.name}</p>`;
+                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
                     break;
                 case 'book':
-                    contentScroll.innerHTML = `<h3>相关著作</h3><p>${currentWord.originator ? '相关人物：' + currentWord.originator : '暂无相关著作信息'}</p>`;
+                    contentScroll.innerHTML = `<h3>相关著作</h3><p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p><p>提出国：${currentWord.proposing_country || '未知'}</p><p>提出时间：${currentWord.proposing_time || '未知'}</p>`;
                     break;
                 case 'detail':
-                    contentScroll.innerHTML = `<h3>详细释义</h3><p>${currentWord.definition || '暂无详细释义'}</p><p style='color:#888;font-size:13px;margin-top:10px;'>${currentWord.quote ? '引用：' + currentWord.quote : ''}</p>`;
+                    contentScroll.innerHTML = `<h3>详细释义</h3><p>${currentWord.extended_definition || '暂无详细释义'}</p><p style='color:#888;font-size:13px;margin-top:10px;'>参考资料：${currentWord.references || '暂无'}</p>`;
                     break;
                 case 'brief':
-                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.definition ? currentWord.definition.replace(/。.*$/, '。') : '暂无简要释义'}</p>`;
+                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
                     break;
                 default:
-                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.definition ? currentWord.definition.replace(/。.*$/, '。') : '暂无简要释义'}</p>`;
+                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
             }
         }
 
@@ -443,27 +457,3 @@ window.addEventListener("DOMContentLoaded", drawBg);
 window.addEventListener("resize", drawBg);
 
 
-
-// {
-//   "id": "唯一ID",
-//   "term": "术语名称",
-//   "brief_definition": "简要释义",
-//   "extended_definition": "扩展释义",
-//   "diagrams": ["分析图URL", "参考图URL", "AI图URL"],
-//   "original_language": "外文/源语言",
-//   "domain": "领域/标签",
-//   "proposer": "提出者",
-//   "proposing_country": "提出国",
-//   "proposing_time": "提出时间",
-//   "references": "参考资料",
-//   "contributors": ["贡献者1", "贡献者2"],
-//   "reviewers": ["审阅者1", "审阅者2"],
-//   "related_terms": ["相关词条ID1", "相关词条ID2"],
-//   "comments": [{
-//     "author": "专家名",
-//     "content": "评论内容",
-//     "date": "评论日期"
-//   }],
-//   "createdAt": "创建时间",
-//   "updatedAt": "更新时间"
-// },
