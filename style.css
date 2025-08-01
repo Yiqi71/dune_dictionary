@@ -423,3 +423,12 @@ body {
     border-bottom-color: #0056b3;
 }
 
+#universe-view {
+    cursor: grab;
+    user-select: none; /* 防止拖拽时选中文本 */
+}
+
+#universe-view:active {
+    cursor: grabbing;
+}
+

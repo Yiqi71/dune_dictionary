@@ -114,6 +114,22 @@ function renderWordUniverse(wordsData) {
                 zoomToWord(word);
             }
         });
+        // 修改单词节点的点击事件
+        node.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+        });
+
+        node.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // 只有不是拖拽操作时才处理点击
+            if (!isDragging) {
+                if (node.classList.contains('focused')) {
+                    showFloatingPanel(word, node);
+                } else {
+                    zoomToWord(word);
+                }
+            }
+        });
 
         wordNodesContainer.appendChild(node);
 
@@ -231,7 +247,7 @@ function renderWordUniverse(wordsData) {
                 if (currentTabIndex > 0) {
                     currentTabIndex--;
                     updateTabContent(tabOrder[currentTabIndex]);
-                    
+
                     // 更新标签高亮状态
                     if (currentTabIndex === 0) {
                         // 滚动到评论位置
@@ -249,7 +265,7 @@ function renderWordUniverse(wordsData) {
                 if (currentTabIndex < tabOrder.length - 1) {
                     currentTabIndex++;
                     updateTabContent(tabOrder[currentTabIndex]);
-                    
+
                     // 更新标签高亮状态
                     commentTab.classList.remove('active');
                     tabs.forEach(tab => tab.classList.remove('active'));
@@ -316,16 +332,74 @@ function renderWordUniverse(wordsData) {
     //   backButton.addEventListener('click', zoomOut);
 
     // 滚轮缩放控制
+
+    // drag
+    let isDragging = false;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+
+    // 鼠标按下事件 - 开始拖拽
+    universeView.addEventListener('mousedown', (e) => {
+        if (e.button === 0) { // 只响应左键
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            universeView.style.cursor = 'grabbing';
+        }
+    });
+
+    // 鼠标移动事件 - 处理拖拽
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            e.preventDefault();
+
+            // 计算鼠标移动距离
+            const deltaX = e.clientX - lastMouseX;
+            const deltaY = e.clientY - lastMouseY;
+
+            // 更新位置（直接应用鼠标移动距离）
+            panX += deltaX;
+            panY += deltaY;
+
+            // 保存当前鼠标位置
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+
+            updateTransform();
+            updateWordFocus();
+        }
+    });
+
+    // 鼠标释放事件 - 结束拖拽
+    document.addEventListener('mouseup', (e) => {
+        if (e.button === 0 && isDragging) {
+            isDragging = false;
+            universeView.style.cursor = 'grab';
+        }
+    });
+
+    // 鼠标离开窗口时结束拖拽
+    document.addEventListener('mouseleave', () => {
+        if (isDragging) {
+            isDragging = false;
+            universeView.style.cursor = 'grab';
+        }
+    });
+
     universeView.addEventListener('wheel', (e) => {
         e.preventDefault();
 
         // 计算缩放方向和中心点
         const delta = -e.deltaY * 0.01;
-        const rect = universeView.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
 
-        // 计算缩放中心在内容坐标系下的位置
+        // 获取容器相对于视口的位置
+        const containerRect = universeView.getBoundingClientRect();
+
+        // 计算鼠标在容器内的相对位置
+        const mouseX = e.clientX - containerRect.left;
+        const mouseY = e.clientY - containerRect.top;
+
+        // 计算缩放中心在内容坐标系下的位置（考虑当前平移和缩放）
         const contentX = (mouseX - panX) / currentScale;
         const contentY = (mouseY - panY) / currentScale;
 
@@ -333,17 +407,27 @@ function renderWordUniverse(wordsData) {
         const prevScale = currentScale;
         currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold + 0.5));
 
-        // 缩放后，为了让鼠标下的点保持不动，调整 pan
-        panX -= (currentScale - prevScale) * contentX;
-        panY -= (currentScale - prevScale) * contentY;
+        // 缩放后调整pan值，使鼠标下的点保持不动
+        panX = mouseX - contentX * currentScale;
+        panY = mouseY - contentY * currentScale;
 
         updateTransform();
         updateWordFocus();
     });
 
-    // 修改缩放和位移的 transform 应用
+
     function updateTransform() {
-        universeView.style.transformOrigin = "0 0";
+        // 精确边界计算
+        const contentWidth = currentScale * universeView.offsetWidth;
+        const viewWidth = universeView.parentElement.offsetWidth;
+
+        const maxPanX = Math.max(0, (contentWidth - viewWidth) / 2);
+        const maxPanY = Math.max(0, (currentScale * universeView.offsetHeight -
+            universeView.parentElement.offsetHeight) / 2);
+
+        panX = Math.max(-maxPanX, Math.min(panX, maxPanX));
+        panY = Math.max(-maxPanY, Math.min(panY, maxPanY));
+
         universeView.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
     }
 
@@ -392,17 +476,17 @@ function renderWordUniverse(wordsData) {
                 closestWord.classList.add('focused');
                 focusedWord = closestWord;
 
-                // 自动平移到视图中心
-                const nodeRect = closestWord.getBoundingClientRect();
-                const nodeCenterX = nodeRect.left + nodeRect.width / 2;
-                const nodeCenterY = nodeRect.top + nodeRect.height / 2;
-                const viewportCenterX = window.innerWidth / 2;
-                const viewportCenterY = window.innerHeight / 2;
+                // // 自动平移到视图中心
+                // const nodeRect = closestWord.getBoundingClientRect();
+                // const nodeCenterX = nodeRect.left + nodeRect.width / 2;
+                // const nodeCenterY = nodeRect.top + nodeRect.height / 2;
+                // const viewportCenterX = window.innerWidth / 2;
+                // const viewportCenterY = window.innerHeight / 2;
 
-                panX += (viewportCenterX - nodeCenterX) / currentScale;
-                panY += (viewportCenterY - nodeCenterY) / currentScale;
+                // panX += (viewportCenterX - nodeCenterX) / currentScale;
+                // panY += (viewportCenterY - nodeCenterY) / currentScale;
 
-                updateTransform();
+                // updateTransform();
             }
         }
     }
@@ -457,3 +541,5 @@ window.addEventListener("DOMContentLoaded", drawBg);
 window.addEventListener("resize", drawBg);
 
 
+
+const universeView = document.getElementById('universe-view');
