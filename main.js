@@ -7,7 +7,8 @@ function renderWordUniverse(wordsData) {
     wordNodesContainer.innerHTML = '';
 
     // 状态变量
-    let panX = 0, panY = 0;
+    let panX = 0,
+        panY = 0;
     let currentScale = 1;
     let focusedWord = null;
     const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
@@ -113,7 +114,7 @@ function renderWordUniverse(wordsData) {
                 zoomToWord(word);
             }
         });
-        
+
         wordNodesContainer.appendChild(node);
 
         console.log('node rendered');
@@ -123,7 +124,7 @@ function renderWordUniverse(wordsData) {
     function showFloatingPanel(word, node) {
         const panel = document.getElementById('floating-panel');
         const contentScroll = panel.querySelector('.content-scroll');
-        
+
         // 更新内容
         contentScroll.innerHTML = `
             <h3>${word.name}</h3>
@@ -135,12 +136,12 @@ function renderWordUniverse(wordsData) {
             <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
         `;
-        
+
         // 显示浮窗
         panel.classList.remove('hidden');
         isPanelVisible = true;
         currentFloatingPanel = panel;
-        
+
         // 重置标签状态
         const tabs = panel.querySelectorAll('.tab-item');
         tabs.forEach(tab => tab.classList.remove('active'));
@@ -157,27 +158,39 @@ function renderWordUniverse(wordsData) {
     // 标签切换功能
     function initTabSwitching() {
         const panel = document.getElementById('floating-panel');
-        const tabs = panel.querySelectorAll('.tab-item');
+        const commentTab = panel.querySelector('.panel-tabs.comment-tabs .tab-item');
+        const tabs = panel.querySelectorAll('.panel-bottom .tab-item');
         const contentScroll = panel.querySelector('.content-scroll');
+        const commentScroll = panel.querySelector('.comment-scroll');
+
         let currentWord = null;
         const tabOrder = ['comment', 'image', 'book', 'detail', 'brief'];
-        let currentTabIndex = 0;
-        const origShowFloatingPanel = showFloatingPanel;
-        showFloatingPanel = function(word, node) {
+        let currentTabIndex = 4; // 默认简要释义（最下面）
+
+        showFloatingPanel = function (word, node) {
             currentWord = word;
-            currentTabIndex = 4; // 从最下方的标签（简要释义）开始
+            currentTabIndex = 4; // 默认简要释义
             updateTabContent(tabOrder[currentTabIndex]);
+            updateCommentContent();
             panel.classList.remove('hidden');
             isPanelVisible = true;
             currentFloatingPanel = panel;
             tabs.forEach(tab => tab.classList.remove('active'));
-            tabs[currentTabIndex].classList.add('active');
+            tabs[currentTabIndex - 1].classList.add('active'); // 减1因为评论不在下半部分
+            commentTab.classList.remove('active');
         };
+
+        function updateCommentContent() {
+            if (!currentWord) return;
+            commentScroll.innerHTML = `<p>暂无评论，欢迎补充！</p>`;
+        }
+
         function updateTabContent(tabType) {
             if (!currentWord) return;
-            switch(tabType) {
+            switch (tabType) {
                 case 'comment':
-                    contentScroll.innerHTML = `<h3>评论</h3><p>暂无评论，欢迎补充！</p>`;
+                    // 评论标签选中时，下半部分保留图片内容
+                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.image}' alt='${currentWord.name}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.name}</p>`;
                     break;
                 case 'image':
                     contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.image}' alt='${currentWord.name}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.name}</p>`;
@@ -192,38 +205,62 @@ function renderWordUniverse(wordsData) {
                     contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.definition ? currentWord.definition.replace(/。.*$/, '。') : '暂无简要释义'}</p>`;
                     break;
                 default:
-                    contentScroll.innerHTML = `<h3>评论</h3><p>暂无评论，欢迎补充！</p>`;
+                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.definition ? currentWord.definition.replace(/。.*$/, '。') : '暂无简要释义'}</p>`;
             }
         }
-        // 滚轮切换标签
+
+        // 滚轮切换标签（包含评论标签）
         contentScroll.addEventListener('wheel', (e) => {
             e.preventDefault();
             if (e.deltaY < 0) {
                 // 向上切换，不能穿梭
                 if (currentTabIndex > 0) {
                     currentTabIndex--;
-                    tabs.forEach(tab => tab.classList.remove('active'));
-                    tabs[currentTabIndex].classList.add('active');
                     updateTabContent(tabOrder[currentTabIndex]);
+                    
+                    // 更新标签高亮状态
+                    if (currentTabIndex === 0) {
+                        // 滚动到评论位置
+                        commentTab.classList.add('active');
+                        tabs.forEach(tab => tab.classList.remove('active'));
+                    } else {
+                        // 滚动到其他位置
+                        commentTab.classList.remove('active');
+                        tabs.forEach(tab => tab.classList.remove('active'));
+                        tabs[currentTabIndex - 1].classList.add('active'); // 减1因为评论不在下半部分
+                    }
                 }
             } else if (e.deltaY > 0) {
                 // 向下切换，不能穿梭
                 if (currentTabIndex < tabOrder.length - 1) {
                     currentTabIndex++;
-                    tabs.forEach(tab => tab.classList.remove('active'));
-                    tabs[currentTabIndex].classList.add('active');
                     updateTabContent(tabOrder[currentTabIndex]);
+                    
+                    // 更新标签高亮状态
+                    commentTab.classList.remove('active');
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    tabs[currentTabIndex - 1].classList.add('active'); // 减1因为评论不在下半部分
                 }
             }
         });
-        // 保留点击切换（可选）
+
+        // 下半部分标签点击切换
         tabs.forEach((tab, idx) => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                currentTabIndex = idx;
+                commentTab.classList.remove('active');
+                currentTabIndex = idx + 1; // 加1因为评论占用了索引0
                 updateTabContent(tabOrder[currentTabIndex]);
             });
+        });
+
+        // 评论标签点击
+        commentTab.addEventListener('click', () => {
+            commentTab.classList.add('active');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            currentTabIndex = 0;
+            updateTabContent(tabOrder[currentTabIndex]);
         });
     }
 
@@ -246,17 +283,17 @@ function renderWordUniverse(wordsData) {
         // 计算目标位置
         const targetX = word.coordinates.x * window.innerWidth;
         const targetY = word.coordinates.y * window.innerHeight;
-        
+
         // 计算需要移动的距离
         const viewportCenterX = window.innerWidth / 2;
         const viewportCenterY = window.innerHeight / 2;
-        
+
         panX = viewportCenterX - targetX;
         panY = viewportCenterY - targetY;
-        
+
         // 设置缩放级别
         currentScale = scaleThreshold;
-        
+
         updateTransform();
         updateWordFocus();
     }
@@ -275,19 +312,19 @@ function renderWordUniverse(wordsData) {
         const mouseY = e.clientY - rect.top;
 
         // 计算缩放中心在内容坐标系下的位置
-    const contentX = (mouseX - panX) / currentScale;
-    const contentY = (mouseY - panY) / currentScale;
+        const contentX = (mouseX - panX) / currentScale;
+        const contentY = (mouseY - panY) / currentScale;
 
-    // 更新缩放
-    const prevScale = currentScale;
-    currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold + 0.5));
+        // 更新缩放
+        const prevScale = currentScale;
+        currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold + 0.5));
 
-    // 缩放后，为了让鼠标下的点保持不动，调整 pan
-    panX -= (currentScale - prevScale) * contentX;
-    panY -= (currentScale - prevScale) * contentY;
+        // 缩放后，为了让鼠标下的点保持不动，调整 pan
+        panX -= (currentScale - prevScale) * contentX;
+        panY -= (currentScale - prevScale) * contentY;
 
-    updateTransform();
-    updateWordFocus();
+        updateTransform();
+        updateWordFocus();
     });
 
     // 修改缩放和位移的 transform 应用
@@ -340,17 +377,17 @@ function renderWordUniverse(wordsData) {
             if (closestWord) {
                 closestWord.classList.add('focused');
                 focusedWord = closestWord;
-            
+
                 // 自动平移到视图中心
                 const nodeRect = closestWord.getBoundingClientRect();
                 const nodeCenterX = nodeRect.left + nodeRect.width / 2;
                 const nodeCenterY = nodeRect.top + nodeRect.height / 2;
                 const viewportCenterX = window.innerWidth / 2;
                 const viewportCenterY = window.innerHeight / 2;
-            
+
                 panX += (viewportCenterX - nodeCenterX) / currentScale;
                 panY += (viewportCenterY - nodeCenterY) / currentScale;
-            
+
                 updateTransform();
             }
         }
@@ -389,7 +426,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function drawBg() {
     let bg = document.getElementById("universe-bg");
     bg.innerHTML = ""; // 清空旧内容
-    let cols = 18, rows = 9;
+    let cols = 18,
+        rows = 9;
     let gridWidth = window.innerWidth / cols;
     let gridHeight = window.innerHeight / rows;
     for (let i = 0; i < cols * rows; i++) {
@@ -403,3 +441,29 @@ function drawBg() {
 
 window.addEventListener("DOMContentLoaded", drawBg);
 window.addEventListener("resize", drawBg);
+
+
+
+// {
+//   "id": "唯一ID",
+//   "term": "术语名称",
+//   "brief_definition": "简要释义",
+//   "extended_definition": "扩展释义",
+//   "diagrams": ["分析图URL", "参考图URL", "AI图URL"],
+//   "original_language": "外文/源语言",
+//   "domain": "领域/标签",
+//   "proposer": "提出者",
+//   "proposing_country": "提出国",
+//   "proposing_time": "提出时间",
+//   "references": "参考资料",
+//   "contributors": ["贡献者1", "贡献者2"],
+//   "reviewers": ["审阅者1", "审阅者2"],
+//   "related_terms": ["相关词条ID1", "相关词条ID2"],
+//   "comments": [{
+//     "author": "专家名",
+//     "content": "评论内容",
+//     "date": "评论日期"
+//   }],
+//   "createdAt": "创建时间",
+//   "updatedAt": "更新时间"
+// },
