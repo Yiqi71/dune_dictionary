@@ -7,7 +7,7 @@
       "image": "images/bg.png",
       "quote": "瞎写的Serendipity is looking in a haystack for a needle and discovering a farmer's daughter.",
       "originator": "Sigmund Freud",
-      "coordinates": { "x": 0.5, "y": 0.3, "z": 0 },
+      "coordinates": { "x": 0.5, "y": 0.3 },
       "color": "#FF6B6B"
     },
     {
@@ -17,7 +17,7 @@
       "image": "images/prism_trimmed.png",
       "quote": "瞎写的I am because we are.",
       "originator": "Wolfgang Rindler",
-      "coordinates": { "x": 0.8, "y": 0.6, "z": 0.2 },
+      "coordinates": { "x": 0.8, "y": 0.6 },
       "color": "#F9CB40"
     }
   ]

@@ -7,9 +7,11 @@ function renderWordUniverse(wordsData) {
     wordNodesContainer.innerHTML = '';
 
     // 状态变量
+    let panX = 0, panY = 0;
     let currentScale = 1;
     let focusedWord = null;
     const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
+
 
     // 创建单词节点
     wordsData.forEach(word => {
@@ -18,7 +20,7 @@ function renderWordUniverse(wordsData) {
 
         // 基础信息
         node.textContent = word.name;
-        node.style.color = word.color;
+        node.style.backgroundColor = word.color;
 
         // 详细信息（zoom in后显示）
         const detailDiv = document.createElement('div');
@@ -41,7 +43,7 @@ function renderWordUniverse(wordsData) {
             {
                 tag: 'p',
                 content: `"${word.quote}"`,
-                class:'quote'
+                class: 'quote'
             },
             {
                 tag: 'p',
@@ -52,7 +54,7 @@ function renderWordUniverse(wordsData) {
 
         // 生成不重叠的30度倍数角度位置
         const usedAngles = new Set();
-        
+
         elements.forEach(item => {
             const el = document.createElement(item.tag);
             if (item.content) el.textContent = item.content;
@@ -60,15 +62,15 @@ function renderWordUniverse(wordsData) {
             if (item.class) el.className = item.class;
 
             // 在30度倍数中选择未使用的位置
-            const angleSteps = 12; // 360度除以30度 = 12个位置
+            const angleSteps = 6; // 6个位置
             let randomStep;
             let attempts = 0;
-            
+
             do {
-                randomStep = Math.floor(Math.random() * angleSteps); // 0-11
+                randomStep = Math.floor(Math.random() * angleSteps); // 0-5
                 attempts++;
             } while (usedAngles.has(randomStep) && attempts < 20);
-            
+
             usedAngles.add(randomStep);
             const angle = (randomStep / angleSteps) * Math.PI * 2; // 转换为弧度
             const distance = 2; // 距离单词固定为200px
@@ -77,9 +79,9 @@ function renderWordUniverse(wordsData) {
 
             Object.assign(el.style, {
                 position: 'absolute',
-                left: `50%`,
-                top: `50%`,
-                transform: `translate(-50%, -50%) translate(${x}%, ${y}%)`,
+                left: `0`,
+                top: `0`,
+                transform: ` translate(${x}%, ${y}%)`,
                 opacity: '0',
                 transition: 'all 0.5s ease-out'
             });
@@ -117,18 +119,28 @@ function renderWordUniverse(wordsData) {
         const rect = universeView.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        const originX = (mouseX / rect.width) * 100;
-        const originY = (mouseY / rect.height) * 100;
 
-        // 应用缩放，限制最大值为scaleThreshold
-        currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold+0.5));
-        universeView.style.transformOrigin = `${originX}% ${originY}%`;
-        universeView.style.transform = `scale(${currentScale})`;
+        // 计算缩放中心在内容坐标系下的位置
+    const contentX = (mouseX - panX) / currentScale;
+    const contentY = (mouseY - panY) / currentScale;
 
-        // 检测是否聚焦到某个单词
-        updateWordFocus();
-        // console.log(currentScale);
+    // 更新缩放
+    const prevScale = currentScale;
+    currentScale = Math.max(1, Math.min(currentScale + delta, scaleThreshold + 0.5));
+
+    // 缩放后，为了让鼠标下的点保持不动，调整 pan
+    panX -= (currentScale - prevScale) * contentX;
+    panY -= (currentScale - prevScale) * contentY;
+
+    updateTransform();
+    updateWordFocus();
     });
+
+    // 修改缩放和位移的 transform 应用
+    function updateTransform() {
+        universeView.style.transformOrigin = "0 0";
+        universeView.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
+    }
 
     // 更新单词聚焦状态 - 基于视图中心
     function updateWordFocus() {
@@ -174,6 +186,18 @@ function renderWordUniverse(wordsData) {
             if (closestWord) {
                 closestWord.classList.add('focused');
                 focusedWord = closestWord;
+            
+                // 自动平移到视图中心
+                const nodeRect = closestWord.getBoundingClientRect();
+                const nodeCenterX = nodeRect.left + nodeRect.width / 2;
+                const nodeCenterY = nodeRect.top + nodeRect.height / 2;
+                const viewportCenterX = window.innerWidth / 2;
+                const viewportCenterY = window.innerHeight / 2;
+            
+                panX += (viewportCenterX - nodeCenterX) / currentScale;
+                panY += (viewportCenterY - nodeCenterY) / currentScale;
+            
+                updateTransform();
             }
         }
     }
@@ -200,3 +224,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 '<p class="error">加载单词数据失败，请刷新重试</p>';
         });
 });
+
+// // menu
+// let duneIcon = document.getElementById("duneIcon");
+// let suffleIcon = document.getElementById("suffleIcon");
+// let nextIcon = document.getElementById("nextIcon");
+// let searchIcon = document.getElementById("searchIcon");
+
+// bg 0-180-0 0-90-0 20/
+function drawBg() {
+    let bg = document.getElementById("universe-bg");
+    bg.innerHTML = ""; // 清空旧内容
+    let cols = 18, rows = 9;
+    let gridWidth = window.innerWidth / cols;
+    let gridHeight = window.innerHeight / rows;
+    for (let i = 0; i < cols * rows; i++) {
+        let grid = document.createElement("div");
+        grid.classList.add("universe-grid");
+        grid.style.width = gridWidth + "px";
+        grid.style.height = gridHeight + "px";
+        bg.appendChild(grid);
+    }
+}
+
+window.addEventListener("DOMContentLoaded", drawBg);
+window.addEventListener("resize", drawBg);
