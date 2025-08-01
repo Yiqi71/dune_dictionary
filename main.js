@@ -199,13 +199,22 @@ function renderWordUniverse(wordsData) {
         contentScroll.addEventListener('wheel', (e) => {
             e.preventDefault();
             if (e.deltaY < 0) {
-                // 只能向上切换
-                currentTabIndex = (currentTabIndex - 1 + tabOrder.length) % tabOrder.length;
-                tabs.forEach(tab => tab.classList.remove('active'));
-                tabs[currentTabIndex].classList.add('active');
-                updateTabContent(tabOrder[currentTabIndex]);
+                // 向上切换，不能穿梭
+                if (currentTabIndex > 0) {
+                    currentTabIndex--;
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    tabs[currentTabIndex].classList.add('active');
+                    updateTabContent(tabOrder[currentTabIndex]);
+                }
+            } else if (e.deltaY > 0) {
+                // 向下切换，不能穿梭
+                if (currentTabIndex < tabOrder.length - 1) {
+                    currentTabIndex++;
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    tabs[currentTabIndex].classList.add('active');
+                    updateTabContent(tabOrder[currentTabIndex]);
+                }
             }
-            // 向下滚动无动作
         });
         // 保留点击切换（可选）
         tabs.forEach((tab, idx) => {
