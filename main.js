@@ -12,6 +12,9 @@ function renderWordUniverse(wordsData) {
     let focusedWord = null;
     const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
 
+    // 浮窗相关变量
+    let currentFloatingPanel = null;
+    let isPanelVisible = false;
 
     // 创建单词节点
     wordsData.forEach(word => {
@@ -101,11 +104,153 @@ function renderWordUniverse(wordsData) {
         node.style.top = `${word.coordinates.y * 100}%`;
         node.style.transform = `translate(-50%, -50%) translateZ(${word.coordinates.z * 100}px)`;
 
-        node.addEventListener('click', () => zoomToWord(word));
+        // 添加点击事件处理浮窗显示
+        node.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (node.classList.contains('focused')) {
+                showFloatingPanel(word, node);
+            } else {
+                zoomToWord(word);
+            }
+        });
+        
         wordNodesContainer.appendChild(node);
 
         console.log('node rendered');
     });
+
+    // 浮窗功能函数
+    function showFloatingPanel(word, node) {
+        const panel = document.getElementById('floating-panel');
+        const contentScroll = panel.querySelector('.content-scroll');
+        
+        // 更新内容
+        contentScroll.innerHTML = `
+            <h3>${word.name}</h3>
+            <p><strong>定义：</strong>${word.definition}</p>
+            <p><strong>引用：</strong>"${word.quote}"</p>
+            <p><strong>来源：</strong>${word.originator}</p>
+            <p>这里是关于"${word.name}"的详细信息。这个单词在沙丘宇宙中具有重要的意义。</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        `;
+        
+        // 显示浮窗
+        panel.classList.remove('hidden');
+        isPanelVisible = true;
+        currentFloatingPanel = panel;
+        
+        // 重置标签状态
+        const tabs = panel.querySelectorAll('.tab-item');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        tabs[0].classList.add('active');
+    }
+
+    function hideFloatingPanel() {
+        const panel = document.getElementById('floating-panel');
+        panel.classList.add('hidden');
+        isPanelVisible = false;
+        currentFloatingPanel = null;
+    }
+
+    // 标签切换功能
+    function initTabSwitching() {
+        const panel = document.getElementById('floating-panel');
+        const tabs = panel.querySelectorAll('.tab-item');
+        const contentScroll = panel.querySelector('.content-scroll');
+        let currentWord = null;
+        const tabOrder = ['comment', 'image', 'book', 'detail', 'brief'];
+        let currentTabIndex = 0;
+        const origShowFloatingPanel = showFloatingPanel;
+        showFloatingPanel = function(word, node) {
+            currentWord = word;
+            currentTabIndex = 4; // 从最下方的标签（简要释义）开始
+            updateTabContent(tabOrder[currentTabIndex]);
+            panel.classList.remove('hidden');
+            isPanelVisible = true;
+            currentFloatingPanel = panel;
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[currentTabIndex].classList.add('active');
+        };
+        function updateTabContent(tabType) {
+            if (!currentWord) return;
+            switch(tabType) {
+                case 'comment':
+                    contentScroll.innerHTML = `<h3>评论</h3><p>暂无评论，欢迎补充！</p>`;
+                    break;
+                case 'image':
+                    contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.image}' alt='${currentWord.name}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.name}</p>`;
+                    break;
+                case 'book':
+                    contentScroll.innerHTML = `<h3>相关著作</h3><p>${currentWord.originator ? '相关人物：' + currentWord.originator : '暂无相关著作信息'}</p>`;
+                    break;
+                case 'detail':
+                    contentScroll.innerHTML = `<h3>详细释义</h3><p>${currentWord.definition || '暂无详细释义'}</p><p style='color:#888;font-size:13px;margin-top:10px;'>${currentWord.quote ? '引用：' + currentWord.quote : ''}</p>`;
+                    break;
+                case 'brief':
+                    contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.definition ? currentWord.definition.replace(/。.*$/, '。') : '暂无简要释义'}</p>`;
+                    break;
+                default:
+                    contentScroll.innerHTML = `<h3>评论</h3><p>暂无评论，欢迎补充！</p>`;
+            }
+        }
+        // 滚轮切换标签
+        contentScroll.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                // 只能向上切换
+                currentTabIndex = (currentTabIndex - 1 + tabOrder.length) % tabOrder.length;
+                tabs.forEach(tab => tab.classList.remove('active'));
+                tabs[currentTabIndex].classList.add('active');
+                updateTabContent(tabOrder[currentTabIndex]);
+            }
+            // 向下滚动无动作
+        });
+        // 保留点击切换（可选）
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentTabIndex = idx;
+                updateTabContent(tabOrder[currentTabIndex]);
+            });
+        });
+    }
+
+    // 点击外部关闭浮窗
+    function initClickOutsideHandler() {
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('floating-panel');
+            if (isPanelVisible && !panel.contains(e.target)) {
+                hideFloatingPanel();
+            }
+        });
+    }
+
+    // 初始化浮窗功能
+    initTabSwitching();
+    initClickOutsideHandler();
+
+    // 缩放到指定单词的函数
+    function zoomToWord(word) {
+        // 计算目标位置
+        const targetX = word.coordinates.x * window.innerWidth;
+        const targetY = word.coordinates.y * window.innerHeight;
+        
+        // 计算需要移动的距离
+        const viewportCenterX = window.innerWidth / 2;
+        const viewportCenterY = window.innerHeight / 2;
+        
+        panX = viewportCenterX - targetX;
+        panY = viewportCenterY - targetY;
+        
+        // 设置缩放级别
+        currentScale = scaleThreshold;
+        
+        updateTransform();
+        updateWordFocus();
+    }
 
     //   // 返回按钮事件
     //   backButton.addEventListener('click', zoomOut);
