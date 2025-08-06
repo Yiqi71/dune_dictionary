@@ -122,6 +122,13 @@ body {
     border: rgb(150, 150, 150) 0.3px solid;
     box-sizing: border-box;
 }
+#universe-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
 
 @keyframes fadeIn {
     from {
@@ -403,4 +410,3 @@ body {
 #universe-view:active {
     cursor: grabbing;
 }
-

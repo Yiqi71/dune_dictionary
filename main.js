@@ -1,3 +1,22 @@
+// 状态变量
+import {
+    state
+} from "./state.js";
+let panX = state.panX,
+    panY = state.panY;
+let currentScale = state.currentScale;
+let focusedWord = null;
+const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
+
+
+
+function updateState() {
+    state.currentScale = currentScale;
+    state.panX = panX;
+    state.panY = panY;
+}
+
+
 // 渲染函数
 function renderWordUniverse(wordsData) {
     const universeView = document.getElementById('universe-view');
@@ -6,12 +25,7 @@ function renderWordUniverse(wordsData) {
     // 清空容器（防止重复加载）
     wordNodesContainer.innerHTML = '';
 
-    // 状态变量
-    let panX = 0,
-        panY = 0;
-    let currentScale = 1;
-    let focusedWord = null;
-    const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
+
 
     // 浮窗相关变量
     let currentFloatingPanel = null;
@@ -321,9 +335,14 @@ function renderWordUniverse(wordsData) {
         panX = viewportCenterX - targetX;
         panY = viewportCenterY - targetY;
 
+
+
         // 设置缩放级别
         currentScale = scaleThreshold;
 
+
+
+        updateState();
         updateTransform();
         updateWordFocus();
     }
@@ -365,6 +384,7 @@ function renderWordUniverse(wordsData) {
             lastMouseX = e.clientX;
             lastMouseY = e.clientY;
 
+            updateState();
             updateTransform();
             updateWordFocus();
         }
@@ -412,6 +432,7 @@ function renderWordUniverse(wordsData) {
         panX = mouseX - contentX * currentScale;
         panY = mouseY - contentY * currentScale;
 
+        updateState();
         updateTransform();
         updateWordFocus();
     });
@@ -429,7 +450,7 @@ function renderWordUniverse(wordsData) {
         panX = Math.max(-maxPanX, Math.min(panX, maxPanX));
         panY = Math.max(-maxPanY, Math.min(panY, maxPanY));
 
-        universeView.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
+        // universeView.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
     }
 
     // 更新单词聚焦状态 - 基于视图中心
@@ -521,26 +542,3 @@ document.addEventListener('DOMContentLoaded', () => {
 // let nextIcon = document.getElementById("nextIcon");
 // let searchIcon = document.getElementById("searchIcon");
 
-// bg 0-180-0 0-90-0 20/
-function drawBg() {
-    let bg = document.getElementById("universe-bg");
-    bg.innerHTML = ""; // 清空旧内容
-    let cols = 18,
-        rows = 9;
-    let gridWidth = window.innerWidth / cols;
-    let gridHeight = window.innerHeight / rows;
-    for (let i = 0; i < cols * rows; i++) {
-        let grid = document.createElement("div");
-        grid.classList.add("universe-grid");
-        grid.style.width = gridWidth + "px";
-        grid.style.height = gridHeight + "px";
-        bg.appendChild(grid);
-    }
-}
-
-window.addEventListener("DOMContentLoaded", drawBg);
-window.addEventListener("resize", drawBg);
-
-
-
-const universeView = document.getElementById('universe-view');
