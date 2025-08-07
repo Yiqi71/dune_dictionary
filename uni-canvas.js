@@ -37,17 +37,16 @@ function updateGridSizeToFitHeight() {
 
 // 更新 word-nodes 的位置
 function updateWordNodeTransforms() {
-    console.log(window.innerWidth*0.1*scale+offsetX);
     const nodes = document.querySelectorAll(".word-node");
     nodes.forEach(node => {
         const xRatio = +node.dataset.x; // x ∈ [0,1]
         const yRatio = +node.dataset.y; // y ∈ [0,1]
 
-        const x = xRatio * window.innerWidth*scale + offsetX;
-        const y = yRatio * window.innerHeight*scale + offsetY;
+        const x = xRatio * window.innerWidth * scale + offsetX;
+        const y = yRatio * window.innerHeight * scale + offsetY;
 
         node.style.top = `${y}px`;
-        node.style.left=`${x}px`;
+        node.style.left = `${x}px`;
 
         node.style.transformOrigin = "top left";
     });
@@ -84,7 +83,7 @@ canvas.addEventListener("mouseleave", () => isDragging = false);
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
-    const zoomStep = 0.05; // 缩放步长更细
+    const zoomStep = 0.08; // 缩放步长更细
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
     const newScale = Math.min(5, Math.max(1, scale + delta));
 

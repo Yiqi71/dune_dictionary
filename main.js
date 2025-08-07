@@ -6,7 +6,7 @@ let panX = state.panX,
     panY = state.panY;
 let currentScale = state.currentScale;
 let focusedWord = null;
-const scaleThreshold = 2.5; // 触发详细信息显示的缩放阈值
+const scaleThreshold = 4; // 触发详细信息显示的缩放阈值
 
 
 
@@ -186,20 +186,44 @@ function renderWordUniverse(wordsData) {
     canvas.addEventListener('wheel', (e) => {
         updateWordFocus();
     });
+    canvas.addEventListener('mouseup', () => {
+        updateWordFocus(); // 拖动结束后更新
+    });
+
+
+
+function hideNearbyNodes(focusedNode) {
+    document.querySelectorAll('.word-node').forEach(node => {
+        if (node === focusedNode) return;
+
+        
+            node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
+        
+    });
+}
+
+function restoreAllNodes() {
+    document.querySelectorAll('.word-node').forEach(node => {
+        node.style.opacity = '1';
+    });
+}
+
+
 
     // 更新单词聚焦状态 - 基于视图中心
     function updateWordFocus() {
+        // 清除之前聚焦的单词
+        if (focusedWord) {
+            focusedWord.classList.remove('focused');
+            focusedWord = null;
+            restoreAllNodes();
+        }
+        
         // 获取视图中心坐标
         const viewportCenter = {
             x: window.innerWidth / 2,
             y: window.innerHeight / 2
         };
-
-        // 清除之前聚焦的单词
-        if (focusedWord) {
-            focusedWord.classList.remove('focused');
-            focusedWord = null;
-        }
 
         // 如果缩放足够大（达到或超过阈值）
         if (state.currentScale >= scaleThreshold) {
@@ -231,6 +255,8 @@ function renderWordUniverse(wordsData) {
             if (closestWord) {
                 closestWord.classList.add('focused');
                 focusedWord = closestWord;
+
+                hideNearbyNodes(closestWord);
 
                 // // 自动平移到视图中心
                 // const nodeRect = closestWord.getBoundingClientRect();

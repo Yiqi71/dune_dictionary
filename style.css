@@ -50,7 +50,7 @@ body {
     pointer-events: auto;
     position: absolute;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: bold;
     /* transition: all 0.5s ease-out; */
     /* text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); */
@@ -67,13 +67,17 @@ body {
     pointer-events: none;
 }
 
+.word-node.focused{
+    font-size: 36px;
+}
+
 .word-node.focused .word-details {
     opacity: 1;
     pointer-events: auto;
 }
 
 .word-details>* {
-    font-size: 6px;
+    font-size: 18px;
     position: absolute;
     color: black;
     padding: 3px;
