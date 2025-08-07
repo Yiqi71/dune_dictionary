@@ -195,10 +195,8 @@ function renderWordUniverse(wordsData) {
 function hideNearbyNodes(focusedNode) {
     document.querySelectorAll('.word-node').forEach(node => {
         if (node === focusedNode) return;
-
-        
             node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
-        
+            node.classList.add("sand-text")
     });
 }
 

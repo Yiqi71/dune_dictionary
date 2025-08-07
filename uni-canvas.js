@@ -83,7 +83,7 @@ canvas.addEventListener("mouseleave", () => isDragging = false);
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
-    const zoomStep = 0.08; // 缩放步长更细
+    const zoomStep = 0.1; // 缩放步长更细
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
     const newScale = Math.min(5, Math.max(1, scale + delta));
 
