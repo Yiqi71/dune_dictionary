@@ -36,18 +36,46 @@ function updateGridSizeToFitHeight() {
 }
 
 // 更新 word-nodes 的位置
-function updateWordNodeTransforms() {
+export function updateWordNodeTransforms() {
+    const offsetX = state.panX;
+    const offsetY = state.panY;
+    const scale = state.currentScale;
+
+    const gridSize = baseGridSize * scale;
+
+    const lonCount = 360 / lonStep;
+    const latCount = 180 / latStep;
+
+    const totalWidth = gridSize * lonCount;
+    const totalHeight = gridSize * latCount;
+
     const nodes = document.querySelectorAll(".word-node");
+
     nodes.forEach(node => {
-        const xRatio = +node.dataset.x; // x ∈ [0,1]
-        const yRatio = +node.dataset.y; // y ∈ [0,1]
+        const xRatio = +node.dataset.x;
+        const yRatio = +node.dataset.y;
 
-        const x = xRatio * window.innerWidth * scale + offsetX;
-        const y = yRatio * window.innerHeight * scale + offsetY;
+        // 逻辑坐标在地图上的位置
+        let baseX = xRatio * totalWidth;
+        let baseY = yRatio * totalHeight;
 
-        node.style.top = `${y}px`;
-        node.style.left = `${x}px`;
+        // 让它和视口中心对齐的 wrap：找最近一份拷贝
+        // 先加上偏移
+        baseX += offsetX;
+        baseY += offsetY;
 
+        // wrap 到中心那一份格子：取最近一格
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        // 找到最近整数倍的 totalWidth/Height 使其靠近中心
+        const wrappedX = baseX + Math.round((centerX - baseX) / totalWidth) * totalWidth;
+        const wrappedY = baseY + Math.round((centerY - baseY) / totalHeight) * totalHeight;
+
+        node.style.left = `0px`;
+        node.style.top = `0px`;
+        node.style.position = 'absolute';
+        node.style.transform = `translate(${wrappedX}px, ${wrappedY}px)`;
         node.style.transformOrigin = "top left";
     });
 }
@@ -85,7 +113,7 @@ canvas.addEventListener("wheel", (e) => {
 
     const zoomStep = 0.1; // 缩放步长更细
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    const newScale = Math.min(5, Math.max(1, scale + delta));
+    const newScale = Math.min(4, Math.max(1, scale + delta));
 
     // 缩放中心在鼠标指针位置
     const mouseX = e.clientX;
@@ -101,7 +129,6 @@ canvas.addEventListener("wheel", (e) => {
     state.panX = offsetX;
     state.panY = offsetY;
 
-    // updateViewTransform();
     draw();
     updateWordNodeTransforms();
 }, {
@@ -110,7 +137,12 @@ canvas.addEventListener("wheel", (e) => {
 
 
 // 主绘图函数
-function draw() {
+export function draw() {
+    // 读取status
+    offsetX = state.panX;
+    offsetY = state.panY;
+    scale = state.currentScale;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const gridSize = baseGridSize * scale;
@@ -124,8 +156,8 @@ function draw() {
     const totalHeight = gridSize * latCount;
 
     // 因为offsetX和offsetY可能很大或很小，做取模运算让偏移在0~地图大小之间循环
-    const modOffsetX = ((offsetX % totalWidth) + totalWidth) % totalWidth;
-    const modOffsetY = ((offsetY % totalHeight) + totalHeight) % totalHeight;
+    const modOffsetX = ((offsetX % totalWidth) - totalWidth) % totalWidth;
+    const modOffsetY = ((offsetY % totalHeight) - totalHeight) % totalHeight;
 
     // 要绘制的偏移组合（九宫格）
     const offsetsToDraw = [

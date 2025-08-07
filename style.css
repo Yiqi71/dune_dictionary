@@ -70,17 +70,6 @@ body {
     pointer-events: none;
 }
 
-.sand-text {
-  font-family: monospace;
-  letter-spacing: 0.1em;
-  animation: sandify 3s infinite alternate;
-}
-
-@keyframes sandify {
-  0% { color: #000; }
-  100% { color: transparent; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
-}
-
 
 
 
@@ -97,7 +86,7 @@ body {
     font-size: 18px;
     position: absolute;
     color: black;
-    padding: 10px;
+    padding: 5px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     transform: translate(-50%, -50%);
     transition: transform 0.3s ease-out;
@@ -128,7 +117,7 @@ body {
 
     width: 250px;
     /* 固定宽度 */
-    height: calc(4.5em+20px);
+    height: calc(4.5em+10px);
     /* 例如 3 行，每行 1.5em */
     line-height: 1.5em;
     display: -webkit-box;
@@ -138,16 +127,10 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 
-    /* 居中对齐 */
-    display: flex;
-    justify-content: center;
-    /* 水平居中 */
-    align-items: center;
-    /* 垂直居中 */
+
     text-align: center;
     /* 多行文本居中 */
 
-    padding: 10px;
     /* 可选，让文字不贴边 */
     box-sizing: border-box;
 }
@@ -159,7 +142,7 @@ body {
 
     width: 250px;
     /* 固定宽度 */
-    height: calc(4.5em+20px);
+    height: calc(4.5em+10px);
     /* 例如 3 行，每行 1.5em */
     line-height: 1.5em;
     display: -webkit-box;
@@ -169,17 +152,9 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 
-    /* 居中对齐 */
-    display: flex;
-    justify-content: center;
-    /* 水平居中 */
-    align-items: center;
-    /* 垂直居中 */
     text-align: center;
     /* 多行文本居中 */
 
-    padding: 10px;
-    /* 可选，让文字不贴边 */
     box-sizing: border-box;
 }
 

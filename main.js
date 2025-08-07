@@ -2,6 +2,11 @@
 import {
     state
 } from "./state.js";
+
+import {
+    draw,
+    updateWordNodeTransforms
+} from "./uni-canvas.js";
 let panX = state.panX,
     panY = state.panY;
 let currentScale = state.currentScale;
@@ -123,15 +128,13 @@ function renderWordUniverse(wordsData) {
         node.dataset.y = word.coordinates.y;
 
 
-        // 添加点击事件处理浮窗显示
-        node.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (node.classList.contains('focused')) {
-                showFloatingPanel(word, node);
-            } else {
-                zoomToWord(word);
-            }
+        node.addEventListener('wheel', function (e) {
+            e.stopPropagation(); // 不让滚轮事件向上传播
+            e.preventDefault(); // 不让自己滚动
+        }, {
+            passive: false
         });
+        // 添加点击事件处理浮窗显示
         // 修改单词节点的点击事件
         node.addEventListener('mousedown', (e) => {
             e.stopPropagation();
@@ -144,7 +147,7 @@ function renderWordUniverse(wordsData) {
                 if (node.classList.contains('focused')) {
                     showFloatingPanel(word, node);
                 } else {
-                    zoomToWord(word);
+                    zoomToWord(e.clientX, e.clientY);
                 }
             }
         });
@@ -156,30 +159,30 @@ function renderWordUniverse(wordsData) {
 
 
     // 缩放到指定单词的函数
-    function zoomToWord(word) {
-        // 计算目标位置
-        const targetX = word.coordinates.x * window.innerWidth;
-        const targetY = word.coordinates.y * window.innerHeight;
+function zoomToWord(x, y) {
+    const oldScale = state.currentScale;
+    const newScale = 4;
 
-        // 计算需要移动的距离
-        const viewportCenterX = window.innerWidth / 2;
-        const viewportCenterY = window.innerHeight / 2;
-        panX = viewportCenterX - targetX;
-        panY = viewportCenterY - targetY;
+    // 屏幕中心
+    const viewportCenterX = window.innerWidth / 2;
+    const viewportCenterY = window.innerHeight / 2;
 
-        // 设置缩放级别
-        currentScale = scaleThreshold;
+    // 更新缩放中心逻辑（保持点击点在中心）
+    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
+    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
 
-        updateState();
-        updateWordFocus();
-    }
+    state.currentScale = newScale;
+
+    draw();
+    updateWordNodeTransforms();
+    updateWordFocus();
+}
+
 
     // 滚轮缩放控制
 
     // drag
     let isDragging = false;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
 
     let canvas = document.getElementById("universe-canvas");
     let nodesView = document.getElementById("word-nodes-container");
@@ -192,19 +195,18 @@ function renderWordUniverse(wordsData) {
 
 
 
-function hideNearbyNodes(focusedNode) {
-    document.querySelectorAll('.word-node').forEach(node => {
-        if (node === focusedNode) return;
+    function hideNearbyNodes(focusedNode) {
+        document.querySelectorAll('.word-node').forEach(node => {
+            if (node === focusedNode) return;
             node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
-            node.classList.add("sand-text")
-    });
-}
+        });
+    }
 
-function restoreAllNodes() {
-    document.querySelectorAll('.word-node').forEach(node => {
-        node.style.opacity = '1';
-    });
-}
+    function restoreAllNodes() {
+        document.querySelectorAll('.word-node').forEach(node => {
+            node.style.opacity = '1';
+        });
+    }
 
 
 
@@ -216,7 +218,7 @@ function restoreAllNodes() {
             focusedWord = null;
             restoreAllNodes();
         }
-        
+
         // 获取视图中心坐标
         const viewportCenter = {
             x: window.innerWidth / 2,
@@ -293,6 +295,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 '<p class="error">加载单词数据失败，请刷新重试</p>';
         });
 });
+
+document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'x') {
+        console.log('state.panX:', state.panX);
+        console.log('state.panY:', state.panY);
+        console.log('state.currentScale:', state.currentScale);
+    }
+});
+
 
 // // menu
 // let duneIcon = document.getElementById("duneIcon");
