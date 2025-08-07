@@ -21,7 +21,7 @@ body {
 }
 
 #universe-view {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100vw;
@@ -31,7 +31,7 @@ body {
     align-items: center;
     perspective: 1000px;
     transform-origin: center center;
-    transition: transform 0.3s ease-out;
+    /* transition: transform 0.3s ease-out; */
     overflow: hidden; /* 防止内容溢出 */
 }
 
@@ -46,16 +46,13 @@ body {
     pointer-events: none; /* 允许点击穿透到universe-view */
 }
 
-#word-nodes-container .word-node {
-    pointer-events: auto; /* 单词节点可以点击 */
-}
-
 .word-node {
+    pointer-events: auto;
     position: absolute;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: bold;
-    transition: all 0.5s ease-out;
+    /* transition: all 0.5s ease-out; */
     /* text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); */
 }
 
@@ -108,20 +105,7 @@ body {
 }
 
 
-#universe-bg {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100vw;
-    height: 100vh;
-    position: absolute; /* 让它作为背景 */
-    top: 0;
-    left: 0;
-    z-index: -1; /* 保证在底层 */
-}
-.universe-grid {
-    border: rgb(150, 150, 150) 0.3px solid;
-    box-sizing: border-box;
-}
+
 #universe-canvas {
   position: absolute;
   top: 0;
