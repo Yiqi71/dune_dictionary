@@ -14,7 +14,7 @@
       "references": "《日常生活的精神病理学》",
       "contributors": ["弗洛伊德", "荣格"],
       "reviewers": ["安娜·弗洛伊德", "拉康"],
-      "related_terms": ["潜意识", "压抑", "口误"],
+      "related_terms": [],
       "comments": [
         {
           "author": "心理学专家",
@@ -50,7 +50,11 @@
       "references": "《相对论宇宙学》",
       "contributors": ["爱因斯坦", "霍金", "彭罗斯"],
       "reviewers": ["惠勒", "索恩"],
-      "related_terms": ["黑洞", "奇点", "霍金辐射"],
+      "related_terms": [
+          {
+              "id": "27",
+              "relation": "反义词"
+          }],
       "comments": [
         {
           "author": "天体物理学家",
@@ -86,7 +90,7 @@
       "references": "《赛博格与空间》",
       "contributors": ["哈拉维", "斯蒂格勒"],
       "reviewers": ["海勒斯", "布拉伊多蒂"],
-      "related_terms": ["后人类", "增强现实", "生物黑客"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.7,
         "y": 0.4,
@@ -110,7 +114,7 @@
       "references": "《伪币制造者》",
       "contributors": ["德里达", "热奈特"],
       "reviewers": ["麦茨", "艾柯"],
-      "related_terms": ["元叙事", "自我指涉", "超小说"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.3,
         "y": 0.5,
@@ -134,7 +138,7 @@
       "references": "《圣经》《古兰经》",
       "contributors": ["大卫王", "君士坦丁大帝", "萨拉丁"],
       "reviewers": [],
-      "related_terms": ["锡安主义", "圣殿", "巴以冲突"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.6,
         "y": 0.8,
@@ -158,7 +162,7 @@
       "references": "《城市地理学批判导论》",
       "contributors": ["德波", "德赛托", "西美尔"],
       "reviewers": ["哈维", "索亚"],
-      "related_terms": ["情境主义", "漂移", "空间生产"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.4,
         "y": 0.7,
@@ -182,7 +186,10 @@
       "references": "《个体心理学的实践与理论》",
       "contributors": ["岸见一郎", "古贺史健"],
       "reviewers": [],
-      "related_terms": ["共同体感觉", "自卑与超越", "目的论"],
+      "related_terms": [{
+              "id": "29",
+              "relation": "近义词"
+          }],
       "coordinates": {
         "x": 0.2,
         "y": 0.4,
@@ -206,7 +213,7 @@
       "references": "《关怀的正义》",
       "contributors": ["霍克希尔德", "特隆托"],
       "reviewers": [],
-      "related_terms": ["情感劳动", "社会再生产", "服务经济"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.5,
         "y": 0.9,
@@ -230,7 +237,11 @@
       "references": "《压缩现代性》",
       "contributors": [],
       "reviewers": [],
-      "related_terms": ["风险社会", "反思性现代化", "发展型国家"],
+      "related_terms": [
+          {
+              "id": "27",
+              "relation": "同类概念"
+          }],
       "coordinates": {
         "x": 0.9,
         "y": 0.2,
@@ -254,7 +265,7 @@
       "references": "《电影眼睛人：一场革命》",
       "contributors": ["爱森斯坦", "罗德钦科"],
       "reviewers": [],
-      "related_terms": ["真实电影", "蒙太奇", "建构主义"],
+      "related_terms": [],
       "coordinates": {
         "x": 0.1,
         "y": 0.6,
@@ -279,7 +290,7 @@
       "references": "《参考书1》",
       "contributors": ["贡献者1"],
       "reviewers": ["审阅者1"],
-      "related_terms": ["相关词1"],
+      "related_terms": [],
       "coordinates": {"x": 0.12, "y": 0.9, "z": 0},
       "color": "#AAAAAA",
       "createdAt": "2024-02-01",
@@ -299,7 +310,11 @@
       "references": "《参考书2》",
       "contributors": ["贡献者2"],
       "reviewers": ["审阅者2"],
-      "related_terms": ["相关词2"],
+      "related_terms": [
+          {
+              "id": "28",
+              "relation": "反义词"
+          }],
       "coordinates": {"x": 0.9, "y": 0.5, "z": 0},
       "color": "#BBBBBB",
       "createdAt": "2024-02-01",
@@ -319,7 +334,7 @@
       "references": "《参考书3》",
       "contributors": ["贡献者3"],
       "reviewers": ["审阅者3"],
-      "related_terms": ["相关词3"],
+      "related_terms": [],
       "coordinates": {"x": 0.35, "y": 0.6, "z": 0},
       "color": "#CCCCCC",
       "createdAt": "2024-02-01",
@@ -339,7 +354,7 @@
       "references": "《参考书4》",
       "contributors": ["贡献者4"],
       "reviewers": ["审阅者4"],
-      "related_terms": ["相关词4"],
+      "related_terms": [],
       "coordinates": {"x": 0.4, "y": 0.4, "z": 0},
       "color": "#DDDDDD",
       "createdAt": "2024-02-01",
@@ -359,7 +374,7 @@
       "references": "《参考书5》",
       "contributors": ["贡献者5"],
       "reviewers": ["审阅者5"],
-      "related_terms": ["相关词5"],
+      "related_terms": [],
       "coordinates": {"x": 0.1, "y": 0.5, "z": 0},
       "color": "#EEEEEE",
       "createdAt": "2024-02-01",
@@ -379,7 +394,7 @@
       "references": "《参考书6》",
       "contributors": ["贡献者6"],
       "reviewers": ["审阅者6"],
-      "related_terms": ["相关词6"],
+      "related_terms": [],
       "coordinates": {"x": 0.9, "y": 0.6, "z": 0},
       "color": "#FFAAAA",
       "createdAt": "2024-02-01",
@@ -399,7 +414,14 @@
       "references": "《参考书7》",
       "contributors": ["贡献者7"],
       "reviewers": ["审阅者7"],
-      "related_terms": ["相关词7"],
+      "related_terms": [{
+              "id": "28",
+              "relation": "近义词"
+          },
+        {
+              "id": "27",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.7, "y": 0.3, "z": 0},
       "color": "#AAFFAA",
       "createdAt": "2024-02-01",
@@ -419,7 +441,7 @@
       "references": "《参考书8》",
       "contributors": ["贡献者8"],
       "reviewers": ["审阅者8"],
-      "related_terms": ["相关词8"],
+      "related_terms": [],
       "coordinates": {"x": 0.8, "y": 0.2, "z": 0},
       "color": "#AAAAFF",
       "createdAt": "2024-02-01",
@@ -439,7 +461,10 @@
       "references": "《参考书9》",
       "contributors": ["贡献者9"],
       "reviewers": ["审阅者9"],
-      "related_terms": ["相关词9"],
+      "related_terms": [{
+              "id": "30",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.9, "y": 0.6, "z": 0},
       "color": "#FFAAFF",
       "createdAt": "2024-02-01",
@@ -459,7 +484,7 @@
       "references": "《参考书10》",
       "contributors": ["贡献者10"],
       "reviewers": ["审阅者10"],
-      "related_terms": ["相关词10"],
+      "related_terms": [],
       "coordinates": {"x": 0.15, "y": 0.65, "z": 0},
       "color": "#AAFFFF",
       "createdAt": "2024-02-01",
@@ -479,7 +504,7 @@
       "references": "《参考书11》",
       "contributors": ["贡献者11"],
       "reviewers": ["审阅者11"],
-      "related_terms": ["相关词11"],
+      "related_terms": [],
       "coordinates": {"x": 0.65, "y": 0.35, "z": 0},
       "color": "#FFA500",
       "createdAt": "2024-02-01",
@@ -499,7 +524,7 @@
       "references": "《参考书12》",
       "contributors": ["贡献者12"],
       "reviewers": ["审阅者12"],
-      "related_terms": ["相关词12"],
+      "related_terms": [],
       "coordinates": {"x": 0.35, "y": 0.95, "z": 0},
       "color": "#800080",
       "createdAt": "2024-02-01",
@@ -519,7 +544,10 @@
       "references": "《参考书13》",
       "contributors": ["贡献者13"],
       "reviewers": ["审阅者13"],
-      "related_terms": ["相关词13"],
+      "related_terms": [{
+              "id": "1",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.95, "y": 0.55, "z": 0},
       "color": "#008000",
       "createdAt": "2024-02-01",
@@ -539,7 +567,10 @@
       "references": "《参考书14》",
       "contributors": ["贡献者14"],
       "reviewers": ["审阅者14"],
-      "related_terms": ["相关词14"],
+      "related_terms": [{
+              "id": "14",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.55, "y": 0.35, "z": 0},
       "color": "#000080",
       "createdAt": "2024-02-01",
@@ -559,7 +590,10 @@
       "references": "《参考书15》",
       "contributors": ["贡献者15"],
       "reviewers": ["审阅者15"],
-      "related_terms": ["相关词15"],
+      "related_terms": [{
+              "id": "20",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.35, "y": 0.75, "z": 0},
       "color": "#808000",
       "createdAt": "2024-02-01",
@@ -579,7 +613,10 @@
       "references": "《参考书16》",
       "contributors": ["贡献者16"],
       "reviewers": ["审阅者16"],
-      "related_terms": ["相关词16"],
+      "related_terms": [{
+              "id": "27",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.75, "y": 0.25, "z": 0},
       "color": "#800000",
       "createdAt": "2024-02-01",
@@ -599,7 +636,21 @@
       "references": "《参考书17》",
       "contributors": ["贡献者17"],
       "reviewers": ["审阅者17"],
-      "related_terms": ["相关词17"],
+      "related_terms": [
+          {
+              "id": "17",
+              "relation": "近义词"
+          },
+          {
+              "id": "2",
+              "relation": "反义词"
+          },
+          {
+              "id": "9",
+              "relation": "同类概念"
+          }
+      ]
+      ,
       "coordinates": {"x": 0.85, "y": 0.15, "z": 0},
       "color": "#008080",
       "createdAt": "2024-02-01",
@@ -619,7 +670,16 @@
       "references": "《参考书18》",
       "contributors": ["贡献者18"],
       "reviewers": ["审阅者18"],
-      "related_terms": ["相关词18"],
+      "related_terms": [
+          {
+              "id": "17",
+              "relation": "近义词"
+          },
+          {
+              "id": "12",
+              "relation": "反义词"
+          }
+      ]      ,
       "coordinates": {"x": 0.95, "y": 0.25, "z": 0},
       "color": "#C0C0C0",
       "createdAt": "2024-02-01",
@@ -639,7 +699,10 @@
       "references": "《参考书19》",
       "contributors": ["贡献者19"],
       "reviewers": ["审阅者19"],
-      "related_terms": ["相关词19"],
+      "related_terms": [{
+              "id": "7",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.05, "y": 0.35, "z": 0},
       "color": "#FFD700",
       "createdAt": "2024-02-01",
@@ -659,7 +722,10 @@
       "references": "《参考书20》",
       "contributors": ["贡献者20"],
       "reviewers": ["审阅者20"],
-      "related_terms": ["相关词20"],
+      "related_terms": [{
+              "id": "19",
+              "relation": "近义词"
+          }],
       "coordinates": {"x": 0.15, "y": 0.45, "z": 0},
       "color": "#FA8072",
       "createdAt": "2024-02-01",

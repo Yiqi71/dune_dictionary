@@ -58,6 +58,71 @@ export function zoomToWord(id) {
     updateWordFocus();
 }
 
+function getCenterPosition(element) {
+    const rect = element.getBoundingClientRect();
+    return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+    };
+}
+
+
+// 画线svg
+function drawLine(id1, id2, relation) {
+    const svg = document.getElementById('connection-lines');
+    svg.innerHTML = ''; 
+    const node1 = document.getElementById(id1);
+    const node2 = document.getElementById(id2);
+    if (!node1 || !node2) return;
+
+    const pos1 = getCenterPosition(node1);
+    const pos2 = getCenterPosition(node2);
+
+    // 创建一条线
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+    // 设置坐标
+    line.setAttribute('x1', pos1.x);
+    line.setAttribute('y1', pos1.y);
+    line.setAttribute('x2', pos2.x);
+    line.setAttribute('y2', pos2.y);
+
+    // 根据关系类型设置样式
+    switch (relation) {
+        case '近义词':
+            line.setAttribute('stroke', 'green');
+            line.setAttribute('stroke-dasharray', '5,5'); // 虚线
+            break;
+        case '反义词':
+            line.setAttribute('stroke', 'red');
+            line.setAttribute('stroke-width', '2');
+            break;
+        case '同类概念':
+            line.setAttribute('stroke', 'blue');
+            line.setAttribute('stroke-width', '1.5');
+            break;
+        default:
+            line.setAttribute('stroke', 'gray');
+    }
+
+    line.setAttribute('pointer-events', 'visibleStroke'); // 允许线接收鼠标事件
+
+    // 添加hover事件 显示对方词语（示例，实际根据需求写）
+    line.addEventListener('mouseenter', () => {
+        // 这里你可以显示tooltip 或者高亮词节点
+        console.log(`连接词：${id1} ⇔ ${id2} 关系：${relation}`);
+    });
+    line.addEventListener('mouseleave', () => {
+        // 隐藏tooltip
+    });
+    line.addEventListener('click', () => {
+        // 点击跳转，比如跳转到id2
+        zoomToWord(id2);
+    });
+
+    svg.appendChild(line);
+}
+
 
 // 更新单词聚焦状态 - 基于视图中心
 function updateWordFocus() {
@@ -105,7 +170,14 @@ function updateWordFocus() {
         if (closestWord) {
             closestWord.classList.add('focused');
             focusedWord = closestWord;
-            state.focusedNodeId = focusedWord.id;
+            state.focusedNodeId = closestWord.id;
+
+            const thisWord = window.allWords.find(w => w.id == state.focusedNodeId);
+            let relations = thisWord.related_terms;
+            relations.forEach(a => {
+                drawLine(state.focusedNodeId, a.id, a.relation);
+                console.log("1");
+            });
 
             hideNearbyNodes(closestWord);
 

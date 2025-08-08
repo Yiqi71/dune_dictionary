@@ -458,3 +458,18 @@ body {
 #universe-view:active {
     cursor: grabbing;
 }
+
+
+
+#connection-lines {
+    position: fixed;  /* 或 absolute */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* 让svg自己不拦截事件，但线条可以拦截 */
+    z-index: 1000; /* 保证在节点之上 */
+}
+#connection-lines line {
+    pointer-events: stroke; /* 让线条能响应鼠标事件 */
+}
