@@ -7,6 +7,15 @@ import {
     draw,
     updateWordNodeTransforms
 } from "./uni-canvas.js";
+
+import {
+    showFloatingPanel
+} from "./detail.js"
+
+
+window.allWords = [];
+
+
 let panX = state.panX,
     panY = state.panY;
 let currentScale = state.currentScale;
@@ -21,6 +30,112 @@ function updateState() {
     state.panY = panY;
 }
 
+export function zoomToWord(id) {
+    const node = document.getElementById(id);
+    const rect = node.getBoundingClientRect();
+
+    const oldScale = state.currentScale;
+    const newScale = 4;
+
+    // let x = node.dataset.x * state.baseGridSize * 36 * oldScale + state.panX;
+    // let y = node.dataset.y * state.baseGridSize * 36 * oldScale + state.panY;
+
+    let x = rect.left + rect.width / 2;
+    let y = rect.top + rect.height / 2
+
+    // 屏幕中心
+    const viewportCenterX = window.innerWidth / 2;
+    const viewportCenterY = window.innerHeight / 2;
+
+    // 更新缩放中心逻辑（保持点击点在中心）
+    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
+    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
+
+    state.currentScale = newScale;
+
+    draw();
+    updateWordNodeTransforms();
+    updateWordFocus();
+}
+
+
+// 更新单词聚焦状态 - 基于视图中心
+function updateWordFocus() {
+    // 清除之前聚焦的单词
+    if (focusedWord) {
+        focusedWord.classList.remove('focused');
+        focusedWord = null;
+        state.focusedNodeId = null;
+        restoreAllNodes();
+    }
+
+    // 获取视图中心坐标
+    const viewportCenter = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+    };
+
+    // 如果缩放足够大（达到或超过阈值）
+    if (state.currentScale >= scaleThreshold) {
+        // 找出距离视图中心最近的单词
+        let closestWord = null;
+        let minDistance = Infinity;
+
+        document.querySelectorAll('.word-node').forEach(node => {
+            const rect = node.getBoundingClientRect();
+            const nodeCenter = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+
+            // 计算距离
+            const distance = Math.sqrt(
+                Math.pow(nodeCenter.x - viewportCenter.x, 2) +
+                Math.pow(nodeCenter.y - viewportCenter.y, 2)
+            );
+
+            // 更新最近单词
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestWord = node;
+            }
+        });
+
+        // 聚焦最近的单词
+        if (closestWord) {
+            closestWord.classList.add('focused');
+            focusedWord = closestWord;
+            state.focusedNodeId = focusedWord.id;
+
+            hideNearbyNodes(closestWord);
+
+            // // 自动平移到视图中心
+            // const nodeRect = closestWord.getBoundingClientRect();
+            // const nodeCenterX = nodeRect.left + nodeRect.width / 2;
+            // const nodeCenterY = nodeRect.top + nodeRect.height / 2;
+            // const viewportCenterX = window.innerWidth / 2;
+            // const viewportCenterY = window.innerHeight / 2;
+
+            // panX += (viewportCenterX - nodeCenterX) / currentScale;
+            // panY += (viewportCenterY - nodeCenterY) / currentScale;
+
+            // updateTransform();
+        }
+    }
+}
+
+function hideNearbyNodes(focusedNode) {
+    document.querySelectorAll('.word-node').forEach(node => {
+        if (node === focusedNode) return;
+        node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
+    });
+}
+
+function restoreAllNodes() {
+    document.querySelectorAll('.word-node').forEach(node => {
+        node.style.opacity = '1';
+    });
+}
 
 // 渲染函数
 function renderWordUniverse(wordsData) {
@@ -127,6 +242,7 @@ function renderWordUniverse(wordsData) {
         node.dataset.x = word.coordinates.x;
         node.dataset.y = word.coordinates.y;
 
+        node.id = word.id;
 
         node.addEventListener('wheel', function (e) {
             e.stopPropagation(); // 不让滚轮事件向上传播
@@ -147,7 +263,8 @@ function renderWordUniverse(wordsData) {
                 if (node.classList.contains('focused')) {
                     showFloatingPanel(word, node);
                 } else {
-                    zoomToWord(e.clientX, e.clientY);
+                    // zoomToWord(e.clientX, e.clientY);
+                    zoomToWord(node.id);
                 }
             }
         });
@@ -159,24 +276,26 @@ function renderWordUniverse(wordsData) {
 
 
     // 缩放到指定单词的函数
-function zoomToWord(x, y) {
-    const oldScale = state.currentScale;
-    const newScale = 4;
+    // function zoomToWord(x, y) {
+    //     const oldScale = state.currentScale;
+    //     const newScale = 4;
 
-    // 屏幕中心
-    const viewportCenterX = window.innerWidth / 2;
-    const viewportCenterY = window.innerHeight / 2;
+    //     // 屏幕中心
+    //     const viewportCenterX = window.innerWidth / 2;
+    //     const viewportCenterY = window.innerHeight / 2;
 
-    // 更新缩放中心逻辑（保持点击点在中心）
-    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
-    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
+    //     // 更新缩放中心逻辑（保持点击点在中心）
+    //     state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
+    //     state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
 
-    state.currentScale = newScale;
+    //     state.currentScale = newScale;
 
-    draw();
-    updateWordNodeTransforms();
-    updateWordFocus();
-}
+    //     draw();
+    //     updateWordNodeTransforms();
+    //     updateWordFocus();
+    // }
+
+
 
 
     // 滚轮缩放控制
@@ -195,83 +314,9 @@ function zoomToWord(x, y) {
 
 
 
-    function hideNearbyNodes(focusedNode) {
-        document.querySelectorAll('.word-node').forEach(node => {
-            if (node === focusedNode) return;
-            node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
-        });
-    }
-
-    function restoreAllNodes() {
-        document.querySelectorAll('.word-node').forEach(node => {
-            node.style.opacity = '1';
-        });
-    }
 
 
 
-    // 更新单词聚焦状态 - 基于视图中心
-    function updateWordFocus() {
-        // 清除之前聚焦的单词
-        if (focusedWord) {
-            focusedWord.classList.remove('focused');
-            focusedWord = null;
-            restoreAllNodes();
-        }
-
-        // 获取视图中心坐标
-        const viewportCenter = {
-            x: window.innerWidth / 2,
-            y: window.innerHeight / 2
-        };
-
-        // 如果缩放足够大（达到或超过阈值）
-        if (state.currentScale >= scaleThreshold) {
-            // 找出距离视图中心最近的单词
-            let closestWord = null;
-            let minDistance = Infinity;
-
-            document.querySelectorAll('.word-node').forEach(node => {
-                const rect = node.getBoundingClientRect();
-                const nodeCenter = {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2
-                };
-
-                // 计算距离
-                const distance = Math.sqrt(
-                    Math.pow(nodeCenter.x - viewportCenter.x, 2) +
-                    Math.pow(nodeCenter.y - viewportCenter.y, 2)
-                );
-
-                // 更新最近单词
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestWord = node;
-                }
-            });
-
-            // 聚焦最近的单词
-            if (closestWord) {
-                closestWord.classList.add('focused');
-                focusedWord = closestWord;
-
-                hideNearbyNodes(closestWord);
-
-                // // 自动平移到视图中心
-                // const nodeRect = closestWord.getBoundingClientRect();
-                // const nodeCenterX = nodeRect.left + nodeRect.width / 2;
-                // const nodeCenterY = nodeRect.top + nodeRect.height / 2;
-                // const viewportCenterX = window.innerWidth / 2;
-                // const viewportCenterY = window.innerHeight / 2;
-
-                // panX += (viewportCenterX - nodeCenterX) / currentScale;
-                // panY += (viewportCenterY - nodeCenterY) / currentScale;
-
-                // updateTransform();
-            }
-        }
-    }
 }
 
 
@@ -285,6 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
         })
@@ -301,6 +347,9 @@ document.addEventListener('keydown', (e) => {
         console.log('state.panX:', state.panX);
         console.log('state.panY:', state.panY);
         console.log('state.currentScale:', state.currentScale);
+    }
+    if (e.key.toLowerCase() === 'c') {
+        console.log('state.focusedNodeId:', state.focusedNodeId);
     }
 });
 

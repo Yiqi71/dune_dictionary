@@ -28,11 +28,14 @@ let dragStartY = 0;
 // 地理常量
 const lonStep = 10; // 经度步长
 const latStep = 10; // 纬度步长
-let baseGridSize = 100; // 初始值，将会被动态计算
 
 function updateGridSizeToFitHeight() {
-    const latCount = 180 / latStep;
-    baseGridSize = window.innerHeight / latCount;
+    if (window.innerHeight * 2 < window.innerWidth) {
+        state.baseGridSize = window.innerWidth / 36;
+    } else {
+        const latCount = 180 / latStep;
+        state.baseGridSize = window.innerHeight / latCount;
+    }
 }
 
 // 更新 word-nodes 的位置
@@ -41,7 +44,7 @@ export function updateWordNodeTransforms() {
     const offsetY = state.panY;
     const scale = state.currentScale;
 
-    const gridSize = baseGridSize * scale;
+    const gridSize = state.baseGridSize * scale;
 
     const lonCount = 360 / lonStep;
     const latCount = 180 / latStep;
@@ -145,7 +148,7 @@ export function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const gridSize = baseGridSize * scale;
+    const gridSize = state.baseGridSize * scale;
 
     // 经度和纬度格子数
     const lonCount = 360 / lonStep;
