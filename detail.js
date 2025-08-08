@@ -11,7 +11,7 @@ let currentFloatingPanel = null;
 let isPanelVisible = false;
 
 function filterProposer() {
-    const focusedWord = allWords.find(w => w.id == state.focusedNodeId);
+    const focusedWord = window.allWords.find(w => w.id == state.focusedNodeId);
 
     // 先渲染 proposer 相关的词
     const relatedContainer = document.getElementById('related-words');
@@ -28,10 +28,12 @@ function filterProposer() {
         link.style.display = 'block';
 
         // 点击跳转到这个单词
-        link.addEventListener('click', () => {
+        link.addEventListener('click', (e) => {
+            e.stopPropagation();
             const targetNodeId = link.id.replace('related-', '');
             console.log(targetNodeId);
             zoomToWord(targetNodeId); // 用你现成的 zoomToWord(node) 逻辑
+            updateTabContent("book");
         });
 
         relatedContainer.appendChild(link);
@@ -42,18 +44,6 @@ function filterProposer() {
 export function showFloatingPanel(word, node) {
     const panel = document.getElementById('floating-panel');
     const contentScroll = panel.querySelector('.content-scroll');
-
-    // 更新内容
-    contentScroll.innerHTML = `
-            <h3>${word.name}</h3>
-            <p><strong>定义：</strong>${word.definition}</p>
-            <p><strong>引用：</strong>"${word.quote}"</p>
-            <p><strong>来源：</strong>${word.originator}</p>
-            <p>这里是关于"${word.name}"的详细信息。这个单词在沙丘宇宙中具有重要的意义。</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-        `;
 
     // 显示浮窗
     panel.classList.remove('hidden');
@@ -73,11 +63,52 @@ function hideFloatingPanel() {
     currentFloatingPanel = null;
 }
 
+// 更新浮窗标签内容
+function updateTabContent(tabType) {
+    const panel = document.getElementById('floating-panel');
+    const contentScroll = panel.querySelector('.content-scroll');
+
+    let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    if (!currentWord) return;
+
+    switch (tabType) {
+        case 'comment':
+            contentScroll.innerHTML = `<h3>图片</h3>
+                <img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
+            break;
+        case 'image':
+            contentScroll.innerHTML = `<h3>图片</h3>
+                <img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
+            break;
+        case 'book':
+            contentScroll.innerHTML = `<h3>相关著作</h3>
+                <p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p>
+                <p>提出国：${currentWord.proposing_country || '未知'}</p>
+                <p>提出时间：${currentWord.proposing_time || '未知'}</p>
+                <div id="related-words"></div>`;
+            filterProposer();
+            break;
+        case 'detail':
+            contentScroll.innerHTML = `<h3>详细释义</h3>
+                <p>${currentWord.extended_definition || '暂无详细释义'}</p>
+                <p style='color:#888;font-size:13px;margin-top:10px;'>参考资料：${currentWord.references || '暂无'}</p>`;
+            break;
+        case 'brief':
+            contentScroll.innerHTML = `<h3>简要释义</h3>
+                <p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
+            break;
+        default:
+            contentScroll.innerHTML = `<h3>简要释义</h3>
+                <p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
+    }
+}
+
 // 标签切换功能
 function initTabSwitching() {
     const panel = document.getElementById('floating-panel');
     const commentTab = panel.querySelector('.panel-tabs.comment-tabs .tab-item');
     const tabs = panel.querySelectorAll('.panel-bottom .tab-item');
+
     const contentScroll = panel.querySelector('.content-scroll');
     const commentScroll = panel.querySelector('.comment-scroll');
 
@@ -117,30 +148,6 @@ function initTabSwitching() {
         }
     }
 
-    function updateTabContent(tabType) {
-        if (!currentWord) return;
-        switch (tabType) {
-            case 'comment':
-                // 评论标签选中时，下半部分保留图片内容
-                contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
-                break;
-            case 'image':
-                contentScroll.innerHTML = `<h3>图片</h3><img src='${currentWord.diagrams[0]}' alt='${currentWord.term}' style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'><p>${currentWord.term}</p>`;
-                break;
-            case 'book':
-                contentScroll.innerHTML = `<h3>相关著作</h3><p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p><p>提出国：${currentWord.proposing_country || '未知'}</p><p>提出时间：${currentWord.proposing_time || '未知'}</p><div id="related-words"></div>`;
-                break;
-            case 'detail':
-                contentScroll.innerHTML = `<h3>详细释义</h3><p>${currentWord.extended_definition || '暂无详细释义'}</p><p style='color:#888;font-size:13px;margin-top:10px;'>参考资料：${currentWord.references || '暂无'}</p>`;
-                break;
-            case 'brief':
-                contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
-                break;
-            default:
-                contentScroll.innerHTML = `<h3>简要释义</h3><p>${currentWord.brief_definition || '暂无简要释义'}</p>`;
-        }
-        filterProposer();
-    }
 
     // 滚轮切换标签（包含评论标签）
     contentScroll.addEventListener('wheel', (e) => {
