@@ -2,6 +2,9 @@ import {
     state
 } from "./state.js";
 
+import {
+    updateRelations
+} from "./main.js"
 
 // window.addEventListener("DOMContentLoaded", () => {
 // 所有画布代码放在这里
@@ -104,6 +107,7 @@ canvas.addEventListener("mousemove", (e) => {
         // updateViewTransform();
         draw();
         updateWordNodeTransforms();
+        updateRelations();
     }
 });
 

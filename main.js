@@ -56,6 +56,7 @@ export function zoomToWord(id) {
     draw();
     updateWordNodeTransforms();
     updateWordFocus();
+    updateRelations();
 }
 
 function getCenterPosition(element) {
@@ -70,59 +71,101 @@ function getCenterPosition(element) {
 // 画线svg
 function drawLine(id1, id2, relation) {
     const svg = document.getElementById('connection-lines');
-    svg.innerHTML = ''; 
+    svg.innerHTML = ''; // 清空原线
     const node1 = document.getElementById(id1);
     const node2 = document.getElementById(id2);
     if (!node1 || !node2) return;
 
+    const word1 = window.allWords.find(w => w.id == id1);
+    const word2 = window.allWords.find(w => w.id == id2);
+
+
     const pos1 = getCenterPosition(node1);
     const pos2 = getCenterPosition(node2);
 
-    // 创建一条线
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    // ===== 1. 视觉线 =====
+    const visualLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    visualLine.setAttribute('x1', pos1.x);
+    visualLine.setAttribute('y1', pos1.y);
+    visualLine.setAttribute('x2', pos2.x);
+    visualLine.setAttribute('y2', pos2.y);
 
-    // 设置坐标
-    line.setAttribute('x1', pos1.x);
-    line.setAttribute('y1', pos1.y);
-    line.setAttribute('x2', pos2.x);
-    line.setAttribute('y2', pos2.y);
-
-    // 根据关系类型设置样式
     switch (relation) {
         case '近义词':
-            line.setAttribute('stroke', 'green');
-            line.setAttribute('stroke-dasharray', '5,5'); // 虚线
+            visualLine.setAttribute('stroke', 'green');
+            visualLine.setAttribute('stroke-dasharray', '5,5');
             break;
         case '反义词':
-            line.setAttribute('stroke', 'red');
-            line.setAttribute('stroke-width', '2');
+            visualLine.setAttribute('stroke', 'red');
+            visualLine.setAttribute('stroke-width', '2');
             break;
         case '同类概念':
-            line.setAttribute('stroke', 'blue');
-            line.setAttribute('stroke-width', '1.5');
+            visualLine.setAttribute('stroke', 'blue');
+            visualLine.setAttribute('stroke-width', '1.5');
             break;
         default:
-            line.setAttribute('stroke', 'gray');
+            visualLine.setAttribute('stroke', 'gray');
     }
 
-    line.setAttribute('pointer-events', 'visibleStroke'); // 允许线接收鼠标事件
+    // ===== 2. 点击/hover hitbox =====
+    const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    hitbox.setAttribute('x1', pos1.x);
+    hitbox.setAttribute('y1', pos1.y);
+    hitbox.setAttribute('x2', pos2.x);
+    hitbox.setAttribute('y2', pos2.y);
+    hitbox.setAttribute('stroke', 'transparent'); // 透明不遮挡视觉
+    hitbox.setAttribute('stroke-width', '10'); // 大点击范围
+    hitbox.setAttribute('pointer-events', 'stroke'); // 只在stroke区域触发事件
 
-    // 添加hover事件 显示对方词语（示例，实际根据需求写）
-    line.addEventListener('mouseenter', () => {
-        // 这里你可以显示tooltip 或者高亮词节点
-        console.log(`连接词：${id1} ⇔ ${id2} 关系：${relation}`);
+    // 鼠标放上去变小手
+    hitbox.style.cursor = 'crosshair';
+
+    // 鼠标跟随提示
+    let tooltipDiv = document.getElementById("tooltipDiv");
+
+    hitbox.addEventListener('mouseenter', (e) => {
+        // 创建 tooltip 元素
+        tooltipDiv.textContent = `连接词：${word1.term} ⇔ ${word2.term} 关系：${relation}`;
+        tooltipDiv.style.position = 'fixed';
+        tooltipDiv.style.background = 'rgba(0, 0, 0, 0.75)';
+        tooltipDiv.style.color = '#fff';
+        tooltipDiv.style.padding = '4px 8px';
+        tooltipDiv.style.borderRadius = '4px';
+        tooltipDiv.style.fontSize = '12px';
+        tooltipDiv.style.pointerEvents = 'none';
+        tooltipDiv.style.zIndex = '9999';
+
+        tooltipDiv.style.opacity = "1";
+
+        // 初始化位置
+        tooltipDiv.style.left = (e.clientX + 12) + 'px';
+        tooltipDiv.style.top = (e.clientY + 12) + 'px';
     });
-    line.addEventListener('mouseleave', () => {
-        // 隐藏tooltip
+
+    // 鼠标移动时更新 tooltip 位置
+    hitbox.addEventListener('mousemove', (e) => {
+        if (tooltipDiv) {
+            tooltipDiv.style.left = (e.clientX + 12) + 'px';
+            tooltipDiv.style.top = (e.clientY + 12) + 'px';
+        }
     });
-    line.addEventListener('click', () => {
-        // 点击跳转，比如跳转到id2
+
+    hitbox.addEventListener('mouseleave', () => {
+        if (tooltipDiv) {
+            tooltipDiv.style.opacity = '0';
+        }
+    });
+
+    hitbox.addEventListener('click', () => {
         zoomToWord(id2);
+        tooltipDiv.style.opacity = '0';
+
     });
 
-    svg.appendChild(line);
+    // 保证 hitbox 在上面，视觉线在下面
+    svg.appendChild(visualLine);
+    svg.appendChild(hitbox);
 }
-
 
 // 更新单词聚焦状态 - 基于视图中心
 function updateWordFocus() {
@@ -172,12 +215,7 @@ function updateWordFocus() {
             focusedWord = closestWord;
             state.focusedNodeId = closestWord.id;
 
-            const thisWord = window.allWords.find(w => w.id == state.focusedNodeId);
-            let relations = thisWord.related_terms;
-            relations.forEach(a => {
-                drawLine(state.focusedNodeId, a.id, a.relation);
-                console.log("1");
-            });
+            updateRelations();
 
             hideNearbyNodes(closestWord);
 
@@ -194,6 +232,19 @@ function updateWordFocus() {
             // updateTransform();
         }
     }
+}
+
+export function updateRelations() {
+    const svg = document.getElementById('connection-lines');
+    svg.innerHTML = '';
+
+    if (!state.focusedNodeId) return;
+
+    const thisWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    let relations = thisWord.related_terms;
+    relations.forEach(a => {
+        drawLine(state.focusedNodeId, a.id, a.relation);
+    });
 }
 
 function hideNearbyNodes(focusedNode) {
@@ -343,6 +394,7 @@ function renderWordUniverse(wordsData) {
 
         wordNodesContainer.appendChild(node);
 
+        updateWordNodeTransforms();
         console.log('node rendered');
     });
 
@@ -429,5 +481,4 @@ document.addEventListener('keydown', (e) => {
 // // menu
 // let duneIcon = document.getElementById("duneIcon");
 // let suffleIcon = document.getElementById("suffleIcon");
-// let nextIcon = document.getElementById("nextIcon");
 // let searchIcon = document.getElementById("searchIcon");
