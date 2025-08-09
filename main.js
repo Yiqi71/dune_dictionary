@@ -277,9 +277,23 @@ function renderWordUniverse(wordsData) {
         const node = document.createElement('div');
         node.className = 'word-node';
 
-        // 基础信息
+        // 随机决定显示图片还是文字
+    if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
+        node.dataset.nodeFormat = "img";
+        // 图片节点
+        const img = document.createElement('img');
+        img.src = word.diagrams[0];
+        img.alt = word.term;
+        img.style.width = '60px';
+        img.style.height = '60px';
+        img.style.objectFit = 'contain';
+        node.appendChild(img);
+    } else {
+        node.dataset.nodeFormat = "word";
+        // 文字节点
         node.textContent = word.term;
         node.style.backgroundColor = word.color;
+    }
 
         // 详细信息（zoom in后显示）
         const detailDiv = document.createElement('div');
@@ -399,31 +413,6 @@ function renderWordUniverse(wordsData) {
     });
 
 
-    // 缩放到指定单词的函数
-    // function zoomToWord(x, y) {
-    //     const oldScale = state.currentScale;
-    //     const newScale = 4;
-
-    //     // 屏幕中心
-    //     const viewportCenterX = window.innerWidth / 2;
-    //     const viewportCenterY = window.innerHeight / 2;
-
-    //     // 更新缩放中心逻辑（保持点击点在中心）
-    //     state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
-    //     state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
-
-    //     state.currentScale = newScale;
-
-    //     draw();
-    //     updateWordNodeTransforms();
-    //     updateWordFocus();
-    // }
-
-
-
-
-    // 滚轮缩放控制
-
     // drag
     let isDragging = false;
 
@@ -435,11 +424,6 @@ function renderWordUniverse(wordsData) {
     canvas.addEventListener('mouseup', () => {
         updateWordFocus(); // 拖动结束后更新
     });
-
-
-
-
-
 
 }
 

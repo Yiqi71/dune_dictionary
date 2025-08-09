@@ -138,6 +138,7 @@ canvas.addEventListener("wheel", (e) => {
 
     draw();
     updateWordNodeTransforms();
+    updateRelations();
 }, {
     passive: false
 });

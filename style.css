@@ -473,3 +473,11 @@ body {
 #connection-lines line {
     pointer-events: stroke; /* 让线条能响应鼠标事件 */
 }
+
+
+img {
+  user-select: none;       /* 禁止文字/图片被选中 */
+  -webkit-user-drag: none; /* 禁止图片被拖动（Chrome/Safari） */
+  -moz-user-select: none;  /* Firefox 禁止选中 */
+  -ms-user-select: none;   /* IE/Edge 旧版 */
+}
