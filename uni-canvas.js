@@ -237,7 +237,19 @@ function drawSpecialLatLines(offsetX, offsetY, gridSize, latStep, latCount, tota
             color: "#555",
             dash: [5, 5],
             lineWidth: 1
-        } // 南极圈，虚线
+        }, // 南极圈，虚线
+{
+            lat: 90,
+            color: "#555",
+            dash: [],
+            lineWidth: 2
+        }, // 北90
+        {
+            lat: -90,
+            color: "#555",
+            dash: [],
+            lineWidth: 2
+        }
     ];
 
     latitudes.forEach(({
