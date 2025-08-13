@@ -15,24 +15,19 @@ import {
 
 window.allWords = [];
 
-
-let panX = state.panX,
-    panY = state.panY;
-let currentScale = state.currentScale;
 let focusedWord = null;
 const scaleThreshold = 4; // 触发详细信息显示的缩放阈值
 
-let nodesColor = [" #F0B549","#E1D37A","#FAD67B", "#D58020"];
+let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
 export function zoomToWord(id) {
     const node = document.getElementById(id);
+    if (!node) return;
+
     const rect = node.getBoundingClientRect();
 
     const oldScale = state.currentScale;
     const newScale = 4;
-
-    // let x = node.dataset.x * state.baseGridSize * 36 * oldScale + state.panX;
-    // let y = node.dataset.y * state.baseGridSize * 36 * oldScale + state.panY;
 
     let x = rect.left + rect.width / 2;
     let y = rect.top + rect.height / 2
@@ -49,7 +44,6 @@ export function zoomToWord(id) {
 
     draw();
     updateWordNodeTransforms();
-    updateWordFocus();
     updateRelations();
 }
 
@@ -152,8 +146,9 @@ function drawLine(id1, id2, relation) {
 
     hitbox.addEventListener('click', () => {
         zoomToWord(id2);
-        tooltipDiv.style.opacity = '0';
 
+        updateWordFocus();
+        tooltipDiv.style.opacity = '0';
     });
 
     // 保证 hitbox 在上面，视觉线在下面
@@ -163,6 +158,8 @@ function drawLine(id1, id2, relation) {
 
 // 更新单词聚焦状态 - 基于视图中心
 function updateWordFocus() {
+    const overlay = document.getElementById("overlay");
+    const detailDiv = document.getElementById("word-details");
     // 清除之前聚焦的单词
     if (focusedWord) {
         focusedWord.classList.remove('focused');
@@ -170,6 +167,9 @@ function updateWordFocus() {
         state.focusedNodeId = null;
         restoreAllNodes();
     }
+
+    overlay.classList.add("hidden");
+    detailDiv.classList.add("hidden");
 
     // 获取视图中心坐标
     const viewportCenter = {
@@ -181,7 +181,7 @@ function updateWordFocus() {
     if (state.currentScale >= scaleThreshold) {
         // 找出距离视图中心最近的单词
         let closestWord = null;
-        let minDistance = Infinity;
+        let minDistance = window.innerHeight/4;
 
         document.querySelectorAll('.word-node').forEach(node => {
             const rect = node.getBoundingClientRect();
@@ -209,25 +209,75 @@ function updateWordFocus() {
             focusedWord = closestWord;
             state.focusedNodeId = closestWord.id;
 
+            overlay.classList.remove("hidden");
             updateRelations();
-
             hideNearbyNodes(closestWord);
 
-            // // 自动平移到视图中心
-            // const nodeRect = closestWord.getBoundingClientRect();
-            // const nodeCenterX = nodeRect.left + nodeRect.width / 2;
-            // const nodeCenterY = nodeRect.top + nodeRect.height / 2;
-            // const viewportCenterX = window.innerWidth / 2;
-            // const viewportCenterY = window.innerHeight / 2;
-
-            // panX += (viewportCenterX - nodeCenterX) / currentScale;
-            // panY += (viewportCenterY - nodeCenterY) / currentScale;
-
-            // updateTransform();
+            // 自动吸附到屏幕中心
+            zoomToWord(focusedWord.id);
+            updateWordDetails();
         }
     }
 }
 
+function updateWordDetails() {
+    if (!state.focusedNodeId) return;
+    const word = window.allWords.find(w => w.id == state.focusedNodeId);
+    if (!word) return;
+
+    // 显示details
+    const detailDiv = document.getElementById("word-details");
+    detailDiv.classList.remove('hidden');
+
+    // term
+    const termTitle = document.querySelector('#term .detail-title');
+    const termMainEl = document.querySelector('#term #term-main');
+    const originalTermEl = document.querySelector('#term #term-ori');
+    termTitle.textContent = String(word.id).padStart(4, '0');
+    termMainEl.textContent = word.term || '未知单词';
+    originalTermEl.textContent = word.termOri || '无';
+
+    // image
+    const imageTitle = document.querySelector('#image .detail-title');
+    const imageEl = document.querySelector('#image img');
+    imageTitle.textContent = '相关图片';
+    if (word.diagrams && word.diagrams.length > 0) {
+        imageEl.src = word.diagrams[0];
+        imageEl.alt = word.term;
+        imageEl.style.display = 'block';
+    } else {
+        imageEl.src = '';
+        imageEl.style.display = 'none';
+    }
+
+    // proposer
+    const proposerTitle = document.querySelector('#proposer .detail-title');
+    const proposerP = document.querySelector('#proposer p');
+    const proposerImg = document.querySelector('#proposer img');
+    proposerTitle.textContent = '提出人';
+    proposerP.textContent = word.proposer || '未知';
+    if (word.proposer_img) {
+        proposerImg.src = word.proposer_img;
+        proposerImg.alt = word.proposer || '';
+        proposerImg.style.display = 'block';
+    } else {
+        proposerImg.style.display = 'none';
+    }
+
+    // comment
+    const commentTitle = document.querySelector('#comment .detail-title');
+    const commentH3 = document.querySelector('#comment h3');
+    const commentP = document.querySelector('#comment p');
+    commentTitle.textContent = '相关评论';
+    if (word.commentAbs) {
+        word.commentAbs.forEach(c =>{
+            commentH3.textContent = `${c.content} `,
+            commentP.innerHTML = `--${c.author}`;
+    })} else {
+        commentH3.textContent = '暂无评论';
+        commentP.innerHTML = '';
+    }
+}
 export function updateRelations() {
     const svg = document.getElementById('connection-lines');
     svg.innerHTML = '';
@@ -244,7 +294,7 @@ export function updateRelations() {
 function hideNearbyNodes(focusedNode) {
     document.querySelectorAll('.word-node').forEach(node => {
         if (node === focusedNode) return;
-        node.style.opacity = '0.2'; // 或者 visibility: hidden / display: none
+        node.style.opacity = '0.5';
     });
 }
 
@@ -256,7 +306,6 @@ function restoreAllNodes() {
 
 // 渲染函数
 function renderWordUniverse(wordsData) {
-    const universeView = document.getElementById('universe-view');
     const wordNodesContainer = document.getElementById('word-nodes-container');
 
     // 清空容器（防止重复加载）
@@ -272,97 +321,24 @@ function renderWordUniverse(wordsData) {
         node.className = 'word-node';
 
         // 随机决定显示图片还是文字
-    // if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
-    //     node.dataset.nodeFormat = "img";
-    //     // 图片节点
-    //     const img = document.createElement('img');
-    //     img.src = word.diagrams[0];
-    //     img.alt = word.term;
-    //     img.style.width = '60px';
-    //     img.style.height = '60px';
-    //     img.style.objectFit = 'contain';
-    //     node.appendChild(img);
-    // } else {
+        // if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
+        //     node.dataset.nodeFormat = "img";
+        //     // 图片节点
+        //     const img = document.createElement('img');
+        //     img.src = word.diagrams[0];
+        //     img.alt = word.term;
+        //     img.style.width = '60px';
+        //     img.style.height = '60px';
+        //     img.style.objectFit = 'contain';
+        //     node.appendChild(img);
+        // } else {
         node.dataset.nodeFormat = "word";
         // 文字节点
         node.textContent = word.term;
         let colorRandom = Math.floor(Math.random() * 4);
         node.style.backgroundColor = nodesColor[colorRandom];
-    // }
+        // }
 
-        // 详细信息（zoom in后显示）
-        const detailDiv = document.createElement('div');
-        detailDiv.className = 'word-details';
-
-        // 创建随机布局的子元素
-        const elements = [{
-                tag: 'img',
-                content: '',
-                attrs: {
-                    src: word.diagrams[0],
-                    alt: word.term
-                }
-            },
-            {
-                tag: 'p',
-                content: word.brief_definition,
-                class: 'definition'
-            },
-            {
-                tag: 'p',
-                content: `"${word.extended_definition}"`,
-                class: 'quote'
-            },
-            {
-                tag: 'p',
-                content: `${word.proposer}`,
-                class: 'originator'
-            }
-        ];
-
-        // 生成不重叠的30度倍数角度位置
-        const usedAngles = new Set();
-
-        elements.forEach(item => {
-            const el = document.createElement(item.tag);
-            if (item.content) el.textContent = item.content;
-            if (item.attrs) Object.assign(el, item.attrs);
-            if (item.class) el.className = item.class;
-
-            // 在30度倍数中选择未使用的位置
-            const angleSteps = 6; // 6个位置
-            let randomStep;
-            let attempts = 0;
-
-            do {
-                randomStep = Math.floor(Math.random() * angleSteps); // 0-5
-                attempts++;
-            } while (usedAngles.has(randomStep) && attempts < 20);
-
-            usedAngles.add(randomStep);
-            const angle = (randomStep / angleSteps) * Math.PI * 2; // 转换为弧度
-            const distance = 2; // 距离单词固定为200px
-            const x = Math.cos(angle) * distance * 100;
-            const y = Math.sin(angle) * distance * 100;
-
-            Object.assign(el.style, {
-                position: 'absolute',
-                left: `0`,
-                top: `0`,
-                transform: ` translate(${x}%, ${y}%)`,
-                opacity: '0',
-                transition: 'all 0.5s ease-out'
-            });
-
-            // 延迟淡入
-            setTimeout(() => {
-                el.style.opacity = '1';
-            }, Math.random() * 300); // 随机延迟产生错落效果
-
-            detailDiv.appendChild(el);
-        });
-
-        node.appendChild(detailDiv);
 
         // 定位
         node.style.left = `${word.coordinates.x * 100}%`;
@@ -395,8 +371,8 @@ function renderWordUniverse(wordsData) {
                 if (node.classList.contains('focused')) {
                     showFloatingPanel(word, node);
                 } else {
-                    // zoomToWord(e.clientX, e.clientY);
                     zoomToWord(node.id);
+                    updateWordFocus();
                 }
             }
         });
@@ -412,7 +388,6 @@ function renderWordUniverse(wordsData) {
     let isDragging = false;
 
     let canvas = document.getElementById("universe-canvas");
-    let nodesView = document.getElementById("word-nodes-container");
     canvas.addEventListener('wheel', (e) => {
         updateWordFocus();
     });

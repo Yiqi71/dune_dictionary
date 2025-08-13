@@ -11,7 +11,7 @@ let currentFloatingPanel = null;
 let isPanelVisible = false;
 
 function filterProposer() {
-    const focusedWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    const focusedWord = window.allWords.find(w => w.id == state.focusedId);
 
     // 先渲染 proposer 相关的词
     const relatedContainer = document.getElementById('related-words');

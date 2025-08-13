@@ -86,6 +86,8 @@ canvas.addEventListener("mousedown", (e) => {
     isDragging = true;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
+    const detailDiv = document.getElementById("word-details");
+    detailDiv.classList.add("hidden");
 });
 
 canvas.addEventListener("mousemove", (e) => {
@@ -104,8 +106,14 @@ canvas.addEventListener("mousemove", (e) => {
     }
 });
 
-canvas.addEventListener("mouseup", () => isDragging = false);
-canvas.addEventListener("mouseleave", () => isDragging = false);
+canvas.addEventListener("mouseup", (e) => {
+    isDragging = false;
+    updateRelations();
+});
+canvas.addEventListener("mouseleave", (e) => {
+    isDragging = false;
+    updateRelations();
+});
 
 // 缩放事件监听
 canvas.addEventListener("wheel", (e) => {
@@ -161,7 +169,7 @@ export function draw() {
     ];
 
     offsetsToDraw.forEach(([ox, oy]) => {
-        drawGridAtOffset(ox, oy, gridWidth, gridHeight,lonCount, latCount);
+        drawGridAtOffset(ox, oy, gridWidth, gridHeight, lonCount, latCount);
         drawSpecialLatLines(ox, oy, gridHeight, totalWidth);
     });
 }
@@ -179,13 +187,32 @@ function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, lat
 
 function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth) {
     ctx.save();
-    const latitudes = [
-        { lat: 0, color: "#F8EDD0", dash: [], lineWidth: 2 },
-        { lat: 23.5, color: "#F8EDD0", dash: [5, 5], lineWidth: 1 },
-        { lat: -23.5, color: "#F8EDD0", dash: [5, 5], lineWidth: 1 }
+    const latitudes = [{
+            lat: 0,
+            color: "#F8EDD0",
+            dash: [],
+            lineWidth: 2
+        },
+        {
+            lat: 23.5,
+            color: "#F8EDD0",
+            dash: [5, 5],
+            lineWidth: 1
+        },
+        {
+            lat: -23.5,
+            color: "#F8EDD0",
+            dash: [5, 5],
+            lineWidth: 1
+        }
     ];
 
-    latitudes.forEach(({ lat, color, dash, lineWidth }) => {
+    latitudes.forEach(({
+        lat,
+        color,
+        dash,
+        lineWidth
+    }) => {
         const latIdx = (90 - lat) / 45;
         const y = latIdx * gridHeight + offsetY;
 

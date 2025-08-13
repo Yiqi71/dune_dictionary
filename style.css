@@ -1,22 +1,31 @@
+@import url("https://fontsapi.zeoseven.com/642/main/result.css");
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 body {
     margin: 0;
+    padding: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
     height: 100vh;
     background: #D1BA80;
+    color: #544011;
+    font-family: "Barlow Condensed", "ChillDIN";
+    transition: opacity 0.8s, transform 0.8s;
 }
 
-.view {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: opacity 0.8s, transform 0.8s;
-    opacity: 1;
+p {
+    font-size: 16px;
+    font-family: "ChillDINGothic";
 }
+
+h3 {
+    font-family: "ChillDINGothic";
+}
+
 
 .hidden {
     transition: opacity 0.8s, transform 0.8s;
-    opacity: 0;
+    opacity: 0 !important;
     pointer-events: none;
 }
 
@@ -31,9 +40,7 @@ body {
     align-items: center;
     perspective: 1000px;
     transform-origin: center center;
-    /* transition: transform 0.3s ease-out; */
     overflow: hidden;
-    /* 防止内容溢出 */
 }
 
 /* 新增关键样式 */
@@ -65,17 +72,6 @@ body {
     /* text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); */
 }
 
-.word-details {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-out;
-    pointer-events: none;
-}
-
 
 
 
@@ -88,81 +84,128 @@ body {
     pointer-events: auto;
 }
 
-.word-details>* {
-    font-size: 18px;
+.word-details {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    opacity: 0.8;
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none;
+    z-index: 9990;
+}
+
+.detail {
     position: absolute;
-    color: black;
-    padding: 5px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     transform: translate(-50%, -50%);
-    transition: transform 0.3s ease-out;
-    max-width: 300px;
-    white-space: normal;
+    border-radius: 5px;
+    overflow: hidden;
+
+    display: flex;
+    /* 启用 Flex 布局 */
+    flex-direction: column;
+    /* 垂直排列子元素 */
+    justify-content: space-between;
+    /* 第一个在上，最后一个在下 */
 }
 
-.word-details img {
-    max-width: 100px;
-    max-height: 80px;
-    object-fit: contain;
+.detail * {
+    margin: 10px;
 }
 
-.word-details .originator {
-    background-color: #f9f9f6;
-    /* 类纸张淡米色 */
-    border: 1px solid #ddd;
+.detail-title {
+    font-family: "ChillDINGothic";
+    font-weight: 575;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+    letter-spacing: 0;
+    gap: 6px;
+    /* 小圆和文字间距 */
+    position: relative;
+}
 
-    white-space: nowrap;
+.detail-title::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #544011;
     display: inline-block;
+}
+
+.detail img {
+    max-width: 280px;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 4px;
+    margin: 10px;
+    opacity: 0.7;
+    mix-blend-mode: darken;
+}
+
+#term {
+    width: 328px;
+    height: 213px;
+    top: 50vh;
+    left: 50vw;
+    background-color: #FAD67B;
+}
+
+#term #terms {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+#term h1 {
+    margin: 0;
+    font-family: "ChillDINGothic";
+    font-weight: 600;
+    font-size: 42px;
+    letter-spacing: -3%;
+}
+
+#image {
     width: auto;
+    height: auto;
+    top: 30vh;
+    left: 70vw;
+    background-color: #F0B549;
 }
 
-.word-details .quote {
-    background-color: #f9f9f6;
-    /* 类纸张淡米色 */
-    border: 1px solid #ddd;
-
-    width: 250px;
-    /* 固定宽度 */
-    height: calc(4.5em+10px);
-    /* 例如 3 行，每行 1.5em */
-    line-height: 1.5em;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    /* 最多显示 3 行 */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-
-    text-align: center;
-    /* 多行文本居中 */
-
-    /* 可选，让文字不贴边 */
-    box-sizing: border-box;
+#proposer {
+    width: 260px;
+    min-height: 160px;
+    top: 65vh;
+    left: 30vw;
+    background-color: #D58020;
 }
 
-.word-details .definition {
-    background-color: #f9f9f6;
-    /* 类纸张淡米色 */
-    border: 1px solid #ddd;
-
-    width: 250px;
-    /* 固定宽度 */
-    height: calc(4.5em+10px);
-    /* 例如 3 行，每行 1.5em */
-    line-height: 1.5em;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    /* 最多显示 3 行 */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    text-align: center;
-    /* 多行文本居中 */
-
-    box-sizing: border-box;
+#comment {
+    width: 400px;
+    height: 240px;
+    top: 70vh;
+    left: 60vw;
+    background-color: #E1D37A;
 }
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #947727;
+    opacity: 0.5;
+    transition: opacity 0.8s;
+    pointer-events: none;
+}
+
 
 
 #universe-canvas {
@@ -475,9 +518,7 @@ body {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    /* 让svg自己不拦截事件，但线条可以拦截 */
-    z-index: 1000;
-    /* 保证在节点之上 */
+    z-index: 90000;
 }
 
 #connection-lines line {
