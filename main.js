@@ -22,13 +22,7 @@ let currentScale = state.currentScale;
 let focusedWord = null;
 const scaleThreshold = 4; // 触发详细信息显示的缩放阈值
 
-
-
-function updateState() {
-    state.currentScale = currentScale;
-    state.panX = panX;
-    state.panY = panY;
-}
+let nodesColor = [" #F0B549","#E1D37A","#FAD67B", "#D58020"];
 
 export function zoomToWord(id) {
     const node = document.getElementById(id);
@@ -292,7 +286,8 @@ function renderWordUniverse(wordsData) {
         node.dataset.nodeFormat = "word";
         // 文字节点
         node.textContent = word.term;
-        node.style.backgroundColor = word.color;
+        let colorRandom = Math.floor(Math.random() * 4);
+        node.style.backgroundColor = nodesColor[colorRandom];
     }
 
         // 详细信息（zoom in后显示）

@@ -1,24 +1,18 @@
 import {
     state
 } from "./state.js";
-
 import {
     updateRelations
-} from "./main.js"
-
-// window.addEventListener("DOMContentLoaded", () => {
-// 所有画布代码放在这里
+} from "./main.js";
 
 const canvas = document.getElementById("universe-canvas");
 const ctx = canvas.getContext("2d");
-
 const wordNodesContainer = document.getElementById("word-nodes-container");
 
 // 初始化尺寸
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// 画布状态
 let offsetX = state.panX;
 let offsetY = state.panY;
 let scale = state.currentScale;
@@ -27,33 +21,42 @@ let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
 
-
-// 地理常量
-const lonStep = 10; // 经度步长
-const latStep = 10; // 纬度步长
+const lonStep = 15; // 经度步长
+const latStep = 90; // 纬度步长
 
 function updateGridSizeToFitHeight() {
+    state.baseWidth = window.innerWidth / 24;
+    state.baseHeight = window.innerHeight / 4;
     if (window.innerHeight * 2 < window.innerWidth) {
-        state.baseGridSize = window.innerWidth / 36;
+        state.baseGridSize = window.innerWidth / 24;
     } else {
-        const latCount = 180 / latStep;
+        const latCount = 4;
         state.baseGridSize = window.innerHeight / latCount;
     }
 }
 
+// 限制 Y 方向边界
+function clampOffsetY(offsetY, scale) {
+    const gridSize = state.baseHeight * scale;
+    const latCount = 4;
+    const totalHeight = gridSize * latCount;
+    const minY = -totalHeight + canvas.height; // 南极边缘
+    const maxY = 0; // 北极边缘
+    return Math.min(Math.max(offsetY, minY), maxY);
+}
+
 // 更新 word-nodes 的位置
 export function updateWordNodeTransforms() {
-    const offsetX = state.panX;
-    const offsetY = state.panY;
     const scale = state.currentScale;
 
-    const gridSize = state.baseGridSize * scale;
+    const gridWidth = state.baseWidth * scale;
+    const gridHeight = state.baseHeight * scale;
 
-    const lonCount = 360 / lonStep;
-    const latCount = 180 / latStep;
+    const lonCount = 24;
+    const latCount = 4;
 
-    const totalWidth = gridSize * lonCount;
-    const totalHeight = gridSize * latCount;
+    const totalWidth = gridWidth * lonCount;
+    const totalHeight = gridHeight * latCount;
 
     const nodes = document.querySelectorAll(".word-node");
 
@@ -61,22 +64,15 @@ export function updateWordNodeTransforms() {
         const xRatio = +node.dataset.x;
         const yRatio = +node.dataset.y;
 
-        // 逻辑坐标在地图上的位置
-        let baseX = xRatio * totalWidth;
-        let baseY = yRatio * totalHeight;
+        let baseX = xRatio * totalWidth + state.panX;
+        let baseY = yRatio * totalHeight + state.panY;
 
-        // 让它和视口中心对齐的 wrap：找最近一份拷贝
-        // 先加上偏移
-        baseX += offsetX;
-        baseY += offsetY;
-
-        // wrap 到中心那一份格子：取最近一格
+        // 水平方向 wrap
         const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-
-        // 找到最近整数倍的 totalWidth/Height 使其靠近中心
         const wrappedX = baseX + Math.round((centerX - baseX) / totalWidth) * totalWidth;
-        const wrappedY = baseY + Math.round((centerY - baseY) / totalHeight) * totalHeight;
+
+        // Y 不 wrap、不 clamp，直接用
+        const wrappedY = baseY;
 
         node.style.left = `0px`;
         node.style.top = `0px`;
@@ -85,7 +81,6 @@ export function updateWordNodeTransforms() {
         node.style.transformOrigin = "top left";
     });
 }
-
 
 // 拖拽事件监听
 canvas.addEventListener("mousedown", (e) => {
@@ -102,9 +97,8 @@ canvas.addEventListener("mousemove", (e) => {
         dragStartY = e.clientY;
 
         state.panX = offsetX;
-        state.panY = offsetY;
+        state.panY = clampOffsetY(offsetY, scale); // 加边界
 
-        // updateViewTransform();
         draw();
         updateWordNodeTransforms();
         updateRelations();
@@ -118,15 +112,13 @@ canvas.addEventListener("mouseleave", () => isDragging = false);
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
-    const zoomStep = 0.1; // 缩放步长更细
+    const zoomStep = 0.1;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
     const newScale = Math.min(4, Math.max(1, scale + delta));
 
-    // 缩放中心在鼠标指针位置
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    // 计算缩放前后，保持视觉中心不变
     offsetX = mouseX - (mouseX - offsetX) * (newScale / scale);
     offsetY = mouseY - (mouseY - offsetY) * (newScale / scale);
 
@@ -134,7 +126,7 @@ canvas.addEventListener("wheel", (e) => {
 
     state.currentScale = scale;
     state.panX = offsetX;
-    state.panY = offsetY;
+    state.panY = clampOffsetY(offsetY, scale); // 加边界
 
     draw();
     updateWordNodeTransforms();
@@ -143,112 +135,68 @@ canvas.addEventListener("wheel", (e) => {
     passive: false
 });
 
-
 // 主绘图函数
 export function draw() {
-    // 读取status
     offsetX = state.panX;
-    offsetY = state.panY;
+    offsetY = clampOffsetY(state.panY, state.currentScale); // 边界
     scale = state.currentScale;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const gridSize = state.baseGridSize * scale;
+    const gridWidth = state.baseWidth * scale;
+    const gridHeight = state.baseHeight * scale;
 
-    // 经度和纬度格子数
-    const lonCount = 360 / lonStep;
-    const latCount = 180 / latStep;
+    const lonCount = 24;
+    const latCount = 4;
 
-    // 整个格子的总宽高（逻辑地图大小）
-    const totalWidth = gridSize * lonCount;
-    const totalHeight = gridSize * latCount;
+    const totalWidth = gridWidth * lonCount;
+    const totalHeight = gridHeight * latCount;
 
-    // 因为offsetX和offsetY可能很大或很小，做取模运算让偏移在0~地图大小之间循环
+    // 水平方向循环，垂直方向固定
     const modOffsetX = ((offsetX % totalWidth) - totalWidth) % totalWidth;
-    const modOffsetY = ((offsetY % totalHeight) - totalHeight) % totalHeight;
 
-    // 要绘制的偏移组合（九宫格）
     const offsetsToDraw = [
-        [modOffsetX, modOffsetY], // 中间
-        [modOffsetX - totalWidth, modOffsetY], // 左边
-        [modOffsetX + totalWidth, modOffsetY], // 右边
-        [modOffsetX, modOffsetY - totalHeight], // 上边
-        [modOffsetX, modOffsetY + totalHeight], // 下边
-        [modOffsetX - totalWidth, modOffsetY - totalHeight], // 左上角
-        [modOffsetX + totalWidth, modOffsetY - totalHeight], // 右上角
-        [modOffsetX - totalWidth, modOffsetY + totalHeight], // 左下角
-        [modOffsetX + totalWidth, modOffsetY + totalHeight] // 右下角
+        [modOffsetX, offsetY],
+        [modOffsetX - totalWidth, offsetY],
+        [modOffsetX + totalWidth, offsetY]
     ];
 
-    // 每个位置都调用绘制格子
     offsetsToDraw.forEach(([ox, oy]) => {
-        drawGridAtOffset(ox, oy, gridSize, lonCount, latCount);
-        drawSpecialLatLines(ox, oy, gridSize, latStep, latCount, totalWidth, totalHeight);
+        drawGridAtOffset(ox, oy, gridWidth, gridHeight,lonCount, latCount);
+        drawSpecialLatLines(ox, oy, gridHeight, 10, latCount, totalWidth);
     });
 }
 
-// 传入偏移，绘制整个格子网格
-function drawGridAtOffset(offsetX, offsetY, gridSize, lonCount, latCount) {
+function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, latCount) {
     for (let lonIdx = 0; lonIdx <= lonCount; lonIdx++) {
         for (let latIdx = 0; latIdx <= latCount; latIdx++) {
-            // 计算当前格子左上角坐标
-            const x = lonIdx * gridSize + offsetX - gridSize; // -gridSize是因为画格线时格子右边界在 lonIdx+1 处
-            const y = latIdx * gridSize + offsetY - gridSize;
-
-            // 画格子或格线
-            // 这里简单画格子边框
-            ctx.strokeStyle = "#ccc";
-            ctx.strokeRect(x, y, gridSize, gridSize);
+            const x = lonIdx * gridWidth + offsetX - gridWidth;
+            const y = latIdx * gridHeight + offsetY - gridHeight;
+            ctx.strokeStyle = "#F8EDD0";
+            ctx.strokeRect(x, y, gridWidth, gridHeight);
         }
     }
 }
 
-
-// 绘制特殊线
-function drawSpecialLatLines(offsetX, offsetY, gridSize, latStep, latCount, totalWidth, totalHeight) {
+function drawSpecialLatLines(offsetX, offsetY, gridHeight, latStep, latCount, totalWidth) {
     ctx.save();
-
     const latitudes = [{
             lat: 0,
-            color: "#555",
+            color: "#F8EDD0",
             dash: [],
             lineWidth: 2
-        }, // 赤道，实线，加粗
+        },
         {
             lat: 23.5,
-            color: "#555",
+            color: "#F8EDD0",
             dash: [5, 5],
             lineWidth: 1
-        }, // 北回归线，虚线
+        },
         {
             lat: -23.5,
-            color: "#555",
+            color: "#F8EDD0",
             dash: [5, 5],
             lineWidth: 1
-        }, // 南回归线，虚线
-        {
-            lat: 66.5,
-            color: "#555",
-            dash: [5, 5],
-            lineWidth: 1
-        }, // 北极圈，虚线
-        {
-            lat: -66.5,
-            color: "#555",
-            dash: [5, 5],
-            lineWidth: 1
-        }, // 南极圈，虚线
-{
-            lat: 90,
-            color: "#555",
-            dash: [],
-            lineWidth: 2
-        }, // 北90
-        {
-            lat: -90,
-            color: "#555",
-            dash: [],
-            lineWidth: 2
         }
     ];
 
@@ -258,8 +206,8 @@ function drawSpecialLatLines(offsetX, offsetY, gridSize, latStep, latCount, tota
         dash,
         lineWidth
     }) => {
-        const latIdx = (90 - lat) / latStep;
-        const y = latIdx * gridSize + offsetY;
+        const latIdx = (90 - lat) / 45;
+        const y = latIdx * gridHeight + offsetY;
 
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
@@ -274,9 +222,6 @@ function drawSpecialLatLines(offsetX, offsetY, gridSize, latStep, latCount, tota
     ctx.restore();
 }
 
-
-
-// 初始化与 resize
 function initialize() {
     updateGridSizeToFitHeight();
     canvas.width = window.innerWidth;
@@ -289,8 +234,4 @@ window.addEventListener("resize", () => {
     initialize();
 });
 
-// 初始化第一次绘制
 initialize();
-
-
-// });

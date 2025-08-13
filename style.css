@@ -3,7 +3,7 @@ body {
     overflow: hidden;
     font-family: Arial, sans-serif;
     height: 100vh;
-    background: #f0f0f0;
+    background: #D1BA80;
 }
 
 .view {
@@ -49,6 +49,12 @@ body {
 }
 
 .word-node {
+    width: 93px;
+    height: 32px;
+    opacity: 1;
+    text-align: center;
+
+
     pointer-events: auto;
     position: absolute;
     cursor: pointer;
@@ -462,22 +468,31 @@ body {
 
 
 #connection-lines {
-    position: fixed;  /* 或 absolute */
+    position: fixed;
+    /* 或 absolute */
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; /* 让svg自己不拦截事件，但线条可以拦截 */
-    z-index: 1000; /* 保证在节点之上 */
+    pointer-events: none;
+    /* 让svg自己不拦截事件，但线条可以拦截 */
+    z-index: 1000;
+    /* 保证在节点之上 */
 }
+
 #connection-lines line {
-    pointer-events: stroke; /* 让线条能响应鼠标事件 */
+    pointer-events: stroke;
+    /* 让线条能响应鼠标事件 */
 }
 
 
 img {
-  user-select: none;       /* 禁止文字/图片被选中 */
-  -webkit-user-drag: none; /* 禁止图片被拖动（Chrome/Safari） */
-  -moz-user-select: none;  /* Firefox 禁止选中 */
-  -ms-user-select: none;   /* IE/Edge 旧版 */
+    user-select: none;
+    /* 禁止文字/图片被选中 */
+    -webkit-user-drag: none;
+    /* 禁止图片被拖动（Chrome/Safari） */
+    -moz-user-select: none;
+    /* Firefox 禁止选中 */
+    -ms-user-select: none;
+    /* IE/Edge 旧版 */
 }

@@ -3,5 +3,7 @@ export const state = {
   panX: 0,
   panY: 0,
   focusedNodeId: null,
-  baseGridSize: 100
+  baseGridSize: 100,
+  baseWidth: 100,
+  baseHeight: 100
 };
