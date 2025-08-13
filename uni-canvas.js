@@ -7,11 +7,35 @@ import {
 
 const canvas = document.getElementById("universe-canvas");
 const ctx = canvas.getContext("2d");
-const wordNodesContainer = document.getElementById("word-nodes-container");
 
 // 初始化尺寸
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+function updateGridSizeToFitHeight() {
+    state.baseWidth = window.innerWidth / 24;
+    state.baseHeight = window.innerHeight / 4;
+}
+
+// 限制 Y 方向边界
+function clampOffsetY(offsetY) {
+    const gridSize = state.baseHeight * state.currentScale;
+    const latCount = 4;
+    const totalHeight = gridSize * latCount;
+    const minY = -totalHeight + canvas.height; // 南极边缘
+    const maxY = 0; // 北极边缘
+    return Math.min(Math.max(offsetY, minY), maxY);
+}
+
+// 限制 X 方向边界
+function clampOffsetX(offsetX) {
+    const gridWidth = state.baseWidth * state.currentScale;
+    const lonCount = 24;
+    const totalWidth = gridWidth * lonCount;
+    const minX = -totalWidth + canvas.width;
+    const maxX = 0;
+    return Math.min(Math.max(offsetX, minX), maxX);
+}
 
 let offsetX = state.panX;
 let offsetY = state.panY;
@@ -21,29 +45,6 @@ let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
 
-const lonStep = 15; // 经度步长
-const latStep = 90; // 纬度步长
-
-function updateGridSizeToFitHeight() {
-    state.baseWidth = window.innerWidth / 24;
-    state.baseHeight = window.innerHeight / 4;
-    if (window.innerHeight * 2 < window.innerWidth) {
-        state.baseGridSize = window.innerWidth / 24;
-    } else {
-        const latCount = 4;
-        state.baseGridSize = window.innerHeight / latCount;
-    }
-}
-
-// 限制 Y 方向边界
-function clampOffsetY(offsetY, scale) {
-    const gridSize = state.baseHeight * scale;
-    const latCount = 4;
-    const totalHeight = gridSize * latCount;
-    const minY = -totalHeight + canvas.height; // 南极边缘
-    const maxY = 0; // 北极边缘
-    return Math.min(Math.max(offsetY, minY), maxY);
-}
 
 // 更新 word-nodes 的位置
 export function updateWordNodeTransforms() {
@@ -70,9 +71,7 @@ export function updateWordNodeTransforms() {
         // 水平方向 wrap
         const centerX = window.innerWidth / 2;
         const wrappedX = baseX + Math.round((centerX - baseX) / totalWidth) * totalWidth;
-
-        // Y 不 wrap、不 clamp，直接用
-        const wrappedY = baseY;
+        const wrappedY = baseY; // 垂直方向不 wrap
 
         node.style.left = `0px`;
         node.style.top = `0px`;
@@ -96,8 +95,8 @@ canvas.addEventListener("mousemove", (e) => {
         dragStartX = e.clientX;
         dragStartY = e.clientY;
 
-        state.panX = offsetX;
-        state.panY = clampOffsetY(offsetY, scale); // 加边界
+        state.panX = clampOffsetX(offsetX);
+        state.panY = clampOffsetY(offsetY); // 加边界
 
         draw();
         updateWordNodeTransforms();
@@ -125,8 +124,8 @@ canvas.addEventListener("wheel", (e) => {
     scale = newScale;
 
     state.currentScale = scale;
-    state.panX = offsetX;
-    state.panY = clampOffsetY(offsetY, scale); // 加边界
+    state.panX = clampOffsetX(offsetX);
+    state.panY = clampOffsetY(offsetY); // 加边界
 
     draw();
     updateWordNodeTransforms();
@@ -137,8 +136,8 @@ canvas.addEventListener("wheel", (e) => {
 
 // 主绘图函数
 export function draw() {
-    offsetX = state.panX;
-    offsetY = clampOffsetY(state.panY, state.currentScale); // 边界
+    offsetX = clampOffsetX(state.panX);
+    offsetY = clampOffsetY(state.panY); // 边界
     scale = state.currentScale;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -163,7 +162,7 @@ export function draw() {
 
     offsetsToDraw.forEach(([ox, oy]) => {
         drawGridAtOffset(ox, oy, gridWidth, gridHeight,lonCount, latCount);
-        drawSpecialLatLines(ox, oy, gridHeight, 10, latCount, totalWidth);
+        drawSpecialLatLines(ox, oy, gridHeight, totalWidth);
     });
 }
 
@@ -178,34 +177,15 @@ function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, lat
     }
 }
 
-function drawSpecialLatLines(offsetX, offsetY, gridHeight, latStep, latCount, totalWidth) {
+function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth) {
     ctx.save();
-    const latitudes = [{
-            lat: 0,
-            color: "#F8EDD0",
-            dash: [],
-            lineWidth: 2
-        },
-        {
-            lat: 23.5,
-            color: "#F8EDD0",
-            dash: [5, 5],
-            lineWidth: 1
-        },
-        {
-            lat: -23.5,
-            color: "#F8EDD0",
-            dash: [5, 5],
-            lineWidth: 1
-        }
+    const latitudes = [
+        { lat: 0, color: "#F8EDD0", dash: [], lineWidth: 2 },
+        { lat: 23.5, color: "#F8EDD0", dash: [5, 5], lineWidth: 1 },
+        { lat: -23.5, color: "#F8EDD0", dash: [5, 5], lineWidth: 1 }
     ];
 
-    latitudes.forEach(({
-        lat,
-        color,
-        dash,
-        lineWidth
-    }) => {
+    latitudes.forEach(({ lat, color, dash, lineWidth }) => {
         const latIdx = (90 - lat) / 45;
         const y = latIdx * gridHeight + offsetY;
 
@@ -218,7 +198,6 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, latStep, latCount, to
         ctx.lineTo(offsetX + totalWidth, y);
         ctx.stroke();
     });
-
     ctx.restore();
 }
 
@@ -230,8 +209,5 @@ function initialize() {
     updateWordNodeTransforms();
 }
 
-window.addEventListener("resize", () => {
-    initialize();
-});
-
+window.addEventListener("resize", initialize);
 initialize();

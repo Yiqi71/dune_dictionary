@@ -272,23 +272,23 @@ function renderWordUniverse(wordsData) {
         node.className = 'word-node';
 
         // 随机决定显示图片还是文字
-    if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
-        node.dataset.nodeFormat = "img";
-        // 图片节点
-        const img = document.createElement('img');
-        img.src = word.diagrams[0];
-        img.alt = word.term;
-        img.style.width = '60px';
-        img.style.height = '60px';
-        img.style.objectFit = 'contain';
-        node.appendChild(img);
-    } else {
+    // if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
+    //     node.dataset.nodeFormat = "img";
+    //     // 图片节点
+    //     const img = document.createElement('img');
+    //     img.src = word.diagrams[0];
+    //     img.alt = word.term;
+    //     img.style.width = '60px';
+    //     img.style.height = '60px';
+    //     img.style.objectFit = 'contain';
+    //     node.appendChild(img);
+    // } else {
         node.dataset.nodeFormat = "word";
         // 文字节点
         node.textContent = word.term;
         let colorRandom = Math.floor(Math.random() * 4);
         node.style.backgroundColor = nodesColor[colorRandom];
-    }
+    // }
 
         // 详细信息（zoom in后显示）
         const detailDiv = document.createElement('div');
