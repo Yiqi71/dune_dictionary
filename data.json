@@ -10,7 +10,7 @@
       "original_language": "Parapraxis",
       "domain": "心理学/精神分析",
       "proposer": "Sigmund Freud",
-      "proposing_country": "奥地利",
+      "proposing_country": "AT",
       "proposing_time": "1901年",
       "references": "《日常生活的精神病理学》",
       "contributors": ["弗洛伊德", "荣格"],
@@ -32,11 +32,7 @@
         "author":"天体物理学家",
         "content":"事件视界是理解黑洞物理学的关键概念，它帮助我们理解时空的弯曲和引力的本质。"
       }],
-      "coordinates": {
-        "x": 0.5,
-        "y": 0.3,
-        "z":0
-      },
+
       "createdAt": "2024-01-01",
       "updatedAt": "2024-01-20"
     },
@@ -49,7 +45,7 @@
       "original_language": "Event Horizon",
       "domain": "物理学/天体物理学",
       "proposer": "Wolfgang Rindler",
-      "proposing_country": "美国",
+      "proposing_country": "US",
       "proposing_time": "1956年",
       "references": "《相对论宇宙学》",
       "contributors": ["爱因斯坦", "霍金", "彭罗斯"],
@@ -71,11 +67,7 @@
           "date": "2024-01-18"
         }
       ],
-      "coordinates": {
-        "x": 0.8,
-        "y": 0.6,
-        "z": 0
-      },
+
       "color": "#F9CB40",
       "createdAt": "2024-01-01",
       "updatedAt": "2024-01-18"
@@ -89,17 +81,13 @@
       "original_language": "Cyborg",
       "domain": "科技哲学/后人类主义",
       "proposer": "Manfred Clynes, Nathan Kline",
-      "proposing_country": "美国",
+      "proposing_country": "US",
       "proposing_time": "1960年",
       "references": "《赛博格与空间》",
       "contributors": ["哈拉维", "斯蒂格勒"],
       "reviewers": ["海勒斯", "布拉伊多蒂"],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.7,
-        "y": 0.4,
-        "z": 0
-      },
+
       "color": "#4ECDC4",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -113,17 +101,13 @@
       "original_language": "Mise en abîme",
       "domain": "文学理论/电影研究",
       "proposer": "安德烈·纪德",
-      "proposing_country": "法国",
+      "proposing_country": "FR",
       "proposing_time": "1893年",
       "references": "《伪币制造者》",
       "contributors": ["德里达", "热奈特"],
       "reviewers": ["麦茨", "艾柯"],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.3,
-        "y": 0.5,
-        "z": 0
-      },
+
       "color": "#A593E0",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -143,11 +127,7 @@
       "contributors": ["大卫王", "君士坦丁大帝", "萨拉丁"],
       "reviewers": [],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.6,
-        "y": 0.8,
-        "z": 0
-      },
+
       "color": "#FF9A76",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -161,17 +141,13 @@
       "original_language": "Psychogéographie",
       "domain": "城市研究/批判理论",
       "proposer": "居伊·德波",
-      "proposing_country": "法国",
+      "proposing_country": "FR",
       "proposing_time": "1955年",
       "references": "《城市地理学批判导论》",
       "contributors": ["德波", "德赛托", "西美尔"],
       "reviewers": ["哈维", "索亚"],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.4,
-        "y": 0.7,
-        "z": 0
-      },
+
       "color": "#5EAAA8",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -185,7 +161,7 @@
       "original_language": "課題分離 (Kadai Bunri)",
       "domain": "心理学/个体心理学",
       "proposer": "阿尔弗雷德·阿德勒",
-      "proposing_country": "奥地利",
+      "proposing_country": "AT",
       "proposing_time": "1920年代",
       "references": "《个体心理学的实践与理论》",
       "contributors": ["岸见一郎", "古贺史健"],
@@ -194,11 +170,7 @@
               "id": "29",
               "relation": "近义词"
           }],
-      "coordinates": {
-        "x": 0.2,
-        "y": 0.4,
-        "z": 0
-      },
+
       "color": "#F8A5C2",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -212,17 +184,13 @@
       "original_language": "Caring Class",
       "domain": "社会学/劳动研究",
       "proposer": "艾丽斯·马利雍·杨",
-      "proposing_country": "美国",
+      "proposing_country": "US",
       "proposing_time": "2003年",
       "references": "《关怀的正义》",
       "contributors": ["霍克希尔德", "特隆托"],
       "reviewers": [],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.5,
-        "y": 0.9,
-        "z": 0
-      },
+
       "color": "#A3E4D7",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -231,12 +199,12 @@
       "id": 9,
       "term": "压缩现代性",
       "brief_definition": "描述东亚社会在极短时间内经历多重现代化阶段的特殊发展模式。",
-      "extended_definition": "压缩现代性（Compressed Modernity）由韩国社会学家张庆燮提出，指东亚社会如韩国、中国台湾等地区在几十年内完成了西方数百年才实现的现代化进程。这种\"时间-空间压缩\"导致传统、现代和后现代特征同时并存，产生独特的社会文化矛盾。",
+      "extended_definition": "压缩现代性（Compressed Modernity）由韩国社会学家张庆燮提出，指东亚社会如韩国、CN台湾等地区在几十年内完成了西方数百年才实现的现代化进程。这种\"时间-空间压缩\"导致传统、现代和后现代特征同时并存，产生独特的社会文化矛盾。",
       "diagrams": ["images/9.jpg"],
       "original_language": "압축적 근대성 (Apchukjeok Geundaeseong)",
       "domain": "社会学/东亚研究",
       "proposer": "张庆燮",
-      "proposing_country": "韩国",
+      "proposing_country": "KR",
       "proposing_time": "1999年",
       "references": "《压缩现代性》",
       "contributors": [],
@@ -246,11 +214,7 @@
               "id": "27",
               "relation": "同类概念"
           }],
-      "coordinates": {
-        "x": 0.9,
-        "y": 0.2,
-        "z": 0
-      },
+
       "color": "#F5D491",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -270,11 +234,7 @@
       "contributors": ["爱森斯坦", "罗德钦科"],
       "reviewers": [],
       "related_terms": [],
-      "coordinates": {
-        "x": 0.1,
-        "y": 0.6,
-        "z": 0
-      },
+
       "color": "#E8A87C",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -289,13 +249,12 @@
       "original_language": "Placeholder 1",
       "domain": "领域1",
       "proposer": "提出者1",
-      "proposing_country": "国家1",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书1》",
       "contributors": ["贡献者1"],
       "reviewers": ["审阅者1"],
       "related_terms": [],
-      "coordinates": {"x": 0.12, "y": 0.9, "z": 0},
       "color": "#AAAAAA",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -309,7 +268,7 @@
       "original_language": "Placeholder 2",
       "domain": "领域2",
       "proposer": "提出者2",
-      "proposing_country": "国家2",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书2》",
       "contributors": ["贡献者2"],
@@ -319,7 +278,6 @@
               "id": "28",
               "relation": "反义词"
           }],
-      "coordinates": {"x": 0.9, "y": 0.5, "z": 0},
       "color": "#BBBBBB",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -333,13 +291,12 @@
       "original_language": "Placeholder 3",
       "domain": "领域3",
       "proposer": "提出者3",
-      "proposing_country": "国家3",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书3》",
       "contributors": ["贡献者3"],
       "reviewers": ["审阅者3"],
       "related_terms": [],
-      "coordinates": {"x": 0.35, "y": 0.6, "z": 0},
       "color": "#CCCCCC",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -353,13 +310,12 @@
       "original_language": "Placeholder 4",
       "domain": "领域4",
       "proposer": "提出者4",
-      "proposing_country": "国家4",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书4》",
       "contributors": ["贡献者4"],
       "reviewers": ["审阅者4"],
       "related_terms": [],
-      "coordinates": {"x": 0.4, "y": 0.4, "z": 0},
       "color": "#DDDDDD",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -373,13 +329,12 @@
       "original_language": "Placeholder 5",
       "domain": "领域5",
       "proposer": "提出者5",
-      "proposing_country": "国家5",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书5》",
       "contributors": ["贡献者5"],
       "reviewers": ["审阅者5"],
       "related_terms": [],
-      "coordinates": {"x": 0.1, "y": 0.5, "z": 0},
       "color": "#EEEEEE",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -393,13 +348,12 @@
       "original_language": "Placeholder 6",
       "domain": "领域6",
       "proposer": "提出者6",
-      "proposing_country": "国家6",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书6》",
       "contributors": ["贡献者6"],
       "reviewers": ["审阅者6"],
       "related_terms": [],
-      "coordinates": {"x": 0.9, "y": 0.6, "z": 0},
       "color": "#FFAAAA",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -413,7 +367,7 @@
       "original_language": "Placeholder 7",
       "domain": "领域7",
       "proposer": "提出者7",
-      "proposing_country": "国家7",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书7》",
       "contributors": ["贡献者7"],
@@ -426,7 +380,6 @@
               "id": "27",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.7, "y": 0.3, "z": 0},
       "color": "#AAFFAA",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -440,13 +393,12 @@
       "original_language": "Placeholder 8",
       "domain": "领域8",
       "proposer": "提出者8",
-      "proposing_country": "国家8",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书8》",
       "contributors": ["贡献者8"],
       "reviewers": ["审阅者8"],
       "related_terms": [],
-      "coordinates": {"x": 0.8, "y": 0.2, "z": 0},
       "color": "#AAAAFF",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -460,7 +412,7 @@
       "original_language": "Placeholder 9",
       "domain": "领域9",
       "proposer": "提出者9",
-      "proposing_country": "国家9",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书9》",
       "contributors": ["贡献者9"],
@@ -469,7 +421,6 @@
               "id": "30",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.9, "y": 0.6, "z": 0},
       "color": "#FFAAFF",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -477,20 +428,25 @@
     {
       "id": 20,
       "term": "占位词10",
+      "original_language": "Placeholder 10",
+
       "brief_definition": "这是第十个占位词的简要定义",
       "extended_definition": "这是第十个占位词的扩展定义内容，用于填充空间和展示结构",
       "diagrams": ["images/10.jpg"],
-      "original_language": "Placeholder 10",
+      
       "domain": "领域10",
+
       "proposer": "提出者10",
-      "proposing_country": "国家10",
+      "proposer_img": "images/10Proposor.jpg",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书10》",
+
       "contributors": ["贡献者10"],
       "reviewers": ["审阅者10"],
+
       "related_terms": [],
-      "coordinates": {"x": 0.15, "y": 0.65, "z": 0},
-      "color": "#AAFFFF",
+
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
     },
@@ -503,13 +459,12 @@
       "original_language": "Placeholder 11",
       "domain": "领域11",
       "proposer": "提出者11",
-      "proposing_country": "国家11",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书11》",
       "contributors": ["贡献者11"],
       "reviewers": ["审阅者11"],
       "related_terms": [],
-      "coordinates": {"x": 0.65, "y": 0.35, "z": 0},
       "color": "#FFA500",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -523,13 +478,12 @@
       "original_language": "Placeholder 12",
       "domain": "领域12",
       "proposer": "提出者12",
-      "proposing_country": "国家12",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书12》",
       "contributors": ["贡献者12"],
       "reviewers": ["审阅者12"],
       "related_terms": [],
-      "coordinates": {"x": 0.35, "y": 0.95, "z": 0},
       "color": "#800080",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -543,7 +497,7 @@
       "original_language": "Placeholder 13",
       "domain": "领域13",
       "proposer": "提出者13",
-      "proposing_country": "国家13",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书13》",
       "contributors": ["贡献者13"],
@@ -552,7 +506,6 @@
               "id": "1",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.95, "y": 0.55, "z": 0},
       "color": "#008000",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -566,7 +519,7 @@
       "original_language": "Placeholder 14",
       "domain": "领域14",
       "proposer": "提出者14",
-      "proposing_country": "国家14",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书14》",
       "contributors": ["贡献者14"],
@@ -575,7 +528,6 @@
               "id": "14",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.55, "y": 0.35, "z": 0},
       "color": "#000080",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -589,7 +541,7 @@
       "original_language": "Placeholder 15",
       "domain": "领域15",
       "proposer": "提出者15",
-      "proposing_country": "国家15",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书15》",
       "contributors": ["贡献者15"],
@@ -598,7 +550,6 @@
               "id": "20",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.35, "y": 0.75, "z": 0},
       "color": "#808000",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -612,7 +563,7 @@
       "original_language": "Placeholder 16",
       "domain": "领域16",
       "proposer": "提出者16",
-      "proposing_country": "国家16",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书16》",
       "contributors": ["贡献者16"],
@@ -621,7 +572,6 @@
               "id": "27",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.75, "y": 0.25, "z": 0},
       "color": "#800000",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -635,7 +585,7 @@
       "original_language": "Placeholder 17",
       "domain": "领域17",
       "proposer": "提出者20",
-      "proposing_country": "国家17",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书17》",
       "contributors": ["贡献者17"],
@@ -655,7 +605,6 @@
           }
       ]
       ,
-      "coordinates": {"x": 0.85, "y": 0.15, "z": 0},
       "color": "#008080",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -669,7 +618,7 @@
       "original_language": "Placeholder 18",
       "domain": "领域18",
       "proposer": "提出者20",
-      "proposing_country": "国家18",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书18》",
       "contributors": ["贡献者18"],
@@ -684,7 +633,6 @@
               "relation": "反义词"
           }
       ]      ,
-      "coordinates": {"x": 0.95, "y": 0.25, "z": 0},
       "color": "#C0C0C0",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -698,7 +646,7 @@
       "original_language": "Placeholder 19",
       "domain": "领域19",
       "proposer": "提出者20",
-      "proposing_country": "国家19",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书19》",
       "contributors": ["贡献者19"],
@@ -707,7 +655,6 @@
               "id": "7",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.05, "y": 0.35, "z": 0},
       "color": "#FFD700",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"
@@ -721,7 +668,7 @@
       "original_language": "Placeholder 20",
       "domain": "领域20",
       "proposer": "提出者20",
-      "proposing_country": "国家20",
+      "proposing_country": "CN",
       "proposing_time": "2024年",
       "references": "《参考书20》",
       "contributors": ["贡献者20"],
@@ -730,7 +677,6 @@
               "id": "19",
               "relation": "近义词"
           }],
-      "coordinates": {"x": 0.15, "y": 0.45, "z": 0},
       "color": "#FA8072",
       "createdAt": "2024-02-01",
       "updatedAt": "2024-02-01"

@@ -12,7 +12,8 @@ let isPanelVisible = false;
 
 function filterProposer() {
     const focusedWord = window.allWords.find(w => w.id == state.focusedId);
-
+    if (!focusedWord) return [];
+    
     // 先渲染 proposer 相关的词
     const relatedContainer = document.getElementById('related-words');
     if (!relatedContainer) return;
@@ -62,6 +63,76 @@ function hideFloatingPanel() {
     isPanelVisible = false;
     currentFloatingPanel = null;
 }
+
+function renderPanelSections() {
+    const contentScroll = document.querySelector('.content-scroll');
+    let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    if (!currentWord) return;
+
+    contentScroll.innerHTML = `
+        <section id="section-comment">
+            <h3>评论</h3>
+            <p>${currentWord.comments?.map(c => `${c.author}：${c.content}`).join('<br>') || '暂无评论'}</p>
+        </section>
+
+        <section id="section-image">
+            <h3>图片</h3>
+            <img src='${currentWord.diagrams[0]}' alt='${currentWord.term}'
+                style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'>
+            <p>${currentWord.term}</p>
+        </section>
+
+        <section id="section-book">
+            <h3>相关著作</h3>
+            <p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p>
+            <p>提出国：${currentWord.proposing_country || '未知'}</p>
+            <p>提出时间：${currentWord.proposing_time || '未知'}</p>
+        </section>
+
+        <section id="section-detail">
+            <h3>详细释义</h3>
+            <p>${currentWord.extended_definition || '暂无详细释义'}</p>
+            <p style='color:#888;font-size:13px;margin-top:10px;'>参考资料：${currentWord.references || '暂无'}</p>
+        </section>
+
+        <section id="section-brief">
+            <h3>简要释义</h3>
+            <p>${currentWord.brief_definition || '暂无简要释义'}</p>
+        </section>
+    `;
+}
+
+
+
+function scrollToSection(sectionId) {
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// tab 点击绑定
+document.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabType = tab.getAttribute('data-tab');
+        const sectionMap = {
+            comment: 'section-comment',
+            image: 'section-image',
+            book: 'section-book',
+            detail: 'section-detail',
+            brief: 'section-brief'
+        };
+        scrollToSection(sectionMap[tabType]);
+    });
+});
+
+
+
+
+
 
 // 更新浮窗标签内容
 function updateTabContent(tabType) {
@@ -213,6 +284,18 @@ function initClickOutsideHandler() {
         }
     });
 }
+
+const termDiv = document.getElementById("term");
+const commentDiv = document.getElementById("comment");
+const proposerDiv = document.getElementById("proposer");
+const imageDiv = document.getElementById("image");
+
+termDiv.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    showFloatingPanel();
+    updateTabContent()
+})
 
 // 初始化浮窗功能
 initTabSwitching();

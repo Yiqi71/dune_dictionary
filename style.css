@@ -92,7 +92,6 @@ h3 {
     height: 0;
     opacity: 0.8;
     transition: opacity 0.8s ease-in-out;
-    pointer-events: none;
     z-index: 9990;
 }
 
@@ -171,8 +170,8 @@ h3 {
 }
 
 #image {
-    width: auto;
-    height: auto;
+    min-width: 120px;
+    min-height: 150px;
     top: 30vh;
     left: 70vw;
     background-color: #F0B549;

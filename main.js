@@ -9,6 +9,10 @@ import {
 } from "./uni-canvas.js";
 
 import {
+    country_bounding_boxes
+} from "./countryBoundingBoxes.js";
+
+import {
     showFloatingPanel
 } from "./detail.js"
 
@@ -181,7 +185,7 @@ function updateWordFocus() {
     if (state.currentScale >= scaleThreshold) {
         // 找出距离视图中心最近的单词
         let closestWord = null;
-        let minDistance = window.innerHeight/4;
+        let minDistance = window.innerHeight / 4;
 
         document.querySelectorAll('.word-node').forEach(node => {
             const rect = node.getBoundingClientRect();
@@ -270,14 +274,16 @@ function updateWordDetails() {
     const commentP = document.querySelector('#comment p');
     commentTitle.textContent = '相关评论';
     if (word.commentAbs) {
-        word.commentAbs.forEach(c =>{
+        word.commentAbs.forEach(c => {
             commentH3.textContent = `${c.content} `,
-            commentP.innerHTML = `--${c.author}`;
-    })} else {
+                commentP.innerHTML = `--${c.author}`;
+        })
+    } else {
         commentH3.textContent = '暂无评论';
         commentP.innerHTML = '';
     }
 }
+
 export function updateRelations() {
     const svg = document.getElementById('connection-lines');
     svg.innerHTML = '';
@@ -304,6 +310,16 @@ function restoreAllNodes() {
     });
 }
 
+function getCountryBoundary(countryCode) {
+    const box = country_bounding_boxes[countryCode];
+    if (!box) return [-180, -90, 180, 90];
+    const [minLon, minLat, maxLon, maxLat] = box[1];
+
+    const coords = box[1]; // [minLon, minLat, maxLon, maxLat]
+    return coords;
+}
+
+
 // 渲染函数
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
@@ -314,8 +330,9 @@ function renderWordUniverse(wordsData) {
     // 创建单词节点
     wordsData.forEach(word => {
 
-        word.longitude = word.coordinates.x * 360 - 180;
-        word.latitude = word.coordinates.y * 180 - 90;
+        let bound = getCountryBoundary(word.proposing_country);
+        word.longitude = Math.random() * (bound[2] - bound[0]) + bound[0];
+        word.latitude = Math.random() * (bound[3] - bound[1]) + bound[1];
 
         const node = document.createElement('div');
         node.className = 'word-node';
@@ -339,16 +356,28 @@ function renderWordUniverse(wordsData) {
         node.style.backgroundColor = nodesColor[colorRandom];
         // }
 
+        // 先计算百分比
+        let leftPercent = (word.longitude + 180) / 360 * 100;
+        let topPercent = (90 - word.latitude) / 180 * 100;
 
-        // 定位
-        node.style.left = `${word.coordinates.x * 100}%`;
-        node.style.top = `${word.coordinates.y * 100}%`;
+        // 对齐到 10 的倍数
+        leftPercent = Math.min(90, Math.max(10, Math.round(leftPercent / 5) * 5));
+        topPercent = Math.min(90, Math.max(10, Math.round(topPercent / 5) * 5));
+
+
+        word.longitude = leftPercent * 3.6 - 180;
+        word.latitude = 90 - topPercent * 1.8;
+        console.log(word.longitude);
+
+        // 设置样式
+        node.style.left = `${leftPercent}%`;
+        node.style.top = `${topPercent}%`;
         node.style.transform = `translate(-50%, -50%)`;
 
         node.dataset.lon = word.longitude;
         node.dataset.lat = word.latitude;
-        node.dataset.x = word.coordinates.x;
-        node.dataset.y = word.coordinates.y;
+        node.dataset.x = leftPercent / 100;
+        node.dataset.y = topPercent / 100;
 
         node.id = word.id;
 
@@ -369,7 +398,7 @@ function renderWordUniverse(wordsData) {
             // 只有不是拖拽操作时才处理点击
             if (!isDragging) {
                 if (node.classList.contains('focused')) {
-                    showFloatingPanel(word, node);
+                    console.log("click focused node");
                 } else {
                     zoomToWord(node.id);
                     updateWordFocus();
@@ -411,6 +440,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
+            zoomToWord(state.focusedNodeId);
+            updateWordFocus();
+            console.log(state.focusedNodeId);
         })
         .catch(error => {
             console.error('加载数据失败:', error);
