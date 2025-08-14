@@ -394,7 +394,7 @@ function renderWordUniverse(wordsData) {
             const node = document.createElement('div');
             node.className = 'word-node';
             node.dataset.nodeFormat = "word";
-            node.innerHTML = `<p>${word.term}</p><p>${word.original_language}</p>`;
+            node.innerHTML = `<p class="Chinese">${word.term}</p><p class="English">${word.original_language}</p>`;
             node.style.backgroundColor = nodesColor[Math.floor(Math.random() * 4)];
             node.style.left = `${leftPercent}%`;
             node.style.top = `${topPercent}%`;

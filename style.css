@@ -4,6 +4,7 @@
 * {
     margin: 0;
     padding: 0;
+    user-select: none;
 }
 
 body {
@@ -63,10 +64,11 @@ h3 {
     height: 32px;
     flex-shrink: 0;
     opacity: 1;
-    text-align: left;
+    border-radius: 4px;
 
+    text-align: left;
     color: #544011;
-    font-family: "Barlow Condensed";
+    font-family: "Barlow Condensed" !important;
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -77,7 +79,14 @@ h3 {
     cursor: pointer;
 }
 
-
+.word-node p #English{
+    color: #544011;
+    font-family: "Barlow Condensed" !important;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    text-wrap: nowrap;  
+}
 
 
 .word-node.focused {
@@ -193,7 +202,7 @@ h3 {
 #comment {
     width: 400px;
     height: 240px;
-    top: 70vh;
+    top: 75vh;
     left: 60vw;
     background-color: #E1D37A;
 }
@@ -477,8 +486,6 @@ h3 {
 
 #universe-view {
     cursor: grab;
-    user-select: none;
-    /* 防止拖拽时选中文本 */
 }
 
 #universe-view:active {
@@ -630,10 +637,6 @@ img {
     width: 200px;
     height: 32px;
     flex-shrink: 0;
-    /* 
-    display:flex;
-    flex-direction: column;*/
-    user-select: none;
 }
 
 .scale-line {
