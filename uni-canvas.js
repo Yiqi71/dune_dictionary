@@ -2,8 +2,10 @@ import {
     state
 } from "./state.js";
 import {
-    updateRelations
+    updateRelations, scaleThreshold
 } from "./main.js";
+import { moveIndicator } from "./menu.js";
+
 
 const canvas = document.getElementById("universe-canvas");
 const ctx = canvas.getContext("2d");
@@ -18,7 +20,7 @@ function updateGridSizeToFitHeight() {
 }
 
 // 限制 Y 方向边界
-function clampOffsetY(offsetY) {
+export function clampOffsetY(offsetY) {
     const gridSize = state.baseHeight * state.currentScale;
     const latCount = 4;
     const totalHeight = gridSize * latCount;
@@ -28,7 +30,7 @@ function clampOffsetY(offsetY) {
 }
 
 // 限制 X 方向边界
-function clampOffsetX(offsetX) {
+export function clampOffsetX(offsetX) {
     const gridWidth = state.baseWidth * state.currentScale;
     const lonCount = 24;
     const totalWidth = gridWidth * lonCount;
@@ -121,7 +123,7 @@ canvas.addEventListener("wheel", (e) => {
 
     const zoomStep = 0.1;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    const newScale = Math.min(4, Math.max(1, scale + delta));
+    const newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
 
     const mouseX = e.clientX;
     const mouseY = e.clientY;
@@ -138,6 +140,7 @@ canvas.addEventListener("wheel", (e) => {
     draw();
     updateWordNodeTransforms();
     updateRelations();
+    moveIndicator(state.currentScale);
 }, {
     passive: false
 });

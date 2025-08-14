@@ -20,7 +20,7 @@ import {
 window.allWords = [];
 
 let focusedWord = null;
-const scaleThreshold = 4; // 触发详细信息显示的缩放阈值
+export const scaleThreshold = 5; // 触发详细信息显示的缩放阈值
 
 let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
@@ -31,7 +31,7 @@ export function zoomToWord(id) {
     const rect = node.getBoundingClientRect();
 
     const oldScale = state.currentScale;
-    const newScale = 4;
+    const newScale = scaleThreshold;
 
     let x = rect.left + rect.width / 2;
     let y = rect.top + rect.height / 2
@@ -394,7 +394,7 @@ function renderWordUniverse(wordsData) {
             const node = document.createElement('div');
             node.className = 'word-node';
             node.dataset.nodeFormat = "word";
-            node.textContent = word.term;
+            node.innerHTML = `<p>${word.term}</p><p>${word.original_language}</p>`;
             node.style.backgroundColor = nodesColor[Math.floor(Math.random() * 4)];
             node.style.left = `${leftPercent}%`;
             node.style.top = `${topPercent}%`;

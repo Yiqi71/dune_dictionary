@@ -10,6 +10,7 @@
     <script type="module" src="main.js" defer></script>
     <script type="module" src="state.js" defer></script>
     <script type="module" src="countryBoundingBoxes.js" defer></script>
+    <script type="module" src="menu.js" defer></script>
     <!-- country_bounding_boxes(->left down up right) -->
     <!-- https://gist.github.com/graydon/11198540?utm_source=chatgpt.com -->
 </head>
@@ -72,10 +73,36 @@
     </div>
 
     <menu id="side-menu">
-        <img id="duneIcon" alt="dune">
-        <img id="shuffleIcon" alt="shuffle">
-        <!-- <img id="nextIcon" alt="next"> -->
-        <img id="searchIcon" alt="search">
+        <div id="upper-menu">
+            <div id="duneIcon">
+                <h2 class="Chinese">沙丘 词典</h2>
+                <h2 class="English">Dunes Dictionary</h2>
+            </div>
+            <div id="buttons">
+                <div class="small-icon">
+                    <img id="shuffleIcon" alt="shuffle">
+                </div>
+                <div class="small-icon">
+                    <img id="searchIcon" alt="search">
+                </div>
+                <div class="medium-icon">
+                    <p>About</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="lower-menu">
+            <div id="scaleContainer">
+                <div id="scale">
+                    <div class="scale-line"></div>
+                    <div class="scale-ticks"></div>
+                    <div id="indicator" class="scale-indicator"></div>
+                </div>
+                <div class="scale-numbers"></div>
+
+            </div>
+        </div>
     </menu>
 
     <div id="universe-view" class="view">
