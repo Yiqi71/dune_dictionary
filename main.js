@@ -313,105 +313,133 @@ function restoreAllNodes() {
 function getCountryBoundary(countryCode) {
     const box = country_bounding_boxes[countryCode];
     if (!box) return [-180, -90, 180, 90];
-    const [minLon, minLat, maxLon, maxLat] = box[1];
-
-    const coords = box[1]; // [minLon, minLat, maxLon, maxLat]
-    return coords;
+    return box[1]; // [minLon, minLat, maxLon, maxLat]
 }
 
+// 生成全地图网格（百分比坐标）
+function generateGridPoints(step = 10, min = 10, max = 90) {
+    const points = [];
+    for (let top = min; top <= max; top += step) {
+        for (let left = min; left <= max; left += step) {
+            points.push({
+                left,
+                top
+            });
+        }
+    }
+    return points;
+}
+
+// 随机打乱
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function getCountryGridPoints(countryCode, step = 10) {
+    const [minLon, minLat, maxLon, maxLat] = getCountryBoundary(countryCode);
+
+    const allPoints = generateGridPoints(step);
+    const availablePoints = allPoints.filter(({
+        left,
+        top
+    }) => {
+        // 转换百分比到经纬度
+        const lon = left * 3.6 - 180;
+        const lat = 90 - top * 1.8;
+        return lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat;
+    });
+
+    shuffleArray(availablePoints); // 只打乱国家内部格子顺序
+    return availablePoints;
+}
 
 // 渲染函数
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
-
-    // 清空容器（防止重复加载）
     wordNodesContainer.innerHTML = '';
 
-    // 创建单词节点
+    // 按国家分组
+    const wordsByCountry = {};
     wordsData.forEach(word => {
-
-        let bound = getCountryBoundary(word.proposing_country);
-        word.longitude = Math.random() * (bound[2] - bound[0]) + bound[0];
-        word.latitude = Math.random() * (bound[3] - bound[1]) + bound[1];
-
-        const node = document.createElement('div');
-        node.className = 'word-node';
-
-        // 随机决定显示图片还是文字
-        // if (Math.random() < 0.4 && word.diagrams && word.diagrams.length > 0) {
-        //     node.dataset.nodeFormat = "img";
-        //     // 图片节点
-        //     const img = document.createElement('img');
-        //     img.src = word.diagrams[0];
-        //     img.alt = word.term;
-        //     img.style.width = '60px';
-        //     img.style.height = '60px';
-        //     img.style.objectFit = 'contain';
-        //     node.appendChild(img);
-        // } else {
-        node.dataset.nodeFormat = "word";
-        // 文字节点
-        node.textContent = word.term;
-        let colorRandom = Math.floor(Math.random() * 4);
-        node.style.backgroundColor = nodesColor[colorRandom];
-        // }
-
-        // 先计算百分比
-        let leftPercent = (word.longitude + 180) / 360 * 100;
-        let topPercent = (90 - word.latitude) / 180 * 100;
-
-        // 对齐到 10 的倍数
-        leftPercent = Math.min(90, Math.max(10, Math.round(leftPercent / 5) * 5));
-        topPercent = Math.min(90, Math.max(10, Math.round(topPercent / 5) * 5));
-
-
-        word.longitude = leftPercent * 3.6 - 180;
-        word.latitude = 90 - topPercent * 1.8;
-        console.log(word.longitude);
-
-        // 设置样式
-        node.style.left = `${leftPercent}%`;
-        node.style.top = `${topPercent}%`;
-        node.style.transform = `translate(-50%, -50%)`;
-
-        node.dataset.lon = word.longitude;
-        node.dataset.lat = word.latitude;
-        node.dataset.x = leftPercent / 100;
-        node.dataset.y = topPercent / 100;
-
-        node.id = word.id;
-
-        node.addEventListener('wheel', function (e) {
-            e.stopPropagation(); // 不让滚轮事件向上传播
-            e.preventDefault(); // 不让自己滚动
-        }, {
-            passive: false
-        });
-        // 添加点击事件处理浮窗显示
-        // 修改单词节点的点击事件
-        node.addEventListener('mousedown', (e) => {
-            e.stopPropagation();
-        });
-
-        node.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // 只有不是拖拽操作时才处理点击
-            if (!isDragging) {
-                if (node.classList.contains('focused')) {
-                    console.log("click focused node");
-                } else {
-                    zoomToWord(node.id);
-                    updateWordFocus();
-                }
-            }
-        });
-
-        wordNodesContainer.appendChild(node);
-
-        updateWordNodeTransforms();
-        console.log('node rendered');
+        if (!wordsByCountry[word.proposing_country]) {
+            wordsByCountry[word.proposing_country] = [];
+        }
+        wordsByCountry[word.proposing_country].push(word);
     });
 
+
+    // 渲染每个国家的节点
+    for (const country in wordsByCountry) {
+        const words = wordsByCountry[country];
+        const countryPoints = getCountryGridPoints(country, 3);
+
+        console.log(`${country} 可以放 ${countryPoints.length} 个 node`);
+
+        // 限制显示数量
+        const displayCount = Math.min(words.length, countryPoints.length);
+
+        for (let i = 0; i < displayCount; i++) {
+            const word = words[i];
+            const {
+                left: leftPercent,
+                top: topPercent
+            } = countryPoints[i];
+
+            word.longitude = leftPercent * 3.6 - 180;
+            word.latitude = 90 - topPercent * 1.8;
+
+            const node = document.createElement('div');
+            node.className = 'word-node';
+            node.dataset.nodeFormat = "word";
+            node.textContent = word.term;
+            node.style.backgroundColor = nodesColor[Math.floor(Math.random() * 4)];
+            node.style.left = `${leftPercent}%`;
+            node.style.top = `${topPercent}%`;
+            node.style.transform = `translate(-50%, -50%)`;
+
+            node.dataset.lon = word.longitude;
+            node.dataset.lat = word.latitude;
+            node.dataset.x = leftPercent / 100;
+            node.dataset.y = topPercent / 100;
+
+
+
+            node.id = word.id;
+
+            node.addEventListener('wheel', function (e) {
+                e.stopPropagation(); // 不让滚轮事件向上传播
+                e.preventDefault(); // 不让自己滚动
+            }, {
+                passive: false
+            });
+            // 添加点击事件处理浮窗显示
+            // 修改单词节点的点击事件
+            node.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 只有不是拖拽操作时才处理点击
+                if (!isDragging) {
+                    if (node.classList.contains('focused')) {
+                        console.log("click focused node");
+                    } else {
+                        zoomToWord(node.id);
+                        updateWordFocus();
+                    }
+                }
+            });
+
+            wordNodesContainer.appendChild(node);
+
+            updateWordNodeTransforms();
+            console.log('node rendered');
+        }
+    }
 
     // drag
     let isDragging = false;
