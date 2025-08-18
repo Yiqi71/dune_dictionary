@@ -134,7 +134,59 @@ function updateTabContent(tabType = "brief") {
     }
 }
 
+const panelContent = document.querySelector('.panel-content');
+const scrollThumb = document.querySelector('.scroll-thumb');
+const scrollTrack = document.querySelector('.scroll-track');
 
+function updateThumbPosition() {
+    const contentHeight = panelContent.scrollHeight;
+    const visibleHeight = panelContent.clientHeight;
+    const scrollTop = panelContent.scrollTop;
+
+    const ratio = scrollTop / (contentHeight - visibleHeight);
+    const trackHeight = panelContent.clientHeight;
+    const thumbMax = trackHeight - scrollThumb.offsetHeight;
+
+    scrollThumb.style.top = `${ratio * thumbMax}px`;
+}
+
+// 监听内容滚动 → 更新圆点位置
+panelContent.addEventListener('scroll', updateThumbPosition);
+
+// 拖动功能
+let isDragging = false;
+let startY, startTop;
+
+scrollThumb.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startY = e.clientY;
+    startTop = parseFloat(scrollThumb.style.top) || 0;
+    document.body.style.userSelect = 'none'; // 防止选中文字
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const deltaY = e.clientY - startY;
+    const trackHeight = panelContent.clientHeight;
+    const thumbMax = trackHeight - scrollThumb.offsetHeight;
+
+    let newTop = Math.min(Math.max(startTop + deltaY, 0), thumbMax);
+    scrollThumb.style.top = `${newTop}px`;
+
+    // 根据 thumb 位置计算内容滚动
+    const ratio = newTop / thumbMax;
+    panelContent.scrollTop = ratio * (panelContent.scrollHeight - panelContent.clientHeight);
+    updateThumbPosition();
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+    document.body.style.userSelect = ''; // 恢复文字选择
+});
+
+// 初始更新一次位置
+updateThumbPosition();
 
 
 

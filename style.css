@@ -72,20 +72,20 @@ h3 {
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
-    text-wrap: nowrap;    
-    
+    text-wrap: nowrap;
+
     pointer-events: auto;
     position: absolute;
     cursor: pointer;
 }
 
-.word-node p #English{
+.word-node p #English {
     color: #544011;
     font-family: "Barlow Condensed" !important;
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
-    text-wrap: nowrap;  
+    text-wrap: nowrap;
 }
 
 
@@ -244,17 +244,18 @@ h3 {
 /* 浮窗样式 */
 .floating-panel {
     position: fixed;
-    top: 32px;
-    right: 100px;
-    /* 预留给menu和间距 */
-    transform: none;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 647px;
+    border-radius: 17px 0 0 17px;
+    background: #FFFCF4;
+
     display: flex;
     flex-direction: column;
     z-index: 1000;
-    transition: all 0.3s ease-out;
-    width: 320px;
-    height: calc(100vh - 64px);
-    /* 与底部等距离 */
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
 }
 
 
@@ -273,64 +274,29 @@ h3 {
 
 /* 上半部分：评论区域 */
 .panel-top {
-    background: white;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     flex: 0 0 200px;
-    display: flex;
-    flex-direction: row-reverse;
-    overflow: hidden;
-}
-
-.comment-section {
-    padding: 20px;
-    flex: 1;
+    /* 高度你可以调，比如 200px */
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* 垂直居中 */
+    align-items: center;
+    /* 水平居中 */
+    border-bottom: 1px solid #eee;
+    padding: 16px;
 }
 
-.comment-section h3 {
-    margin: 0 0 15px 0;
-    color: #333;
-    font-size: 18px;
-}
-
-.comment-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-.comment-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.comment-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.comment-scroll::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.comment-scroll::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
 
 /* 下半部分：其他标签内容 */
 .panel-bottom {
     display: flex;
     flex: 1;
-    background: white;
     border-radius: 0 0 8px 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
 .panel-content {
-    background: white;
     border-radius: 0 0 0 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     width: 100%;
@@ -338,6 +304,63 @@ h3 {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    flex: 1;
+    overflow-y: scroll;
+    /* 开启滚动 */
+    padding-right: 12px;
+    /* 给滚动条留点空间 */
+
+    /* 隐藏原生滚动条 */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+}
+
+.panel-content::-webkit-scrollbar {
+    display: none;
+    /* Chrome / Safari */
+}
+
+
+/* 自定义滚动条容器 */
+.panel-slide {
+    width: 20px;
+    /* 滚动条宽度 */
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+/* 背景线 */
+.panel-slide .scroll-track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background: #000;
+    border-radius: 1px;
+}
+
+/* 滚动圆点 */
+.panel-slide .scroll-thumb {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* 圆心对齐黑线 */
+    transform: translate(-50%, 0);
+    width: 14px;
+    height: 14px;
+    background: #000;
+    border-radius: 50%;
+
+    cursor: grab;
+}
+
+.panel-slide .scroll-thumb:active {
+    cursor: grabbing;
 }
 
 .content-area {
