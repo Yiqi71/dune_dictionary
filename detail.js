@@ -41,6 +41,7 @@ function filterProposer() {
     });
 }
 
+
 // 浮窗功能函数
 export function showFloatingPanel(word, node) {
     const panel = document.getElementById('floating-panel');
@@ -49,6 +50,12 @@ export function showFloatingPanel(word, node) {
     currentFloatingPanel = panel;
 
     renderPanelSections();
+
+    // 重置 tab 按钮状态
+    const tabs = document.querySelectorAll('.panel-tabs button');
+    tabs.forEach(btn => btn.classList.remove('active'));
+    const entryTab = document.querySelector('.panel-tabs button[data-tab="entry"]');
+    if (entryTab) entryTab.classList.add('active');
 }
 
 function hideFloatingPanel() {
@@ -66,8 +73,8 @@ function renderPanelSections() {
     const title = document.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
-    <h1> ${currentWord.term || '未知单词'} </h1>
-    <h1> ${currentWord.termOri || '无'} </h1>
+    <h1 class = "Chinese"> ${currentWord.term || '未知单词'} </h1>
+    <h1 class = "English"> ${currentWord.termOri || '无'} </h1>
     `
 
     // 下半部分
@@ -105,7 +112,40 @@ function renderPanelSections() {
     `;
 }
 
+function renderCommentSection() {
+    let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    if (!currentWord) return;
 
+    const contentScroll = document.querySelector('.panel-content');
+    contentScroll.innerHTML = `
+        <section id="section-comment">
+            <h3>评论</h3>
+            <div class="comment-list">
+                ${currentWord.comments?.map(c => `<p><b>${c.author}：</b>${c.content}</p>`).join('') || '暂无评论'}
+            </div>
+        </section>
+    `;
+}
+
+// tab 切换逻辑
+function initTabs() {
+    const tabs = document.querySelectorAll('.panel-tabs button');
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (btn.dataset.tab === 'entry') {
+                renderPanelSections();
+            } else if (btn.dataset.tab === 'comment') {
+                renderCommentSection();
+            }
+        });
+    });
+}
+
+// 初始化时调用
+initTabs();
 
 // 滚动到对应 section
 function updateTabContent(tabType = "brief") {

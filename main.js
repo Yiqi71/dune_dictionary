@@ -220,6 +220,8 @@ function updateWordFocus() {
             // 自动吸附到屏幕中心
             zoomToWord(focusedWord.id);
             updateWordDetails();
+
+            showFloatingPanel();
         }
     }
 }
