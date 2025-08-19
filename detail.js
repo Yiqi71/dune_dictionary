@@ -3,7 +3,7 @@ import {
 } from "./state.js";
 
 import {
-    zoomToWord
+    zoomToWord, updateWordDetails, updateWordFocus
 } from "./main.js";
 
 // 浮窗相关变量
@@ -11,14 +11,14 @@ let currentFloatingPanel = null;
 let isPanelVisible = false;
 
 function filterProposer() {
-    const focusedWord = window.allWords.find(w => w.id == state.focusedId);
+    const focusedWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!focusedWord) return [];
 
     // 先渲染 proposer 相关的词
     const relatedContainer = document.getElementById('related-words');
     if (!relatedContainer) return;
-    relatedContainer.innerHTML = '';
 
+    relatedContainer.innerHTML = '';
     const relatedWords = window.allWords.filter(
         w => w.proposer === focusedWord.proposer && w.id !== focusedWord.id
     );
@@ -32,9 +32,12 @@ function filterProposer() {
         link.addEventListener('click', (e) => {
             e.stopPropagation();
             const targetNodeId = link.id.replace('related-', '');
-            console.log(targetNodeId);
             zoomToWord(targetNodeId); // 用你现成的 zoomToWord(node) 逻辑
+            updateWordFocus();
+
+            renderPanelSections();
             updateTabContent("book");
+            
         });
 
         relatedContainer.appendChild(link);
@@ -43,7 +46,7 @@ function filterProposer() {
 
 
 // 浮窗功能函数
-export function showFloatingPanel(word, node) {
+export function showFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.remove('hidden');
     isPanelVisible = true;
@@ -58,14 +61,14 @@ export function showFloatingPanel(word, node) {
     if (entryTab) entryTab.classList.add('active');
 }
 
-function hideFloatingPanel() {
+export function hideFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
     isPanelVisible = false;
     currentFloatingPanel = null;
 }
 
-function renderPanelSections() {
+export function renderPanelSections() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
 
@@ -96,6 +99,7 @@ function renderPanelSections() {
             <p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p>
             <p>提出国：${currentWord.proposing_country || '未知'}</p>
             <p>提出时间：${currentWord.proposing_time || '未知'}</p>
+            <div id="related-words"></div>
         </section>
 
         <section id="section-image">
@@ -104,12 +108,8 @@ function renderPanelSections() {
                 style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'>
             <p>${currentWord.term}</p>
         </section>
-
-        <section id="section-comment">
-            <h3>评论</h3>
-            <p>${currentWord.comments?.map(c => `${c.author}：${c.content}`).join('<br>') || '暂无评论'}</p>
-        </section>
     `;
+    filterProposer();
 }
 
 function renderCommentSection() {
@@ -258,7 +258,7 @@ termDiv.addEventListener("click", (e) => {
 commentDiv.addEventListener("click", (e) => {
     e.stopPropagation();
     showFloatingPanel();
-    updateTabContent("comment"); // 滚动到评论
+    renderCommentSection();
 });
 
 // 点击「相关著作 / 提出者」

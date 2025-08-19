@@ -13,7 +13,7 @@ import {
 } from "./countryBoundingBoxes.js";
 
 import {
-    showFloatingPanel
+    showFloatingPanel,renderPanelSections
 } from "./detail.js"
 
 
@@ -33,8 +33,11 @@ export function zoomToWord(id) {
     const oldScale = state.currentScale;
     const newScale = scaleThreshold;
 
-    let x = rect.left + rect.width / 2;
-    let y = rect.top + rect.height / 2
+    // let x = rect.left + rect.width / 2;
+    // let y = rect.top + rect.height / 2;
+
+    let x = rect.left;
+    let y = rect.top;
 
     // 屏幕中心
     const viewportCenterX = window.innerWidth / 2;
@@ -161,7 +164,7 @@ function drawLine(id1, id2, relation) {
 }
 
 // 更新单词聚焦状态 - 基于视图中心
-function updateWordFocus() {
+export function updateWordFocus() {
     const overlay = document.getElementById("overlay");
     const detailDiv = document.getElementById("word-details");
     // 清除之前聚焦的单词
@@ -220,13 +223,11 @@ function updateWordFocus() {
             // 自动吸附到屏幕中心
             zoomToWord(focusedWord.id);
             updateWordDetails();
-
-            showFloatingPanel();
         }
     }
 }
 
-function updateWordDetails() {
+export function updateWordDetails() {
     if (!state.focusedNodeId) return;
     const word = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!word) return;
@@ -428,10 +429,10 @@ function renderWordUniverse(wordsData) {
                 // 只有不是拖拽操作时才处理点击
                 if (!isDragging) {
                     if (node.classList.contains('focused')) {
-                        console.log("click focused node");
                     } else {
                         zoomToWord(node.id);
                         updateWordFocus();
+                        renderPanelSections();
                     }
                 }
             });
@@ -472,7 +473,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderWordUniverse(data.words);
             zoomToWord(state.focusedNodeId);
             updateWordFocus();
-            console.log(state.focusedNodeId);
         })
         .catch(error => {
             console.error('加载数据失败:', error);
@@ -495,6 +495,6 @@ document.addEventListener('keydown', (e) => {
 
 
 // // menu
-// let duneIcon = document.getElementById("duneIcon");
+// let dunes-icon = document.getElementById("dunes-icon");
 // let suffleIcon = document.getElementById("suffleIcon");
 // let searchIcon = document.getElementById("searchIcon");

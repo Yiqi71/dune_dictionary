@@ -2,10 +2,15 @@ import {
     state
 } from "./state.js";
 import {
-    updateRelations, scaleThreshold
+    updateRelations,
+    scaleThreshold
 } from "./main.js";
-import { moveIndicator } from "./menu.js";
-
+import {
+    moveIndicator
+} from "./menu.js";
+import{
+    hideFloatingPanel
+} from "./detail.js"
 
 const canvas = document.getElementById("universe-canvas");
 const ctx = canvas.getContext("2d");
@@ -16,13 +21,13 @@ canvas.height = window.innerHeight;
 
 function updateGridSizeToFitHeight() {
     state.baseWidth = window.innerWidth / 24;
-    state.baseHeight = window.innerHeight / 4;
+    state.baseHeight = window.innerHeight / 2;
 }
 
 // 限制 Y 方向边界
 export function clampOffsetY(offsetY) {
     const gridSize = state.baseHeight * state.currentScale;
-    const latCount = 4;
+    const latCount = 2;
     const totalHeight = gridSize * latCount;
     const minY = -totalHeight + canvas.height; // 南极边缘
     const maxY = 0; // 北极边缘
@@ -39,10 +44,6 @@ export function clampOffsetX(offsetX) {
     return Math.min(Math.max(offsetX, minX), maxX);
 }
 
-let offsetX = state.panX;
-let offsetY = state.panY;
-let scale = state.currentScale;
-
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
@@ -56,7 +57,7 @@ export function updateWordNodeTransforms() {
     const gridHeight = state.baseHeight * scale;
 
     const lonCount = 24;
-    const latCount = 4;
+    const latCount = 2;
 
     const totalWidth = gridWidth * lonCount;
     const totalHeight = gridHeight * latCount;
@@ -90,10 +91,14 @@ canvas.addEventListener("mousedown", (e) => {
     dragStartY = e.clientY;
     const detailDiv = document.getElementById("word-details");
     detailDiv.classList.add("hidden");
+    hideFloatingPanel();
 });
 
 canvas.addEventListener("mousemove", (e) => {
     if (isDragging) {
+        let offsetX = state.panX;
+        let offsetY = state.panY;
+
         offsetX += e.clientX - dragStartX;
         offsetY += e.clientY - dragStartY;
         dragStartX = e.clientX;
@@ -121,6 +126,7 @@ canvas.addEventListener("mouseleave", (e) => {
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
+    let scale =state.currentScale; 
     const zoomStep = 0.1;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
     const newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
@@ -128,12 +134,13 @@ canvas.addEventListener("wheel", (e) => {
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
+    let offsetX = state.panX;
+    let offsetY = state.panY;
+
     offsetX = mouseX - (mouseX - offsetX) * (newScale / scale);
     offsetY = mouseY - (mouseY - offsetY) * (newScale / scale);
 
-    scale = newScale;
-
-    state.currentScale = scale;
+    state.currentScale = newScale;
     state.panX = clampOffsetX(offsetX);
     state.panY = clampOffsetY(offsetY); // 加边界
 
@@ -141,23 +148,23 @@ canvas.addEventListener("wheel", (e) => {
     updateWordNodeTransforms();
     updateRelations();
     moveIndicator(state.currentScale);
+    hideFloatingPanel();
 }, {
     passive: false
 });
 
 // 主绘图函数
 export function draw() {
-    offsetX = clampOffsetX(state.panX);
-    offsetY = clampOffsetY(state.panY); // 边界
-    scale = state.currentScale;
+    let offsetX = clampOffsetX(state.panX);
+    let offsetY = clampOffsetY(state.panY); // 边界
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const gridWidth = state.baseWidth * scale;
-    const gridHeight = state.baseHeight * scale;
+    const gridWidth = state.baseWidth * state.currentScale;
+    const gridHeight = state.baseHeight * state.currentScale;
 
     const lonCount = 24;
-    const latCount = 4;
+    const latCount = 2;
 
     const totalWidth = gridWidth * lonCount;
     const totalHeight = gridHeight * latCount;
@@ -174,8 +181,33 @@ export function draw() {
     offsetsToDraw.forEach(([ox, oy]) => {
         drawGridAtOffset(ox, oy, gridWidth, gridHeight, lonCount, latCount);
         drawSpecialLatLines(ox, oy, gridHeight, totalWidth);
+        drawTimezoneLabels(ox, oy, gridWidth, lonCount); 
     });
 }
+
+
+function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
+    ctx.save();
+    ctx.fillStyle = "#F8EDD0";   // 字体颜色
+    ctx.font = `15px ChillDINGothic`; // 随缩放变化
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+
+    for (let lonIdx = 0; lonIdx < lonCount; lonIdx++) {
+        // 中点位置
+        const centerX = lonIdx * gridWidth + offsetX + gridWidth / 2;
+        const y = offsetY + 25; // 在格子上方留点间距
+
+        // 计算时区号
+        const tz = -11 + lonIdx;
+        const label = tz > 0 ? `+${tz}` : `${tz}`;
+
+        ctx.fillText(label, centerX, y);
+    }
+    ctx.restore();
+}
+
+
 
 function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, latCount) {
     for (let lonIdx = 0; lonIdx <= lonCount; lonIdx++) {
@@ -216,7 +248,7 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth) {
         dash,
         lineWidth
     }) => {
-        const latIdx = (90 - lat) / 45;
+        const latIdx = (90 - lat) / 90;
         const y = latIdx * gridHeight + offsetY;
 
         ctx.strokeStyle = color;
@@ -241,5 +273,3 @@ function initialize() {
 
 window.addEventListener("resize", initialize);
 initialize();
-
-
