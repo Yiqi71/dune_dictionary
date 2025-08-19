@@ -377,7 +377,7 @@ function renderWordUniverse(wordsData) {
     // 渲染每个国家的节点
     for (const country in wordsByCountry) {
         const words = wordsByCountry[country];
-        const countryPoints = getCountryGridPoints(country, 3);
+        const countryPoints = getCountryGridPoints(country, 1);
 
         console.log(`${country} 可以放 ${countryPoints.length} 个 node`);
 
