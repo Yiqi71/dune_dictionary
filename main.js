@@ -245,7 +245,7 @@ export function updateWordFocus() {
             let neighbors = getNeighbors(wordsOnGrid, left, top);
             const hasAny = neighbors.some(n => n.hasValue);
 
-            if (hasAny && state.currentScale < 8) {
+            if (hasAny && state.currentScale < 7.99) {
                 return;
             }
 
