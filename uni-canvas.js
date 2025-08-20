@@ -127,9 +127,9 @@ canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
     let scale =state.currentScale; 
-    const zoomStep = 0.1;
+    const zoomStep = 0.2;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    const newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
+    const newScale = Math.min(scaleThreshold+3, Math.max(1, scale + delta));
 
     const mouseX = e.clientX;
     const mouseY = e.clientY;

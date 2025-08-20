@@ -3,7 +3,9 @@ import {
 } from "./state.js";
 
 import {
-    updateRelations
+    updateRelations,
+    zoomToWord,
+    updateWordFocus
 } from "./main.js";
 
 import {
@@ -105,3 +107,23 @@ export function moveIndicator(value) {
     const percent = (value - 1) * 25; // 5 个刻度
     indicator.style.left = percent + '%';
 }
+
+
+// menu
+let dunesIcon = document.getElementById("dunes-icon");
+dunesIcon.addEventListener('click', () => {
+    zoomToWord(17, Math.max(5,state.currentScale));
+    updateWordFocus();
+});
+
+// window.addEventListener('DOMContentLoaded', () => {
+//     const suffleIcon = document.getElementById('suffle-icon');
+//     suffleIcon.addEventListener('click', () => {
+//         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
+//         console.log(randomId);
+//         zoomToWord(randomId, Math.max(5,state.currentScale));
+//         updateWordFocus();
+//     });
+// });
+
+let searchIcon = document.getElementById("searchIcon");

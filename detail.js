@@ -32,7 +32,7 @@ function filterProposer() {
         link.addEventListener('click', (e) => {
             e.stopPropagation();
             const targetNodeId = link.id.replace('related-', '');
-            zoomToWord(targetNodeId); // 用你现成的 zoomToWord(node) 逻辑
+            zoomToWord(targetNodeId, state.currentScale); // 用你现成的 zoomToWord(node) 逻辑
             updateWordFocus();
 
             renderPanelSections();

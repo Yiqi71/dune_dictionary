@@ -13,7 +13,8 @@ import {
 } from "./countryBoundingBoxes.js";
 
 import {
-    showFloatingPanel,renderPanelSections
+    showFloatingPanel,
+    renderPanelSections
 } from "./detail.js"
 
 
@@ -24,14 +25,13 @@ export const scaleThreshold = 5; // 触发详细信息显示的缩放阈值
 
 let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
-export function zoomToWord(id) {
+export function zoomToWord(id,newScale) {
     const node = document.getElementById(id);
     if (!node) return;
 
     const rect = node.getBoundingClientRect();
 
     const oldScale = state.currentScale;
-    const newScale = scaleThreshold;
 
     // let x = rect.left + rect.width / 2;
     // let y = rect.top + rect.height / 2;
@@ -47,7 +47,7 @@ export function zoomToWord(id) {
     state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
     state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
 
-    state.currentScale = newScale;
+    state.currentScale = Math.max(oldScale, newScale);
 
     draw();
     updateWordNodeTransforms();
@@ -63,7 +63,7 @@ function getCenterPosition(element) {
 }
 
 
-// 画线svg
+// 画线svg relations
 function drawLine(id1, id2, relation) {
     const svg = document.getElementById('connection-lines');
     svg.innerHTML = ''; // 清空原线
@@ -152,7 +152,7 @@ function drawLine(id1, id2, relation) {
     });
 
     hitbox.addEventListener('click', () => {
-        zoomToWord(id2);
+        zoomToWord(id2, state.currentScale);
 
         updateWordFocus();
         tooltipDiv.style.opacity = '0';
@@ -162,6 +162,32 @@ function drawLine(id1, id2, relation) {
     svg.appendChild(visualLine);
     svg.appendChild(hitbox);
 }
+
+// 获取邻居
+function getNeighbors(wordsOnGrid, left, top) {
+    const neighbors = [];
+    const deltas = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1, 0],           [1, 0],
+        [-1, 1],  [0, 1],  [1, 1]
+    ];
+
+    for (const [dx, dy] of deltas) {
+        const nx = Math.round(left + dx);
+        const ny = Math.round(top + dy);
+        const key = `${nx},${ny}`;
+
+        neighbors.push({
+            key,
+            value: wordsOnGrid[key] || null,
+            hasValue: !!wordsOnGrid[key]
+        });
+    }
+
+    return neighbors;
+}
+
+
 
 // 更新单词聚焦状态 - 基于视图中心
 export function updateWordFocus() {
@@ -212,6 +238,17 @@ export function updateWordFocus() {
 
         // 聚焦最近的单词
         if (closestWord) {
+            // 是否有足够空间
+            let left = closestWord.dataset.x * 100;
+            let top = closestWord.dataset.y * 100;
+
+            let neighbors = getNeighbors(wordsOnGrid, left, top);
+            const hasAny = neighbors.some(n => n.hasValue);
+
+            if (hasAny && state.currentScale < 8) {
+                return;
+            }
+
             closestWord.classList.add('focused');
             focusedWord = closestWord;
             state.focusedNodeId = closestWord.id;
@@ -221,8 +258,9 @@ export function updateWordFocus() {
             hideNearbyNodes(closestWord);
 
             // 自动吸附到屏幕中心
-            zoomToWord(focusedWord.id);
+            // zoomToWord(focusedWord.id,state.currentScale);
             updateWordDetails();
+        
         }
     }
 }
@@ -319,11 +357,13 @@ function getCountryBoundary(countryCode) {
     return box[1]; // [minLon, minLat, maxLon, maxLat]
 }
 
+let wordsOnGrid = {};
+let minGrid = 1;
 // 生成全地图网格（百分比坐标）
-function generateGridPoints(step = 10, min = 10, max = 90) {
+function generateGridPoints(min = 5, max = 95) {
     const points = [];
-    for (let top = min; top <= max; top += step) {
-        for (let left = min; left <= max; left += step) {
+    for (let top = min; top <= max; top += minGrid) {
+        for (let left = min; left <= max; left += minGrid) {
             points.push({
                 left,
                 top
@@ -341,10 +381,10 @@ function shuffleArray(array) {
     }
 }
 
-function getCountryGridPoints(countryCode, step = 10) {
+function getCountryGridPoints(countryCode) {
     const [minLon, minLat, maxLon, maxLat] = getCountryBoundary(countryCode);
 
-    const allPoints = generateGridPoints(step);
+    const allPoints = generateGridPoints();
     const availablePoints = allPoints.filter(({
         left,
         top
@@ -363,6 +403,7 @@ function getCountryGridPoints(countryCode, step = 10) {
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
     wordNodesContainer.innerHTML = '';
+    wordsOnGrid = {};
 
     // 按国家分组
     const wordsByCountry = {};
@@ -407,10 +448,11 @@ function renderWordUniverse(wordsData) {
             node.dataset.lat = word.latitude;
             node.dataset.x = leftPercent / 100;
             node.dataset.y = topPercent / 100;
-
-
-
             node.id = word.id;
+
+             // ✅ 关键：用 "x,y" 作为 key 存储
+            const key = `${Math.round(leftPercent)},${Math.round(topPercent)}`;
+            wordsOnGrid[key] = node.id;
 
             node.addEventListener('wheel', function (e) {
                 e.stopPropagation(); // 不让滚轮事件向上传播
@@ -428,9 +470,9 @@ function renderWordUniverse(wordsData) {
                 e.stopPropagation();
                 // 只有不是拖拽操作时才处理点击
                 if (!isDragging) {
-                    if (node.classList.contains('focused')) {
-                    } else {
-                        zoomToWord(node.id);
+                    if (node.classList.contains('focused')) {} else {
+                        // zoomToWord(node.id, Math.max(scaleThreshold,state.currentScale));
+                        zoomToWord(node.id, 8);
                         updateWordFocus();
                         renderPanelSections();
                     }
@@ -471,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
-            zoomToWord(state.focusedNodeId);
+            zoomToWord(state.focusedNodeId,scaleThreshold);
             updateWordFocus();
         })
         .catch(error => {
@@ -494,7 +536,3 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-// // menu
-// let dunes-icon = document.getElementById("dunes-icon");
-// let suffleIcon = document.getElementById("suffleIcon");
-// let searchIcon = document.getElementById("searchIcon");
