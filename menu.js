@@ -116,14 +116,14 @@ dunesIcon.addEventListener('click', () => {
     updateWordFocus();
 });
 
-// window.addEventListener('DOMContentLoaded', () => {
-//     const suffleIcon = document.getElementById('suffle-icon');
-//     suffleIcon.addEventListener('click', () => {
-//         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
-//         console.log(randomId);
-//         zoomToWord(randomId, Math.max(5,state.currentScale));
-//         updateWordFocus();
-//     });
-// });
+window.addEventListener('DOMContentLoaded', () => {
+    const shuffleIcon = document.getElementById('shuffle-icon');
+    shuffleIcon.addEventListener('click', () => {
+        const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
+        console.log(randomId);
+        zoomToWord(randomId, 8);
+        updateWordFocus();
+    });
+});
 
 let searchIcon = document.getElementById("searchIcon");
