@@ -84,18 +84,18 @@ export function renderPanelSections() {
     const contentScroll = document.querySelector('.panel-content');
     contentScroll.innerHTML = `        
         <section id="section-brief">
-            <h3>简要释义</h3>
-            <p>${currentWord.brief_definition || '暂无简要释义'}</p>
+            <p style='color: #392F17;font-family: ChillDINGothic;font-size: 20px;font-weight: 400;'>简要释义</p>
+            <h2>${currentWord.brief_definition || '暂无简要释义'}</h2>
         </section>
 
         <section id="section-detail">
-            <h3>详细释义</h3>
+            <p>详细释义</p>
             <p>${currentWord.extended_definition || '暂无详细释义'}</p>
             <p style='color:#888;font-size:13px;margin-top:10px;'>参考资料：${currentWord.references || '暂无'}</p>
         </section>
 
         <section id="section-book">
-            <h3>相关著作</h3>
+            <p>相关著作</p>
             <p>${currentWord.proposer ? '提出者：' + currentWord.proposer : '暂无相关著作信息'}</p>
             <p>提出国：${currentWord.proposing_country || '未知'}</p>
             <p>提出时间：${currentWord.proposing_time || '未知'}</p>
@@ -103,13 +103,14 @@ export function renderPanelSections() {
         </section>
 
         <section id="section-image">
-            <h3>图片</h3>
+            <p>图片</p>
             <img src='${currentWord.diagrams[0]}' alt='${currentWord.term}'
                 style='max-width:100%;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:10px;'>
             <p>${currentWord.term}</p>
         </section>
     `;
     filterProposer();
+    renderScrollMarkers();
 }
 
 function renderCommentSection() {
@@ -119,7 +120,7 @@ function renderCommentSection() {
     const contentScroll = document.querySelector('.panel-content');
     contentScroll.innerHTML = `
         <section id="section-comment">
-            <h3>评论</h3>
+            <p>评论</p>
             <div class="comment-list">
                 ${currentWord.comments?.map(c => `<p><b>${c.author}：</b>${c.content}</p>`).join('') || '暂无评论'}
             </div>
@@ -228,6 +229,53 @@ document.addEventListener('mouseup', () => {
 // 初始更新一次位置
 updateThumbPosition();
 
+
+function renderScrollMarkers() {
+    // 清空旧的 marker
+    scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
+
+    const sections = [
+        { id: "section-brief", label: "简要释义" },
+        { id: "section-detail", label: "详细释义" },
+        { id: "section-book", label: "提出人" },
+        { id: "section-image", label: "图片" }
+    ];
+
+    const visibleHeight = panelContent.clientHeight;     // 可视高度
+    const contentHeight = panelContent.scrollHeight;     // 内容总高度
+    const trackHeight = panelContent.clientHeight;       // 滚动条轨道高度
+    const thumbHeight = scrollThumb.offsetHeight;        // thumb 高度
+    const thumbMax = trackHeight - thumbHeight*2;          // thumb 最大移动范围
+
+    sections.forEach(sec => {
+        const el = document.getElementById(sec.id);
+        if (!el) return;
+
+        // section 相对 panelContent 顶部的距离
+        const relativeTop = el.offsetTop - panelContent.offsetTop;
+
+        // 映射到轨道位置
+        let markerTop = (relativeTop / (contentHeight - visibleHeight)) * thumbMax;
+        if (markerTop > thumbMax) markerTop = thumbMax;
+        
+        // 生成 marker
+        const marker = document.createElement("div");
+        marker.className = "scroll-marker";
+        marker.style.top = `${markerTop}px`;
+
+        const tooltip = document.createElement("div");
+        tooltip.className = "scroll-tooltip";
+        tooltip.textContent = sec.label;
+        marker.appendChild(tooltip);
+
+        // 点击 → 滚动到该 section
+        marker.addEventListener("click", () => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+
+        scrollTrack.appendChild(marker);
+    });
+}
 
 
 

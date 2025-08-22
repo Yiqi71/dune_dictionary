@@ -1,0 +1,244 @@
+/* 浮窗样式 */
+#floating-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 647px;
+    border-radius: 17px 0 0 17px;
+    background: #FFFCF4;
+
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
+}
+
+#floating-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+}
+
+#floating-panel:not(.hidden) {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 上半部分 */
+.panel-top {
+    flex: 0 0 200px;
+    /* 高度你可以调，比如 200px */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* 垂直居中 */
+    align-items: center;
+    /* 水平居中 */
+    border-bottom: 1px solid #392F17;
+    padding: 16px;
+}
+
+
+/* 下半部分：其他标签内容 */
+.panel-bottom {
+    display: flex;
+    flex: 1;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+.panel-content {
+    border-radius: 0 0 0 8px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    overflow-y: scroll;
+    /* 开启滚动 */
+    padding-right: 12px;
+    /* 给滚动条留点空间 */
+
+    /* 隐藏原生滚动条 */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+}
+.panel-content::-webkit-scrollbar {
+    display: none;
+    /* Chrome / Safari */
+}
+.panel-content section {
+    margin: 0 24px;
+    padding: 48px 0;
+    border-bottom: #392F17 dashed 1px;
+}
+.panel-content section * {
+    margin: 16px 0;
+}
+
+.panel-content section p {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 20px;
+    font-weight: 400;
+}
+.panel-content section h2 {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+#section-brief * {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+/* tabs 样式 */
+.panel-tabs {
+    position: absolute;
+    bottom: 10px;
+    left: -80px;
+    /* 让它在面板外左边 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.panel-tabs button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #eee;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.panel-tabs button.active {
+    background: #000;
+    color: #fff;
+}
+
+
+/* 自定义滚动条容器 */
+.panel-slide {
+    width: 20px;
+    /* 滚动条宽度 */
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.panel-slide .scroll-track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background: #392F17;
+    border-radius: 1px;
+    margin:5px 0;
+}
+
+.panel-slide .scroll-thumb {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    /* 圆心对齐黑线 */
+    transform: translate(-50%, 0);
+    width: 14px;
+    height: 14px;
+    background: #FCF8EF;
+    border-radius: 50%;
+    border: solid 1px #474132;
+        margin:5px 0;
+
+    cursor: grab;
+}
+
+
+.panel-slide .scroll-thumb:active {
+    cursor: grabbing;
+}
+
+.content-area {
+    flex: 1;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.content-scroll {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.content-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.content-scroll::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.content-scroll::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+
+.panel-tabs {
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fa;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.scroll-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background-color: #F0B549;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.scroll-marker:hover {
+    background-color: #333;
+}
+
+.scroll-tooltip {
+    position: absolute;
+    left: -110px;
+    /* 根据需要调整到点的左侧 */
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    display: none;
+}
+
+.scroll-marker:hover .scroll-tooltip {
+    display: block;
+}
