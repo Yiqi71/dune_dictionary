@@ -1,58 +1,66 @@
 // 状态变量
-import {
-    state
-} from "./state.js";
-
-import {
-    draw,
-    updateWordNodeTransforms
-} from "./uni-canvas.js";
-
-import {
-    country_bounding_boxes
-} from "./countryBoundingBoxes.js";
-
-import {
-    showFloatingPanel,
-    renderPanelSections
-} from "./detail.js"
-
+import { state } from "./state.js";
+import { draw, updateWordNodeTransforms } from "./uni-canvas.js";
+import { country_bounding_boxes } from "./countryBoundingBoxes.js";
+import { renderPanelSections } from "./detail.js";
 
 window.allWords = [];
 
 let focusedWord = null;
 export const scaleThreshold = 5; // 触发详细信息显示的缩放阈值
-
 let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
-export function zoomToWord(id,newScale) {
-    const node = document.getElementById(id);
-    if (!node) return;
 
-    const rect = node.getBoundingClientRect();
+// nodes
+let wordsOnGrid = {};
+let minGrid = 1;
 
-    const oldScale = state.currentScale;
-
-    // let x = rect.left + rect.width / 2;
-    // let y = rect.top + rect.height / 2;
-
-    let x = rect.left;
-    let y = rect.top;
-
-    // 屏幕中心
-    const viewportCenterX = window.innerWidth / 2;
-    const viewportCenterY = window.innerHeight / 2;
-
-    // 更新缩放中心逻辑（保持点击点在中心）
-    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
-    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
-
-    state.currentScale = Math.max(oldScale, newScale);
-
-    draw();
-    updateWordNodeTransforms();
-    updateRelations();
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
+
+function getCountryBoundary(countryCode) {
+    const box = country_bounding_boxes[countryCode];
+    if (!box) return [-180, -90, 180, 90];
+    return box[1]; // [minLon, minLat, maxLon, maxLat]
+}
+
+// 生成全地图网格（百分比坐标）
+function generateGridPoints(min = 5, max = 95) {
+    const points = [];
+    for (let top = min; top <= max; top += minGrid) {
+        for (let left = min; left <= max; left += minGrid) {
+            points.push({
+                left,
+                top
+            });
+        }
+    }
+    return points;
+}
+
+function getCountryGridPoints(countryCode) {
+    const [minLon, minLat, maxLon, maxLat] = getCountryBoundary(countryCode);
+
+    const allPoints = generateGridPoints();
+    const availablePoints = allPoints.filter(({
+        left,
+        top
+    }) => {
+        // 转换百分比到经纬度
+        const lon = left * 3.6 - 180;
+        const lat = 90 - top * 1.8;
+        return lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat;
+    });
+
+    shuffleArray(availablePoints); // 只打乱国家内部格子顺序
+    return availablePoints;
+}
+
+
 
 function getCenterPosition(element) {
     const rect = element.getBoundingClientRect();
@@ -188,8 +196,35 @@ function getNeighbors(wordsOnGrid, left, top) {
 }
 
 
+export function zoomToWord(id,newScale) {
+    const node = document.getElementById(id);
+    if (!node) return;
 
-// 更新单词聚焦状态 - 基于视图中心
+    const rect = node.getBoundingClientRect();
+
+    const oldScale = state.currentScale;
+
+    // let x = rect.left + rect.width / 2;
+    // let y = rect.top + rect.height / 2;
+
+    let x = rect.left;
+    let y = rect.top;
+
+    // 屏幕中心
+    const viewportCenterX = window.innerWidth / 2;
+    const viewportCenterY = window.innerHeight / 2;
+
+    // 更新缩放中心逻辑（保持点击点在中心）
+    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
+    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
+
+    state.currentScale = Math.max(oldScale, newScale);
+
+    draw();
+    updateWordNodeTransforms();
+    updateRelations();
+}
+
 export function updateWordFocus() {
     const overlay = document.getElementById("overlay");
     const detailDiv = document.getElementById("word-details");
@@ -245,7 +280,7 @@ export function updateWordFocus() {
             let neighbors = getNeighbors(wordsOnGrid, left, top);
             const hasAny = neighbors.some(n => n.hasValue);
 
-            if (hasAny && state.currentScale < 7.99) {
+            if (hasAny && state.currentScale < 7.9) {
                 return;
             }
 
@@ -337,68 +372,6 @@ export function updateRelations() {
         drawLine(state.focusedNodeId, a.id, a.relation);
     });
 }
-
-function hideNearbyNodes(focusedNode) {
-    document.querySelectorAll('.word-node').forEach(node => {
-        if (node === focusedNode) return;
-        node.style.opacity = '0.5';
-    });
-}
-
-function restoreAllNodes() {
-    document.querySelectorAll('.word-node').forEach(node => {
-        node.style.opacity = '1';
-    });
-}
-
-function getCountryBoundary(countryCode) {
-    const box = country_bounding_boxes[countryCode];
-    if (!box) return [-180, -90, 180, 90];
-    return box[1]; // [minLon, minLat, maxLon, maxLat]
-}
-
-let wordsOnGrid = {};
-let minGrid = 1;
-// 生成全地图网格（百分比坐标）
-function generateGridPoints(min = 5, max = 95) {
-    const points = [];
-    for (let top = min; top <= max; top += minGrid) {
-        for (let left = min; left <= max; left += minGrid) {
-            points.push({
-                left,
-                top
-            });
-        }
-    }
-    return points;
-}
-
-// 随机打乱
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-function getCountryGridPoints(countryCode) {
-    const [minLon, minLat, maxLon, maxLat] = getCountryBoundary(countryCode);
-
-    const allPoints = generateGridPoints();
-    const availablePoints = allPoints.filter(({
-        left,
-        top
-    }) => {
-        // 转换百分比到经纬度
-        const lon = left * 3.6 - 180;
-        const lat = 90 - top * 1.8;
-        return lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat;
-    });
-
-    shuffleArray(availablePoints); // 只打乱国家内部格子顺序
-    return availablePoints;
-}
-
 // 渲染函数
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
@@ -499,6 +472,22 @@ function renderWordUniverse(wordsData) {
 
 }
 
+function hideNearbyNodes(focusedNode) {
+    document.querySelectorAll('.word-node').forEach(node => {
+        if (node === focusedNode) return;
+        node.style.opacity = '0.5';
+    });
+}
+
+function restoreAllNodes() {
+    document.querySelectorAll('.word-node').forEach(node => {
+        node.style.opacity = '1';
+    });
+}
+
+
+
+
 
 // 初始化 - 等待DOM加载完成后获取数据
 document.addEventListener('DOMContentLoaded', () => {
@@ -513,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
-            zoomToWord(state.focusedNodeId,scaleThreshold);
+            zoomToWord(state.focusedNodeId,scaleThreshold+3);
             updateWordFocus();
         })
         .catch(error => {

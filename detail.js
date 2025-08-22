@@ -230,6 +230,12 @@ updateThumbPosition();
 
 
 
+
+
+
+
+
+
 // 点击外部关闭浮窗
 function initClickOutsideHandler() {
     document.addEventListener('click', (e) => {
