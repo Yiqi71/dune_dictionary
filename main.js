@@ -344,6 +344,9 @@ export function updateWordDetails() {
     termMainEl.textContent = word.term || '未知单词';
     originalTermEl.textContent = word.termOri || '无';
 
+    const node=document.getElementById(word.id);
+    const termDiv=document.getElementById("term");
+    termDiv.style.backgroundColor=node.style.backgroundColor;
     // image
     const imageTitle = document.querySelector('#image .detail-title');
     const imageEl = document.querySelector('#image img');
