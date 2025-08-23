@@ -10,7 +10,7 @@
 body {
     overflow: hidden;
     height: 100vh;
-    background: #D1BA80;
+    background: #AA925B;
     color: #544011;
     font-family: "Barlow Condensed", "ChillDIN";
     transition: opacity 0.8s, transform 0.8s;

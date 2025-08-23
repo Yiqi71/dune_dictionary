@@ -180,15 +180,15 @@ export function draw() {
 
     offsetsToDraw.forEach(([ox, oy]) => {
         drawGridAtOffset(ox, oy, gridWidth, gridHeight, lonCount, latCount);
-        drawSpecialLatLines(ox, oy, gridHeight, totalWidth);
-        drawTimezoneLabels(ox, oy, gridWidth, lonCount); 
+        drawSpecialLatLines(ox, oy, gridHeight, totalWidth, gridWidth);
+        drawTimezoneLabels(ox, oy, gridWidth, lonCount);
     });
 }
 
 
 function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
     ctx.save();
-    ctx.fillStyle = "#F8EDD0";   // 字体颜色
+    ctx.fillStyle = "#F0B549";   // 字体颜色
     ctx.font = `15px ChillDINGothic`; // 随缩放变化
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
@@ -214,54 +214,47 @@ function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, lat
         for (let latIdx = 0; latIdx <= latCount; latIdx++) {
             const x = lonIdx * gridWidth + offsetX - gridWidth;
             const y = latIdx * gridHeight + offsetY - gridHeight;
-            ctx.strokeStyle = "#F8EDD0";
+            ctx.strokeStyle = "#F0B549";
             ctx.strokeRect(x, y, gridWidth, gridHeight);
         }
     }
 }
 
-function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth) {
+function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth) {
     ctx.save();
-    const latitudes = [{
-            lat: 0,
-            color: "#F8EDD0",
-            dash: [],
-            lineWidth: 2
-        },
-        {
-            lat: 23.5,
-            color: "#F8EDD0",
-            dash: [5, 5],
-            lineWidth: 1
-        },
-        {
-            lat: -23.5,
-            color: "#F8EDD0",
-            dash: [5, 5],
-            lineWidth: 1
-        }
+    const latitudes = [
+        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 2 },
+        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [5, 5], lineWidth: 1 },
+        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [5, 5], lineWidth: 1 }
     ];
 
-    latitudes.forEach(({
-        lat,
-        color,
-        dash,
-        lineWidth
-    }) => {
-        const latIdx = (90 - lat) / 90;
+    latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {
+        const latIdx = (90 - lat) / 90;   // 映射成 [0,2] 区间
         const y = latIdx * gridHeight + offsetY;
 
+        // 1. 横线（从第二列开始，不覆盖 -11 时区）
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.setLineDash(dash);
 
         ctx.beginPath();
-        ctx.moveTo(offsetX, y);
+        ctx.moveTo(offsetX + gridWidth, y); // 从 -10 时区开始
         ctx.lineTo(offsetX + totalWidth, y);
         ctx.stroke();
+
+        // 2. 标签放在最右边（+12 时区之后）
+        ctx.setLineDash([]); 
+        ctx.fillStyle = color;
+        ctx.font = "14px ChillDINGothic";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(label, offsetX + totalWidth + 5, y); 
     });
+
     ctx.restore();
 }
+
+
 
 function initialize() {
     updateGridSizeToFitHeight();
