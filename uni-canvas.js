@@ -21,13 +21,13 @@ canvas.height = window.innerHeight;
 
 function updateGridSizeToFitHeight() {
     state.baseWidth = window.innerWidth / 24;
-    state.baseHeight = window.innerHeight / 2;
+    state.baseHeight = window.innerHeight;
 }
 
 // 限制 Y 方向边界
 export function clampOffsetY(offsetY) {
     const gridSize = state.baseHeight * state.currentScale;
-    const latCount = 2;
+    const latCount = 1;
     const totalHeight = gridSize * latCount;
     const minY = -totalHeight + canvas.height; // 南极边缘
     const maxY = 0; // 北极边缘
@@ -57,7 +57,7 @@ export function updateWordNodeTransforms() {
     const gridHeight = state.baseHeight * scale;
 
     const lonCount = 24;
-    const latCount = 2;
+    const latCount = 1;
 
     const totalWidth = gridWidth * lonCount;
     const totalHeight = gridHeight * latCount;
@@ -164,7 +164,7 @@ export function draw() {
     const gridHeight = state.baseHeight * state.currentScale;
 
     const lonCount = 24;
-    const latCount = 2;
+    const latCount = 1;
 
     const totalWidth = gridWidth * lonCount;
     const totalHeight = gridHeight * latCount;
@@ -223,13 +223,13 @@ function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, lat
 function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth) {
     ctx.save();
     const latitudes = [
-        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 2 },
-        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [5, 5], lineWidth: 1 },
-        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [5, 5], lineWidth: 1 }
+        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 1 },
+        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [], lineWidth: 1 },
+        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [], lineWidth: 1 }
     ];
 
     latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {
-        const latIdx = (90 - lat) / 90;   // 映射成 [0,2] 区间
+        const latIdx = (90 - lat) / 180;
         const y = latIdx * gridHeight + offsetY;
 
         // 1. 横线（从第二列开始，不覆盖 -11 时区）
@@ -242,13 +242,17 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
         ctx.lineTo(offsetX + totalWidth, y);
         ctx.stroke();
 
-        // 2. 标签放在最右边（+12 时区之后）
+        // 2. 标签放在最左边
         ctx.setLineDash([]); 
         ctx.fillStyle = color;
         ctx.font = "14px ChillDINGothic";
-        ctx.textAlign = "left";
+        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(label, offsetX + totalWidth + 5, y); 
+        ctx.fillText(
+            label,
+            offsetX + gridWidth / 2, // -11 区的格子中心 (横向)
+            y                        // 纬线的纵向位置
+        );
     });
 
     ctx.restore();

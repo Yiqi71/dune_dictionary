@@ -28,6 +28,26 @@ function getCountryBoundary(countryCode) {
     return box[1]; // [minLon, minLat, maxLon, maxLat]
 }
 
+function getCountryCenter(countryCode) {
+    const box = country_bounding_boxes[countryCode];
+    if (!box) {
+        // 没有数据时，返回世界中心
+        return { left: 50, top: 50 };
+    }
+
+    const [minLon, minLat, maxLon, maxLat] = box[1];
+
+    const centerLon = (minLon + maxLon) / 2; // 中心经度
+    const centerLat = (minLat + maxLat) / 2; // 中心纬度
+
+    // 把经纬度转成百分比坐标（和你的 renderWordUniverse 里一致）
+    const left = (centerLon + 180) / 3.6;   // -180~180 → 0~100
+    const top = (90 - centerLat) / 1.8;     // 90~-90 → 0~100
+
+    return { left, top };
+}
+
+
 // 生成全地图网格（百分比坐标）
 function generateGridPoints(min = 5, max = 95) {
     const points = [];
@@ -309,6 +329,13 @@ export function updateWordDetails() {
     const detailDiv = document.getElementById("word-details");
     detailDiv.classList.remove('hidden');
 
+    detailDiv.addEventListener('wheel', function (e) {
+                e.stopPropagation(); // 不让滚轮事件向上传播
+                e.preventDefault(); // 不让自己滚动
+            }, {
+                passive: false
+            });
+
     // term
     const termTitle = document.querySelector('#term .detail-title');
     const termMainEl = document.querySelector('#term #term-main');
@@ -372,6 +399,18 @@ export function updateRelations() {
         drawLine(state.focusedNodeId, a.id, a.relation);
     });
 }
+
+function getYearRange(terms) {
+  const years = terms
+    .map(t => parseInt(t.proposing_time))
+    .filter(y => !isNaN(y)); // 防止有不是数字的情况
+
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+
+  return { minYear, maxYear };
+}
+
 // 渲染函数
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
@@ -393,17 +432,40 @@ function renderWordUniverse(wordsData) {
         const words = wordsByCountry[country];
         const countryPoints = getCountryGridPoints(country, 1);
 
-        console.log(`${country} 可以放 ${countryPoints.length} 个 node`);
-
         // 限制显示数量
-        const displayCount = Math.min(words.length, countryPoints.length);
+        // const displayCount = Math.min(words.length, countryPoints.length);
+        const displayCount = words.length; 
 
         for (let i = 0; i < displayCount; i++) {
             const word = words[i];
-            const {
-                left: leftPercent,
-                top: topPercent
-            } = countryPoints[i];
+            // const {
+            //     left: leftPercent,
+            //     top: topPercent
+            // } = countryPoints[i];
+            let pos;
+            if (countryPoints.length > 0) {
+                if (i < countryPoints.length) {
+                    // 用格点
+                    pos = countryPoints[i];
+                } else {
+                    // 超出数量，挤在最后一个格点附近
+                    const base = countryPoints[countryPoints.length - 1];
+                    pos = {
+                        left: base.left + (Math.random() - 0.5) * 10, // ±5%
+                        top: base.top + (Math.random() - 0.5) * 10
+                    };
+                }
+            } else {
+                // ❌ 没有格点 → 用国家中心点 + 偏移
+                const base = getCountryCenter(country); // 你要定义这个函数
+                pos = {
+                    left: base.left + (Math.random() - 0.5) * 10,
+                    top: base.top + (Math.random() - 0.5) * 10
+                };
+            }
+
+            let leftPercent=pos.left;
+            let topPercent=pos.top;
 
             word.longitude = leftPercent * 3.6 - 180;
             word.latitude = 90 - topPercent * 1.8;
@@ -412,10 +474,32 @@ function renderWordUniverse(wordsData) {
             node.className = 'word-node';
             node.dataset.nodeFormat = "word";
             node.innerHTML = `<p class="Chinese">${word.term}</p><p class="English">${word.original_language}</p>`;
-            node.style.backgroundColor = nodesColor[Math.floor(Math.random() * 4)];
             node.style.left = `${leftPercent}%`;
             node.style.top = `${topPercent}%`;
             node.style.transform = `translate(-50%, -50%)`;
+
+            const { minYear, maxYear } = getYearRange(wordsData);
+
+            
+            const year = Number(word.proposing_time.replace("年", ""));
+            console.log(year);
+            const ratio = (year - minYear) / (maxYear - minYear); // 0~1
+            let nodeColor = null;
+            if(ratio<1/6){
+                nodeColor="#F9D67A";
+            }else if(ratio<2/6){
+                nodeColor="#FADD91";
+            }else if(ratio<3/6){
+                nodeColor="#FAE2A5";
+            }else if(ratio<4/6){
+                nodeColor="#FAE8BA";
+            }else if(ratio<5/6){
+                nodeColor="#FAEED0";
+            }else{
+                nodeColor="#F9F3E3";
+            }
+            node.style.backgroundColor = nodeColor;
+
 
             node.dataset.lon = word.longitude;
             node.dataset.lat = word.latitude;
@@ -455,7 +539,6 @@ function renderWordUniverse(wordsData) {
             wordNodesContainer.appendChild(node);
 
             updateWordNodeTransforms();
-            console.log('node rendered');
         }
     }
 
