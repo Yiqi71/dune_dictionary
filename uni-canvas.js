@@ -26,9 +26,7 @@ function updateGridSizeToFitHeight() {
 
 // 限制 Y 方向边界
 export function clampOffsetY(offsetY) {
-    const gridSize = state.baseHeight * state.currentScale;
-    const latCount = 1;
-    const totalHeight = gridSize * latCount;
+    const totalHeight = state.baseHeight * state.currentScale;
     const minY = -totalHeight + canvas.height; // 南极边缘
     const maxY = 0; // 北极边缘
     return Math.min(Math.max(offsetY, minY), maxY);
@@ -36,9 +34,7 @@ export function clampOffsetY(offsetY) {
 
 // 限制 X 方向边界
 export function clampOffsetX(offsetX) {
-    const gridWidth = state.baseWidth * state.currentScale;
-    const lonCount = 24;
-    const totalWidth = gridWidth * lonCount;
+    const totalWidth = state.baseWidth * state.currentScale * 24;
     const minX = -totalWidth + canvas.width;
     const maxX = 0;
     return Math.min(Math.max(offsetX, minX), maxX);
@@ -52,15 +48,8 @@ let dragStartY = 0;
 // 更新 word-nodes 的位置
 export function updateWordNodeTransforms() {
     const scale = state.currentScale;
-
-    const gridWidth = state.baseWidth * scale;
-    const gridHeight = state.baseHeight * scale;
-
-    const lonCount = 24;
-    const latCount = 1;
-
-    const totalWidth = gridWidth * lonCount;
-    const totalHeight = gridHeight * latCount;
+    const totalWidth = state.baseWidth * scale * 24;
+    const totalHeight = state.baseHeight * scale;
 
     const nodes = document.querySelectorAll(".word-node");
 
@@ -93,7 +82,6 @@ canvas.addEventListener("mousedown", (e) => {
     detailDiv.classList.add("hidden");
     hideFloatingPanel();
 });
-
 canvas.addEventListener("mousemove", (e) => {
     if (isDragging) {
         let offsetX = state.panX;
@@ -112,7 +100,6 @@ canvas.addEventListener("mousemove", (e) => {
         updateRelations();
     }
 });
-
 canvas.addEventListener("mouseup", (e) => {
     isDragging = false;
     updateRelations();
@@ -131,18 +118,12 @@ canvas.addEventListener("wheel", (e) => {
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
     const newScale = Math.min(scaleThreshold+3, Math.max(1, scale + delta));
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-
-    let offsetX = state.panX;
-    let offsetY = state.panY;
-
-    offsetX = mouseX - (mouseX - offsetX) * (newScale / scale);
-    offsetY = mouseY - (mouseY - offsetY) * (newScale / scale);
+    state.panX = e.clientX - (e.clientX - state.panX) * (newScale / scale);
+    state.panY = e.clientY - (e.clientY - state.panY) * (newScale / scale);
 
     state.currentScale = newScale;
-    state.panX = clampOffsetX(offsetX);
-    state.panY = clampOffsetY(offsetY); // 加边界
+    state.panX = clampOffsetX(state.panX);
+    state.panY = clampOffsetY(state.panY); // 加边界
 
     draw();
     updateWordNodeTransforms();
