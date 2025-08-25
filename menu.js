@@ -96,7 +96,6 @@ function onDrag(e) {
 
 
     updateScaleForNodes(newScale);
-    console.log(document.body.dataset.scale);
 }
 
 function snapToStep() {
@@ -128,7 +127,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const shuffleIcon = document.getElementById('shuffle-icon');
     shuffleIcon.addEventListener('click', () => {
         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
-        console.log(randomId);
         zoomToWord(randomId, scaleThreshold);
         updateWordFocus();
     });

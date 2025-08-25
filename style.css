@@ -62,13 +62,7 @@ h1.English {
     font-weight: 600;
     text-wrap: nowrap;
 } */
-#term h1 {
-    margin: 0;
-    font-family: "ChillDINGothic";
-    font-weight: 600;
-    font-size: 42px;
-    letter-spacing: -3%;
-}
+
 
 #upper-menu .Chinese {
     color: #392F17;
@@ -195,14 +189,14 @@ h1.English {
     white-space: nowrap;
     /* 保证一行内显示 */
 }
-#term-main {
+.term-main {
     color: #544011;
     font-family: "DIN Condensed";
     font-weight: 700;
     margin: 0;
     padding: 0;
 }
-#term-ori {
+.term-ori {
     color: #544011;
     font-family: "Barlow Condensed";
     font-weight: 600;
@@ -260,8 +254,8 @@ body[data-scale="3"] .word-node .terms,
 body[data-scale="4"] .word-node .terms {
     margin: 8px;
 }
-body[data-scale="3"] .word-node .terms #term-main,
-body[data-scale="4"] .word-node .terms #term-main {
+body[data-scale="3"] .word-node .terms .term-main,
+body[data-scale="4"] .word-node .terms .term-main {
     color: #392F17;
     font-family: ChillDINGothic;
     font-size: 23.493px;
@@ -270,8 +264,8 @@ body[data-scale="4"] .word-node .terms #term-main {
     letter-spacing: -1.287px;
 }
 
-body[data-scale="3"] .word-node .terms #term-ori,
-body[data-scale="4"] .word-node .terms #term-ori {
+body[data-scale="3"] .word-node .terms .term-ori,
+body[data-scale="4"] .word-node .terms .term-ori {
     color: #392F17;
     font-family: "Stint Ultra Condensed";
     font-size: 33.428px;
@@ -291,7 +285,7 @@ body[data-scale="5"] .word-node {
 body[data-scale="5"] .word-node .terms {
     margin: 10px;
 }
-body[data-scale="5"] .word-node .terms #term-main {
+body[data-scale="5"] .word-node .terms .term-main {
     color: #392F17;
     font-family: ChillDINGothic;
     font-size: 42.911px;
@@ -299,7 +293,7 @@ body[data-scale="5"] .word-node .terms #term-main {
     font-weight: 600;
     letter-spacing: -1.287px;
 }
-body[data-scale="5"] .word-node .terms #term-ori {
+body[data-scale="5"] .word-node .terms .term-ori {
     color: #392F17;
     font-family: "Stint Ultra Condensed";
     font-size: 61.06px;
@@ -409,13 +403,42 @@ body[data-scale="5"] .word-node .terms #term-ori {
     left: 50vw;
     background-color: #FAD67B;
 }
-#term #terms {
+#term .terms {
     margin: 10px;
     display: flex;
     flex-direction: column;
     gap: 0px;
     align-items: flex-start; 
 }
+
+#term h1 {
+    margin: 0;
+    font-family: "ChillDINGothic";
+    font-weight: 600;
+    font-size: 42px;
+    letter-spacing: -3%;
+}
+
+#term .term-main {
+    margin: 0;
+    padding: 0;
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 42.911px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: -1.287px;
+}
+#term .term-ori {
+    margin: 0;
+    padding: 0;
+    color: #392F17;
+    font-family: "Stint Ultra Condensed";
+    font-size: 61.06px;
+    font-style: normal;
+    font-weight: 400;
+}
+
 
 #image {
     min-width: 120px;

@@ -266,7 +266,6 @@ export function updateWordFocus() {
         y: window.innerHeight / 2
     };
 
-    console.log(state.currentScale);
     // 如果缩放足够大（达到或超过阈值）
     if (state.currentScale >= scaleThreshold) {
         // 找出距离视图中心最近的单词
@@ -340,8 +339,8 @@ export function updateWordDetails() {
 
     // term
     const termTitle = document.querySelector('#term .detail-title');
-    const termMainEl = document.querySelector('#term #term-main');
-    const originalTermEl = document.querySelector('#term #term-ori');
+    const termMainEl = document.querySelector('#term .term-main');
+    const originalTermEl = document.querySelector('#term .term-ori');
     termTitle.textContent = String(word.id).padStart(4, '0');
     termMainEl.textContent = word.term || '未知单词';
     originalTermEl.textContent = word.termOri || '无';
@@ -484,8 +483,8 @@ function renderWordUniverse(wordsData) {
             node.innerHTML = `
             <div class="detail-title">${String(word.id).padStart(4, '0')}</div>
             <div class="terms">
-                <div id="term-main">${word.term || '未知单词'}</div>
-                <div id="term-ori">${word.termOri || '无'}</div>
+                <div class="term-main">${word.term || '未知单词'}</div>
+                <div class="term-ori">${word.termOri || '无'}</div>
             </div>
             `;
             node.style.left = `${leftPercent}%`;
