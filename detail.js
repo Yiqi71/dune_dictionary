@@ -76,8 +76,9 @@ export function renderPanelSections() {
     const title = document.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
+    <div>
     <h1 class = "Chinese"> ${currentWord.term || '未知单词'} </h1>
-    <h1 class = "English"> ${currentWord.termOri || '无'} </h1>
+    <h1 class = "English"> ${currentWord.termOri || '无'} </h1></div>
     `
 
     // 下半部分
@@ -302,11 +303,11 @@ const proposerDiv = document.getElementById("proposer");
 const imageDiv = document.getElementById("image");
 
 // 点击「简要释义」
-termDiv.addEventListener("click", (e) => {
-    e.stopPropagation();
-    showFloatingPanel();
-    updateTabContent("brief"); // 滚动到简要释义
-});
+// termDiv.addEventListener("click", (e) => {
+//     e.stopPropagation();
+//     showFloatingPanel();
+//     updateTabContent("brief"); // 滚动到简要释义
+// });
 
 // 点击「评论」
 commentDiv.addEventListener("click", (e) => {

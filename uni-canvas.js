@@ -8,7 +8,7 @@ import {
 import {
     moveIndicator
 } from "./menu.js";
-import{
+import {
     hideFloatingPanel
 } from "./detail.js"
 
@@ -69,7 +69,7 @@ export function updateWordNodeTransforms() {
         node.style.top = `0px`;
         node.style.position = 'absolute';
         node.style.transform = `translate(${wrappedX}px, ${wrappedY}px)`;
-        node.style.transformOrigin = "top left";
+        // node.style.transformOrigin = "top left";
     });
 }
 
@@ -113,10 +113,10 @@ canvas.addEventListener("mouseleave", (e) => {
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
-    let scale =state.currentScale; 
+    let scale = state.currentScale;
     const zoomStep = 0.2;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    const newScale = Math.min(scaleThreshold+3, Math.max(1, scale + delta));
+    const newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
 
     state.panX = e.clientX - (e.clientX - state.panX) * (newScale / scale);
     state.panY = e.clientY - (e.clientY - state.panY) * (newScale / scale);
@@ -125,14 +125,40 @@ canvas.addEventListener("wheel", (e) => {
     state.panX = clampOffsetX(state.panX);
     state.panY = clampOffsetY(state.panY); // 加边界
 
+
+
     draw();
     updateWordNodeTransforms();
     updateRelations();
     moveIndicator(state.currentScale);
-    hideFloatingPanel();
+    hideFloatingPanel();    
+    
+    updateScaleForNodes(newScale);
+    // console.log(document.body.dataset.scale);
+    console.log(state.currentScale);
 }, {
     passive: false
 });
+
+export function updateScaleForNodes(newScale, scaleThreshold = 20) {
+    let snapped;
+    
+    if (newScale < 1.5) {
+        snapped = 1;
+    } else if (newScale < 5) {
+        snapped = 2;
+    } else if (newScale < 13) {
+        snapped = 3;
+    } else if (newScale < 19.5) {
+        snapped = 4;
+    } else {
+        snapped = 5;
+    }
+    
+    document.body.dataset.scale = snapped;
+}
+
+
 
 // 主绘图函数
 export function draw() {
@@ -169,7 +195,7 @@ export function draw() {
 
 function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
     ctx.save();
-    ctx.fillStyle = "#F0B549";   // 字体颜色
+    ctx.fillStyle = "#F0B549"; // 字体颜色
     ctx.font = `15px ChillDINGothic`; // 随缩放变化
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
@@ -203,13 +229,36 @@ function drawGridAtOffset(offsetX, offsetY, gridWidth, gridHeight, lonCount, lat
 
 function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth) {
     ctx.save();
-    const latitudes = [
-        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 1 },
-        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [], lineWidth: 1 },
-        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [], lineWidth: 1 }
+    const latitudes = [{
+            lat: 0,
+            label: "0°",
+            color: "#F0B549",
+            dash: [],
+            lineWidth: 1
+        },
+        {
+            lat: 23.5,
+            label: "23.5°N",
+            color: "#F0B549",
+            dash: [],
+            lineWidth: 1
+        },
+        {
+            lat: -23.5,
+            label: "23.5°S",
+            color: "#F0B549",
+            dash: [],
+            lineWidth: 1
+        }
     ];
 
-    latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {
+    latitudes.forEach(({
+        lat,
+        label,
+        color,
+        dash,
+        lineWidth
+    }) => {
         const latIdx = (90 - lat) / 180;
         const y = latIdx * gridHeight + offsetY;
 
@@ -224,7 +273,7 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
         ctx.stroke();
 
         // 2. 标签放在最左边
-        ctx.setLineDash([]); 
+        ctx.setLineDash([]);
         ctx.fillStyle = color;
         ctx.font = "14px ChillDINGothic";
         ctx.textAlign = "center";
@@ -232,7 +281,7 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
         ctx.fillText(
             label,
             offsetX + gridWidth / 2, // -11 区的格子中心 (横向)
-            y                        // 纬线的纵向位置
+            y // 纬线的纵向位置
         );
     });
 

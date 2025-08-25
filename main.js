@@ -1,19 +1,19 @@
 // 状态变量
 import { state } from "./state.js";
-import { draw, updateWordNodeTransforms } from "./uni-canvas.js";
+import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
 import { country_bounding_boxes } from "./countryBoundingBoxes.js";
 import { renderPanelSections } from "./detail.js";
 
 window.allWords = [];
 
 let focusedWord = null;
-export const scaleThreshold = 5; // 触发详细信息显示的缩放阈值
+export const scaleThreshold = 20; // 触发详细信息显示的缩放阈值
 let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
 
 // nodes
 let wordsOnGrid = {};
-let minGrid = 1;
+let minGrid = 2;
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -220,15 +220,12 @@ export function zoomToWord(id,newScale) {
     const node = document.getElementById(id);
     if (!node) return;
 
-    const rect = node.getBoundingClientRect();
-
     const oldScale = state.currentScale;
-
-    // let x = rect.left + rect.width / 2;
-    // let y = rect.top + rect.height / 2;
-
-    let x = rect.left;
-    let y = rect.top;
+    
+    
+    const rect = node.getBoundingClientRect();
+    let x = rect.left+rect.width/2;
+    let y = rect.top+rect.height/2;
 
     // 屏幕中心
     const viewportCenterX = window.innerWidth / 2;
@@ -238,11 +235,15 @@ export function zoomToWord(id,newScale) {
     state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
     state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
 
-    state.currentScale = Math.max(oldScale, newScale);
+    state.currentScale = newScale;
+
+    let maxX = 164;
+    let maxY = 106.5;
 
     draw();
     updateWordNodeTransforms();
     updateRelations();
+    updateScaleForNodes(newScale);
 }
 
 export function updateWordFocus() {
@@ -265,6 +266,7 @@ export function updateWordFocus() {
         y: window.innerHeight / 2
     };
 
+    console.log(state.currentScale);
     // 如果缩放足够大（达到或超过阈值）
     if (state.currentScale >= scaleThreshold) {
         // 找出距离视图中心最近的单词
@@ -313,7 +315,7 @@ export function updateWordFocus() {
             hideNearbyNodes(closestWord);
 
             // 自动吸附到屏幕中心
-            // zoomToWord(focusedWord.id,state.currentScale);
+            zoomToWord(focusedWord.id,state.currentScale);
             updateWordDetails();
         
         }
@@ -347,6 +349,7 @@ export function updateWordDetails() {
     const node=document.getElementById(word.id);
     const termDiv=document.getElementById("term");
     termDiv.style.backgroundColor=node.style.backgroundColor;
+
     // image
     const imageTitle = document.querySelector('#image .detail-title');
     const imageEl = document.querySelector('#image img');
@@ -402,6 +405,8 @@ export function updateRelations() {
         drawLine(state.focusedNodeId, a.id, a.relation);
     });
 }
+
+
 
 function getYearRange(terms) {
   const years = terms
@@ -476,7 +481,13 @@ function renderWordUniverse(wordsData) {
             const node = document.createElement('div');
             node.className = 'word-node';
             node.dataset.nodeFormat = "word";
-            node.innerHTML = `<p class="Chinese">${word.term}</p><p class="English">${word.original_language}</p>`;
+            node.innerHTML = `
+            <div class="detail-title">${String(word.id).padStart(4, '0')}</div>
+            <div class="terms">
+                <div id="term-main">${word.term || '未知单词'}</div>
+                <div id="term-ori">${word.termOri || '无'}</div>
+            </div>
+            `;
             node.style.left = `${leftPercent}%`;
             node.style.top = `${topPercent}%`;
             node.style.transform = `translate(-50%, -50%)`;
@@ -485,7 +496,6 @@ function renderWordUniverse(wordsData) {
 
             
             const year = Number(word.proposing_time.replace("年", ""));
-            console.log(year);
             const ratio = (year - minYear) / (maxYear - minYear); // 0~1
             let nodeColor = null;
             if(ratio<1/6){
@@ -509,7 +519,7 @@ function renderWordUniverse(wordsData) {
             node.dataset.x = leftPercent / 100;
             node.dataset.y = topPercent / 100;
             node.id = word.id;
-
+            
              // ✅ 关键：用 "x,y" 作为 key 存储
             const key = `${Math.round(leftPercent)},${Math.round(topPercent)}`;
             wordsOnGrid[key] = node.id;
@@ -531,8 +541,7 @@ function renderWordUniverse(wordsData) {
                 // 只有不是拖拽操作时才处理点击
                 if (!isDragging) {
                     if (node.classList.contains('focused')) {} else {
-                        // zoomToWord(node.id, Math.max(scaleThreshold,state.currentScale));
-                        zoomToWord(node.id, 8);
+                        zoomToWord(node.id, scaleThreshold);
                         updateWordFocus();
                         renderPanelSections();
                     }
@@ -540,7 +549,7 @@ function renderWordUniverse(wordsData) {
             });
 
             wordNodesContainer.appendChild(node);
-
+            
             updateWordNodeTransforms();
         }
     }
@@ -588,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
-            zoomToWord(state.focusedNodeId,scaleThreshold+3);
+            zoomToWord(state.focusedNodeId,scaleThreshold);
             updateWordFocus();
         })
         .catch(error => {

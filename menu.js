@@ -5,14 +5,16 @@ import {
 import {
     updateRelations,
     zoomToWord,
-    updateWordFocus
+    updateWordFocus,
+    scaleThreshold
 } from "./main.js";
 
 import {
     draw,
     updateWordNodeTransforms,
     clampOffsetX,
-    clampOffsetY
+    clampOffsetY,
+    updateScaleForNodes
 } from "./uni-canvas.js";
 
 const numSteps = 5;
@@ -22,20 +24,20 @@ const numbersContainer = document.querySelector('.scale-numbers');
 ticksContainer.innerHTML = '';
 numbersContainer.innerHTML = '';
 
-for (let i = 0; i < numSteps; i++) {
-    const percent = (i / (numSteps - 1)) * 100;
+// for (let i = 0; i < numSteps; i++) {
+//     const percent = (i / (numSteps - 1)) * 100;
 
-    // 刻度线
-    const tick = document.createElement('div');
-    tick.style.left = percent + '%';
-    ticksContainer.appendChild(tick);
+//     // 刻度线
+//     const tick = document.createElement('div');
+//     tick.style.left = percent + '%';
+//     ticksContainer.appendChild(tick);
 
-    // 数字
-    const num = document.createElement('span');
-    num.textContent = (i + 1);
-    num.style.left = percent + '%';
-    numbersContainer.appendChild(num);
-}
+//     // 数字
+//     const num = document.createElement('span');
+//     num.textContent = (i + 1);
+//     num.style.left = percent + '%';
+//     numbersContainer.appendChild(num);
+// }
 
 const indicator = document.getElementById('indicator');
 const container = document.getElementById('scaleContainer');
@@ -44,7 +46,7 @@ let containerRect;
 
 
 // 初始化 indicator 在中间
-moveIndicator(1);
+moveIndicator(scaleThreshold);
 
 indicator.addEventListener('mousedown', startDrag);
 window.addEventListener('mouseup', endDrag);
@@ -59,7 +61,8 @@ function startDrag(e) {
 function endDrag(e) {
     if (!isDragging) return;
     isDragging = false;
-    snapToStep();
+    // snapToStep();
+
 }
 
 function onDrag(e) {
@@ -72,7 +75,7 @@ function onDrag(e) {
 
 
     let scale = state.currentScale;
-    let newScale = percent / 25 + 1;
+    let newScale = percent*19 / 100 + 1;
 
     const mouseX = window.innerWidth / 2;
     const mouseY = window.innerHeight / 2;
@@ -85,11 +88,15 @@ function onDrag(e) {
 
     state.panX = clampOffsetX(offsetX);
     state.panY = clampOffsetY(offsetY); // 加边界
-    state.currentScale = percent / 25 + 1;
+    state.currentScale = percent*19 / 100 + 1;
 
     draw();
     updateWordNodeTransforms();
     updateRelations();
+
+
+    updateScaleForNodes(newScale);
+    console.log(document.body.dataset.scale);
 }
 
 function snapToStep() {
@@ -102,6 +109,7 @@ function snapToStep() {
 
 // 可程序化移动 indicator
 export function moveIndicator(value) {
+    value = value*5/scaleThreshold;
     if (value < 1) value = 1;
     if (value > 5) value = 5;
     const percent = (value - 1) * 25; // 5 个刻度
@@ -112,7 +120,7 @@ export function moveIndicator(value) {
 // menu
 let dunesIcon = document.getElementById("dunes-icon");
 dunesIcon.addEventListener('click', () => {
-    zoomToWord(17, Math.max(5,state.currentScale));
+    zoomToWord(17, scaleThreshold);
     updateWordFocus();
 });
 
@@ -121,7 +129,7 @@ window.addEventListener('DOMContentLoaded', () => {
     shuffleIcon.addEventListener('click', () => {
         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
         console.log(randomId);
-        zoomToWord(randomId, 8);
+        zoomToWord(randomId, scaleThreshold);
         updateWordFocus();
     });
 });
