@@ -5,7 +5,8 @@ import {
 import {
     zoomToWord,
     updateWordFocus,
-    scaleThreshold
+    scaleThreshold,
+    updateWordDetails
 } from "./wordFocus.js";
 import {
     updateRelations
@@ -57,13 +58,12 @@ function startDrag(e) {
     e.preventDefault();
     isDragging = true;
     containerRect = container.getBoundingClientRect();
+    state.focusedNodeId=null;
 }
 
 function endDrag(e) {
     if (!isDragging) return;
     isDragging = false;
-    // snapToStep();
-
 }
 
 function onDrag(e) {
@@ -93,7 +93,9 @@ function onDrag(e) {
 
     draw();
     updateWordNodeTransforms();
+    updateWordFocus();
     updateRelations();
+    updateWordDetails();
 
 
     updateScaleForNodes(newScale);

@@ -114,12 +114,12 @@ export function updateWordFocus() {
             let left = parseFloat(closestWord.dataset.x) * 100;
             let top = parseFloat(closestWord.dataset.y) * 100;
 
-            let neighbors = getNeighbors(left, top);
-            const hasNearbyNodes = neighbors.some(n => n.hasValue);
+            // let neighbors = getNeighbors(left, top);
+            // const hasNearbyNodes = neighbors.some(n => n.hasValue);
 
-            if (hasNearbyNodes && state.currentScale < 7.9) {
-                return;
-            }
+            // if (hasNearbyNodes && state.currentScale < 7.9) {
+            //     return;
+            // }
 
             closestWord.classList.add('focused');
             focusedWord = closestWord;

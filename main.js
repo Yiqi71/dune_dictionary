@@ -190,17 +190,6 @@ function allocatePositionsForCountries(wordsByCountry) {
     return countryPositions;
 }
 
-function getCenterPosition(element) {
-    const rect = element.getBoundingClientRect();
-    return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-    };
-}
-
-
-
-
 function getYearRange(terms) {
   const years = terms
     .map(t => parseInt(t.proposing_time))
@@ -332,9 +321,11 @@ function renderWordUniverse(wordsData) {
     let canvas = document.getElementById("universe-canvas");
     canvas.addEventListener('wheel', (e) => {
         updateWordFocus();
+        updateRelations();
     });
     canvas.addEventListener('mouseup', () => {
         updateWordFocus(); // 拖动结束后更新
+        updateRelations();
     });
 
     console.log(usedPositions);
