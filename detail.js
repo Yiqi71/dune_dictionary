@@ -95,7 +95,7 @@ export function renderPanelSections() {
     briefSec.innerHTML = `<p class="left-title">简要释义</p>
                        <div>
                            <h2>${currentWord.brief_definition || '暂无简要释义'}</h2>
-                           <h3>${currentWord.extended_definition || '暂无详细释义'}</h3>
+                           ${currentWord.extended_definition.map(paragraph => `<h3>${paragraph}</h3>`).join('')}
                       </div>`;
 
     exampleSec.innerHTML = `<p class="left-title">例句</p>
@@ -217,10 +217,11 @@ function updateTabContent(tabType = "brief") {
 
     // tabType -> section 的映射
     const sectionMap = {
-        comment: "section-comment",
-        image: "section-image",
-        book: "section-book",
-        detail: "section-detail",
+        contributors: "section-contributors",
+        related: "section-related-works",
+        source: "section-source",
+        proposers: "section-proposers",
+        example: "section-example",
         brief: "section-brief"
     };
 
@@ -332,19 +333,31 @@ function renderScrollMarkers() {
         }, // 新增顶部marker
         {
             id: "section-brief",
-            label: "简要释义"
+            label: "释义"
         },
         {
-            id: "section-detail",
-            label: "详细释义"
+            id: "section-example",
+            label: "例句"
         },
         {
-            id: "section-book",
+            id: "section-proposers",
             label: "提出人"
         },
         {
-            id: "section-image",
-            label: "图片"
+            id: "section-source",
+            label: "来源"
+        },
+        {
+            id: "section-related-works",
+            label: "相关著作"
+        },
+        {
+            id: "section-contributors",
+            label: "contributors"
+        },
+        {
+            id: "section-editors",
+            label: "编辑"
         }
     ];
 
@@ -442,14 +455,14 @@ commentDiv.addEventListener("click", (e) => {
 proposerDiv.addEventListener("click", (e) => {
     e.stopPropagation();
     showFloatingPanel();
-    updateTabContent("book");
+    updateTabContent("proposers");
 });
 
 // 点击「图片」
 imageDiv.addEventListener("click", (e) => {
     e.stopPropagation();
     showFloatingPanel();
-    updateTabContent("image");
+    scrollToTop(); 
 });
 
 // 初始化浮窗功能
