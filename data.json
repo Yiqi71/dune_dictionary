@@ -3,16 +3,32 @@
       "id": 1,
       "term": "理性无知",
       "termOri": "Rational Ignorance",
+      "concept_image": "images/1.jpg",
       "brief_definition": "在信息获取成本过高时，人们选择不去深入了解仍然是理性的。",
-      "extended_definition": "理性无知指的是个体在决策过程中，为了节省时间与精力，放弃获取过多无关或昂贵的信息，而以有限的知识做出选择。这一概念常用于政治学和经济学，说明为什么选民在复杂议题上可能保持‘不知情’状态。",
-      "diagrams": ["images/1.jpg"],
-      "domain": "政治学 / 决策理论",
-      "proposer": "Anthony Downs",
-      "proposer_img": "images/1Proposer.jpg",
-      "proposing_country": "US",
-      "proposing_time": "1957年",
-      "references": "《公共选择理论》",
-      "contributors": ["Fei", "Diane"],
+      "extended_definition": [
+        "理性无知指的是个体在决策过程中，为了节省时间与精力，放弃获取过多无关或昂贵的信息，而以有限的知识做出选择。这一概念常用于政治学和经济学，说明为什么选民在复杂议题上可能保持‘不知情’状态。"
+      ],
+      "example_sentence": "面对复杂的政策细节，许多选民选择保持理性无知，只在投票时依赖简单的信号或政党立场。",
+      "diagrams": [{
+        "src": "images/1.jpg",
+        "caption": "理性无知常被用于解释政治参与中的冷漠现象。"
+      }],
+      "proposers": [{
+        "name": "安东尼·唐斯 (Anthony Downs)",
+        "year": "1930—2021",
+        "role": "美国经济学家、政治学家",
+        "image": "images/1Proposer.jpg"
+      }],
+      "source": "Anthony Downs, An Economic Theory of Democracy (1957)，Harper and Row （中文译名《民主的经济理论》）",
+      "related_works": [
+        "Public Choice Theory 《公共选择理论》"
+      ],
+      "contributor": "本期词条的贡献者是Fei与Diane。",
+      "editors": [
+        "沙丘研究所（Gemini 2.5 Pro辅助润色）",
+        "封面图由Midjourney V7生成",
+        "© 沙丘研究所 2025. 本作品采用CC BY-NC 4.0 国际许可协议"
+      ],
       "reviewers": [],
       "related_terms": [{
           "id": 2,
@@ -23,6 +39,9 @@
           "relation": "同类概念"
         }
       ],
+      "proposing_country": "US",
+      "proposing_time": "1957年",
+      "domain": "政治学 / 决策理论",
       "createdAt": "2025-08-13",
       "updatedAt": "2025-08-13"
     },
@@ -30,21 +49,40 @@
       "id": 2,
       "term": "行为倒错",
       "termOri": "Parapraxis",
+      "concept_image": "images/2.jpg",
       "brief_definition": "口误或失误行为常常揭示潜意识中的真实想法。",
-      "extended_definition": "行为倒错源自精神分析学，指人在日常交流或行动中出现的口误、笔误、失误，往往并非单纯的偶然，而是潜意识欲望或焦虑的显现。例如在不经意间说出内心的隐秘想法，或在行动中流露真实动机。",
-      "diagrams": ["images/2.jpg"],
-      "domain": "心理学 / 精神分析",
-      "proposer": "西格蒙德·弗洛伊德 (Sigmund Freud)",
-      "proposer_img": "images/2Proposer.jpg",
-      "proposing_country": "AT",
-      "proposing_time": "1901年",
-      "references": "弗洛伊德《日常生活的精神病理学》",
-      "contributors": ["Fei", "Yalun"],
+      "extended_definition": [
+        "行为倒错源自精神分析学，指人在日常交流或行动中出现的口误、笔误、失误，往往并非单纯的偶然，而是潜意识欲望或焦虑的显现。例如在不经意间说出内心的隐秘想法，或在行动中流露真实动机。"
+      ],
+      "example_sentence": "在演讲中，他不小心把前任的名字说成了现任伴侣的名字——这是典型的行为倒错。",
+      "diagrams": [{
+        "src": "images/2.jpg",
+        "caption": "弗洛伊德通过研究口误与失误，揭示了潜意识的力量。"
+      }],
+      "proposers": [{
+        "name": "西格蒙德·弗洛伊德 (Sigmund Freud)",
+        "year": "1856—1939",
+        "role": "奥地利神经学家、精神分析学派创始人",
+        "image": "images/2Proposer.jpg"
+      }],
+      "source": "Sigmund Freud, The Psychopathology of Everyday Life (1901)，Franz Deuticke（中文版《日常生活的精神病理学》）",
+      "related_works": [
+        "The Interpretation of Dreams 《梦的解析》"
+      ],
+      "contributor": "本期词条的贡献者是Fei与Yalun。",
+      "editors": [
+        "沙丘研究所（Gemini 2.5 Pro辅助润色）",
+        "封面图由Midjourney V7生成",
+        "© 沙丘研究所 2025. 本作品采用CC BY-NC 4.0 国际许可协议"
+      ],
       "reviewers": [],
       "related_terms": [{
         "id": 1,
         "relation": "近义词"
       }],
+      "proposing_country": "AT",
+      "proposing_time": "1901年",
+      "domain": "心理学 / 精神分析",
       "createdAt": "2025-01-17",
       "updatedAt": "2025-01-17"
     },
@@ -347,8 +385,8 @@
       "related_terms": ["牲人"],
       "createdAt": "2024-04-18",
       "updatedAt": "2024-04-18"
-    }, 
-    
+    },
+
     {
       "id": 18,
       "term": "主体见性",
@@ -356,9 +394,8 @@
       "concept_image": "images/18.jpg",
 
       "brief_definition": "在交往中生成的体验性现实。",
-      "extended_definition":["想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。","这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。"],
+      "extended_definition": ["想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。", "这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。"],
       "example_sentence": "在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题，更是整个家庭系统的主体间性——譬如，他们如何通过互动模式，共同创造并维持了一个充满焦虑的家庭氛围。",
-
       "diagrams": [{
         "src": "images/17.jpg",
         "caption": "照片来自玛丽娜·阿布拉莫维奇（Marina Abramović）2010年在MoMA的行为艺术作品《艺术家在场》（The Artist is Present）。在凝视中，两个世界相遇。Photo by Andrew Russeth, CC BY-SA 2.0, via Wikimedia Commons"
@@ -369,8 +406,7 @@
           "year": "1944—",
           "role": "美国的临床心理学家",
           "image": "images/GeorgeAtwood.jpg"
-        },
-        {
+        },{
           "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
           "year": "1942—",
           "role": "美国的精神分析家、哲学家",
@@ -378,15 +414,20 @@
         }
       ],
 
-      
-      
       "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
       "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
       "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
       "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
 
       "reviewers": [],
-      "related_terms": ["牲人"],
+      "related_terms": [{
+          "id": 2,
+          "relation": "近义词"
+        },{
+          "id": 5,
+          "relation": "同类概念"
+        }
+      ],
       "proposing_country": "CN",
       "proposing_time": "2024年",
       "domain": "社会学 / 人类学",

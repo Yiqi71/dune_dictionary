@@ -158,6 +158,12 @@
 #section-example{
     padding-top:55px;
 }
+#section-example img{
+    padding:24px 0 36px 0;
+    width: 406px !important;
+    height: 270px !important;
+    object-fit: cover !important;
+}
 #section-proposers{
     padding-top:118px;
 }
@@ -196,7 +202,7 @@
 
 #section-example,
 #section-related-works {
-    border-bottom: #392F17 dashed 1px;
+    border-bottom: #392F17 solid 1px;
 }
 
 
