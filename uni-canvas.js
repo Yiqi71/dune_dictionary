@@ -3,7 +3,7 @@ import {
 } from "./state.js";
 import {
     scaleThreshold
-} from "./main.js";
+} from "./wordFocus.js";
 import {
     updateRelations
 } from "./relationManager.js";

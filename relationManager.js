@@ -1,6 +1,6 @@
 // relationsManager.js - 专门处理单词关系连线
 import { state } from "./state.js";
-import { updateWordFocus, zoomToWord } from "./main.js";
+import { updateWordFocus, zoomToWord } from "./wordFocus.js";
 
 function getCenterPosition(element) {
     const rect = element.getBoundingClientRect();

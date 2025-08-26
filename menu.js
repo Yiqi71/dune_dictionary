@@ -6,7 +6,7 @@ import {
     zoomToWord,
     updateWordFocus,
     scaleThreshold
-} from "./main.js";
+} from "./wordFocus.js";
 import {
     updateRelations
 } from "./relationManager.js";

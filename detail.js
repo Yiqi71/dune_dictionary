@@ -6,7 +6,7 @@ import {
     zoomToWord,
     updateWordDetails,
     updateWordFocus
-} from "./main.js";
+} from "./wordFocus.js";
 
 // 浮窗相关变量
 let isPanelVisible = false;
