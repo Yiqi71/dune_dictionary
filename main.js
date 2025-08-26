@@ -13,6 +13,7 @@ let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
 // nodes
 let wordsOnGrid = {};
+let usedPositions = new Set(); // 记录已使用的位置
 let minGrid = 2;
 
 function shuffleArray(array) {
@@ -49,7 +50,7 @@ function getCountryCenter(countryCode) {
 
 
 // 生成全地图网格（百分比坐标）
-function generateGridPoints(min = 5, max = 95) {
+function generateGridPoints(min = 4, max = 96) {
     const points = [];
     for (let top = min; top <= max; top += minGrid) {
         for (let left = min; left <= max; left += minGrid) {
@@ -80,7 +81,111 @@ function getCountryGridPoints(countryCode) {
     return availablePoints;
 }
 
+// 新增：扩散算法 - 从国家中心向外扩散寻找可用位置
+function findAvailablePositions(countryCode, wordCount) {
+    const countryPoints = getCountryGridPoints(countryCode);
+    const positions = [];
+    
+    // 首先使用国家内部的格点
+    for (let i = 0; i < countryPoints.length && positions.length < wordCount; i++) {
+        const point = countryPoints[i];
+        const key = `${Math.round(point.left)},${Math.round(point.top)}`;
+        if (!usedPositions.has(key)) {
+            positions.push(point);
+            usedPositions.add(key);
+        }
+    }
+    
+    // 如果国家内部格点不够，向外扩散
+    if (positions.length < wordCount) {
+        const countryCenter = getCountryCenter(countryCode);
+        const additionalPositions = expandFromCenter(
+            countryCenter, 
+            wordCount - positions.length,
+            countryPoints
+        );
+        positions.push(...additionalPositions);
+    }
+    
+    return positions;
+}
 
+// 从中心点向外螺旋扩散寻找可用位置
+function expandFromCenter(center, neededCount, excludePoints = []) {
+    const positions = [];
+    const excludeKeys = new Set(
+        excludePoints.map(p => `${Math.round(p.left)},${Math.round(p.top)}`)
+    );
+    
+    let radius = minGrid;
+    const maxRadius = 50; // 最大扩散半径
+    
+    while (positions.length < neededCount && radius <= maxRadius) {
+        const ringPositions = generateRingPositions(center, radius);
+        
+        for (const pos of ringPositions) {
+            if (positions.length >= neededCount) break;
+            
+            const key = `${Math.round(pos.left)},${Math.round(pos.top)}`;
+            
+            // 检查是否在地图范围内，未被使用，且不在排除列表中
+            if (isValidPosition(pos) && 
+                !usedPositions.has(key) && 
+                !excludeKeys.has(key)) {
+                positions.push(pos);
+                usedPositions.add(key);
+            }
+        }
+        
+        radius += minGrid;
+    }
+    
+    return positions;
+}
+
+// 生成指定半径的环形位置
+function generateRingPositions(center, radius) {
+    const positions = [];
+    const steps = Math.max(8, Math.floor(2 * Math.PI * radius / minGrid)); // 根据半径调整密度
+    
+    for (let i = 0; i < steps; i++) {
+        const angle = (2 * Math.PI * i) / steps;
+        const left = center.left + radius * Math.cos(angle);
+        const top = center.top + radius * Math.sin(angle);
+        
+        // 对齐到网格
+        const gridLeft = Math.round(left / minGrid) * minGrid;
+        const gridTop = Math.round(top / minGrid) * minGrid;
+        
+        positions.push({ left: gridLeft, top: gridTop });
+    }
+    
+    return positions;
+}
+
+// 检查位置是否有效（在地图范围内）
+function isValidPosition(pos) {
+    return pos.left >= 5 && pos.left <= 95 && 
+           pos.top >= 5 && pos.top <= 95;
+}
+
+// 优化后的位置分配算法
+function allocatePositionsForCountries(wordsByCountry) {
+    usedPositions.clear(); // 重置已使用位置
+    const countryPositions = {};
+    
+    // 按单词数量排序，优先分配单词多的国家
+    const sortedCountries = Object.keys(wordsByCountry).sort((a, b) => {
+        return wordsByCountry[b].length - wordsByCountry[a].length;
+    });
+    
+    for (const country of sortedCountries) {
+        const wordCount = wordsByCountry[country].length;
+        countryPositions[country] = findAvailablePositions(country, wordCount);
+    }
+    
+    return countryPositions;
+}
 
 function getCenterPosition(element) {
     const rect = element.getBoundingClientRect();
@@ -222,7 +327,6 @@ export function zoomToWord(id,newScale) {
 
     const oldScale = state.currentScale;
     
-    
     const rect = node.getBoundingClientRect();
     let x = rect.left+rect.width/2;
     let y = rect.top+rect.height/2;
@@ -316,7 +420,6 @@ export function updateWordFocus() {
             // 自动吸附到屏幕中心
             zoomToWord(focusedWord.id,state.currentScale);
             updateWordDetails();
-        
         }
     }
 }
@@ -405,8 +508,6 @@ export function updateRelations() {
     });
 }
 
-
-
 function getYearRange(terms) {
   const years = terms
     .map(t => parseInt(t.proposing_time))
@@ -418,7 +519,7 @@ function getYearRange(terms) {
   return { minYear, maxYear };
 }
 
-// 渲染函数
+// 优化后的渲染函数
 function renderWordUniverse(wordsData) {
     const wordNodesContainer = document.getElementById('word-nodes-container');
     wordNodesContainer.innerHTML = '';
@@ -433,46 +534,26 @@ function renderWordUniverse(wordsData) {
         wordsByCountry[word.proposing_country].push(word);
     });
 
+    // 使用优化的位置分配算法
+    const countryPositions = allocatePositionsForCountries(wordsByCountry);
 
     // 渲染每个国家的节点
     for (const country in wordsByCountry) {
         const words = wordsByCountry[country];
-        const countryPoints = getCountryGridPoints(country, 1);
+        const positions = countryPositions[country];
 
-        // 限制显示数量
-        // const displayCount = Math.min(words.length, countryPoints.length);
-        const displayCount = words.length; 
-
-        for (let i = 0; i < displayCount; i++) {
+        for (let i = 0; i < words.length; i++) {
             const word = words[i];
-            // const {
-            //     left: leftPercent,
-            //     top: topPercent
-            // } = countryPoints[i];
-            let pos;
-            if (countryPoints.length > 0) {
-                if (i < countryPoints.length) {
-                    // 用格点
-                    pos = countryPoints[i];
-                } else {
-                    // 超出数量，挤在最后一个格点附近
-                    const base = countryPoints[countryPoints.length - 1];
-                    pos = {
-                        left: base.left + (Math.random() - 0.5) * 10, // ±5%
-                        top: base.top + (Math.random() - 0.5) * 10
-                    };
-                }
-            } else {
-                // ❌ 没有格点 → 用国家中心点 + 偏移
-                const base = getCountryCenter(country); // 你要定义这个函数
-                pos = {
-                    left: base.left + (Math.random() - 0.5) * 10,
-                    top: base.top + (Math.random() - 0.5) * 10
-                };
+            
+            // 使用分配好的位置，如果位置不够就跳过
+            if (i >= positions.length) {
+                console.warn(`国家 ${country} 的单词数量超过可分配位置，跳过单词: ${word.term}`);
+                continue;
             }
-
-            let leftPercent=pos.left;
-            let topPercent=pos.top;
+            
+            const pos = positions[i];
+            const leftPercent = pos.left;
+            const topPercent = pos.top;
 
             word.longitude = leftPercent * 3.6 - 180;
             word.latitude = 90 - topPercent * 1.8;
@@ -492,7 +573,6 @@ function renderWordUniverse(wordsData) {
             node.style.transform = `translate(-50%, -50%)`;
 
             const { minYear, maxYear } = getYearRange(wordsData);
-
             
             const year = Number(word.proposing_time.replace("年", ""));
             const ratio = (year - minYear) / (maxYear - minYear); // 0~1
@@ -512,14 +592,13 @@ function renderWordUniverse(wordsData) {
             }
             node.style.backgroundColor = nodeColor;
 
-
             node.dataset.lon = word.longitude;
             node.dataset.lat = word.latitude;
             node.dataset.x = leftPercent / 100;
             node.dataset.y = topPercent / 100;
             node.id = word.id;
             
-             // ✅ 关键：用 "x,y" 作为 key 存储
+            // ✅ 关键：用 "x,y" 作为 key 存储
             const key = `${Math.round(leftPercent)},${Math.round(topPercent)}`;
             wordsOnGrid[key] = node.id;
 
@@ -529,6 +608,7 @@ function renderWordUniverse(wordsData) {
             }, {
                 passive: false
             });
+            
             // 添加点击事件处理浮窗显示
             // 修改单词节点的点击事件
             node.addEventListener('mousedown', (e) => {
@@ -564,6 +644,7 @@ function renderWordUniverse(wordsData) {
         updateWordFocus(); // 拖动结束后更新
     });
 
+    console.log(usedPositions);
 }
 
 function hideNearbyNodes(focusedNode) {
@@ -578,10 +659,6 @@ function restoreAllNodes() {
         node.style.opacity = '1';
     });
 }
-
-
-
-
 
 // 初始化 - 等待DOM加载完成后获取数据
 document.addEventListener('DOMContentLoaded', () => {
@@ -617,5 +694,3 @@ document.addEventListener('keydown', (e) => {
         console.log('state.focusedNodeId:', state.focusedNodeId);
     }
 });
-
-
