@@ -3,12 +3,12 @@ import { state } from "./state.js";
 import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
 import { country_bounding_boxes } from "./countryBoundingBoxes.js";
 import { renderPanelSections } from "./detail.js";
+import {updateRelations} from "./relationManager.js";
 
 window.allWords = [];
 
 let focusedWord = null;
 export const scaleThreshold = 20; // 触发详细信息显示的缩放阈值
-let nodesColor = [" #F0B549", "#E1D37A", "#FAD67B", "#D58020"];
 
 
 // nodes
@@ -196,105 +196,6 @@ function getCenterPosition(element) {
 }
 
 
-// 画线svg relations
-function drawLine(id1, id2, relation) {
-    const svg = document.getElementById('connection-lines');
-    svg.innerHTML = ''; // 清空原线
-    const node1 = document.getElementById(id1);
-    const node2 = document.getElementById(id2);
-    if (!node1 || !node2) return;
-
-    const word1 = window.allWords.find(w => w.id == id1);
-    const word2 = window.allWords.find(w => w.id == id2);
-
-
-    const pos1 = getCenterPosition(node1);
-    const pos2 = getCenterPosition(node2);
-
-    // ===== 1. 视觉线 =====
-    const visualLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    visualLine.setAttribute('x1', pos1.x);
-    visualLine.setAttribute('y1', pos1.y);
-    visualLine.setAttribute('x2', pos2.x);
-    visualLine.setAttribute('y2', pos2.y);
-
-    switch (relation) {
-        case '近义词':
-            visualLine.setAttribute('stroke', 'green');
-            visualLine.setAttribute('stroke-dasharray', '5,5');
-            break;
-        case '反义词':
-            visualLine.setAttribute('stroke', 'red');
-            visualLine.setAttribute('stroke-width', '2');
-            break;
-        case '同类概念':
-            visualLine.setAttribute('stroke', 'blue');
-            visualLine.setAttribute('stroke-width', '1.5');
-            break;
-        default:
-            visualLine.setAttribute('stroke', 'gray');
-    }
-
-    // ===== 2. 点击/hover hitbox =====
-    const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    hitbox.setAttribute('x1', pos1.x);
-    hitbox.setAttribute('y1', pos1.y);
-    hitbox.setAttribute('x2', pos2.x);
-    hitbox.setAttribute('y2', pos2.y);
-    hitbox.setAttribute('stroke', 'transparent'); // 透明不遮挡视觉
-    hitbox.setAttribute('stroke-width', '10'); // 大点击范围
-    hitbox.setAttribute('pointer-events', 'stroke'); // 只在stroke区域触发事件
-
-    // 鼠标放上去变小手
-    hitbox.style.cursor = 'crosshair';
-
-    // 鼠标跟随提示
-    let tooltipDiv = document.getElementById("tooltipDiv");
-
-    hitbox.addEventListener('mouseenter', (e) => {
-        // 创建 tooltip 元素
-        tooltipDiv.textContent = `连接词：${word1.term} ⇔ ${word2.term} 关系：${relation}`;
-        tooltipDiv.style.position = 'fixed';
-        tooltipDiv.style.background = 'rgba(0, 0, 0, 0.75)';
-        tooltipDiv.style.color = '#fff';
-        tooltipDiv.style.padding = '4px 8px';
-        tooltipDiv.style.borderRadius = '4px';
-        tooltipDiv.style.fontSize = '12px';
-        tooltipDiv.style.pointerEvents = 'none';
-        tooltipDiv.style.zIndex = '9999';
-
-        tooltipDiv.style.opacity = "1";
-
-        // 初始化位置
-        tooltipDiv.style.left = (e.clientX + 12) + 'px';
-        tooltipDiv.style.top = (e.clientY + 12) + 'px';
-    });
-
-    // 鼠标移动时更新 tooltip 位置
-    hitbox.addEventListener('mousemove', (e) => {
-        if (tooltipDiv) {
-            tooltipDiv.style.left = (e.clientX + 12) + 'px';
-            tooltipDiv.style.top = (e.clientY + 12) + 'px';
-        }
-    });
-
-    hitbox.addEventListener('mouseleave', () => {
-        if (tooltipDiv) {
-            tooltipDiv.style.opacity = '0';
-        }
-    });
-
-    hitbox.addEventListener('click', () => {
-        zoomToWord(id2, state.currentScale);
-
-        updateWordFocus();
-        tooltipDiv.style.opacity = '0';
-    });
-
-    // 保证 hitbox 在上面，视觉线在下面
-    svg.appendChild(visualLine);
-    svg.appendChild(hitbox);
-}
 
 // 获取邻居
 function getNeighbors(wordsOnGrid, left, top) {
@@ -340,9 +241,6 @@ export function zoomToWord(id,newScale) {
     state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
 
     state.currentScale = newScale;
-
-    let maxX = 164;
-    let maxY = 106.5;
 
     draw();
     updateWordNodeTransforms();
@@ -495,18 +393,6 @@ export function updateWordDetails() {
     }
 }
 
-export function updateRelations() {
-    const svg = document.getElementById('connection-lines');
-    svg.innerHTML = '';
-
-    if (!state.focusedNodeId) return;
-
-    const thisWord = window.allWords.find(w => w.id == state.focusedNodeId);
-    let relations = thisWord.related_terms;
-    relations.forEach(a => {
-        drawLine(state.focusedNodeId, a.id, a.relation);
-    });
-}
 
 function getYearRange(terms) {
   const years = terms

@@ -2,9 +2,11 @@ import {
     state
 } from "./state.js";
 import {
-    updateRelations,
     scaleThreshold
 } from "./main.js";
+import {
+    updateRelations
+} from "./relationManager.js";
 import {
     moveIndicator
 } from "./menu.js";
@@ -80,7 +82,7 @@ canvas.addEventListener("mousemove", (e) => {
     if (isDragging) {
         let offsetX = state.panX + (e.clientX - dragStartX);
         let offsetY = state.panY + (e.clientY - dragStartY);
-        
+
         dragStartX = e.clientX;
         dragStartY = e.clientY;
 
@@ -123,8 +125,8 @@ canvas.addEventListener("wheel", (e) => {
     updateWordNodeTransforms();
     updateRelations();
     moveIndicator(state.currentScale);
-    hideFloatingPanel();    
-    
+    hideFloatingPanel();
+
     updateScaleForNodes(newScale);
     console.log(state.currentScale);
 }, {
@@ -133,7 +135,7 @@ canvas.addEventListener("wheel", (e) => {
 
 export function updateScaleForNodes(newScale, scaleThreshold = 20) {
     let snapped;
-    
+
     if (newScale < 1.5) {
         snapped = 1;
     } else if (newScale < 5) {
@@ -145,7 +147,7 @@ export function updateScaleForNodes(newScale, scaleThreshold = 20) {
     } else {
         snapped = 5;
     }
-    
+
     document.body.dataset.scale = snapped;
 }
 
@@ -186,7 +188,7 @@ function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
 
 function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
     ctx.strokeStyle = "#F0B549";
-    
+
     // 绘制垂直线
     for (let lonIdx = 0; lonIdx <= lonCount; lonIdx++) {
         const x = lonIdx * gridWidth + offsetX;
@@ -195,13 +197,13 @@ function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
         ctx.lineTo(x, offsetY + gridHeight);
         ctx.stroke();
     }
-    
+
     // 绘制水平线
     ctx.beginPath();
     ctx.moveTo(offsetX, offsetY);
     ctx.lineTo(offsetX + gridWidth * lonCount, offsetY);
     ctx.stroke();
-    
+
     ctx.beginPath();
     ctx.moveTo(offsetX, offsetY + gridHeight);
     ctx.lineTo(offsetX + gridWidth * lonCount, offsetY + gridHeight);
