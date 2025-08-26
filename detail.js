@@ -9,7 +9,6 @@ import {
 } from "./main.js";
 
 // 浮窗相关变量
-let currentFloatingPanel = null;
 let isPanelVisible = false;
 
 function filterProposer(name) {
@@ -51,7 +50,6 @@ export function showFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.remove('hidden');
     isPanelVisible = true;
-    currentFloatingPanel = panel;
 
     renderPanelSections();
 
@@ -61,12 +59,10 @@ export function showFloatingPanel() {
     const entryTab = document.querySelector('.panel-tabs button[data-tab="entry"]');
     if (entryTab) entryTab.classList.add('active');
 }
-
 export function hideFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
     isPanelVisible = false;
-    currentFloatingPanel = null;
 }
 
 export function renderPanelSections() {
@@ -84,6 +80,17 @@ export function renderPanelSections() {
     `
 
     // 下半部分
+    const bottomDiv = document.querySelector('.panel-bottom');
+    bottomDiv.innerHTML = `
+        <section id="section-brief"> </section>
+        <section id="section-example"> </section>
+        <section id="section-proposers"> </section>
+        <section id="section-source"> </section>
+        <section id="section-related-works"> </section>
+        <section id="section-contributors"> </section>
+        <section id="section-editors"> </section>
+    `;
+
     const briefSec = document.getElementById("section-brief");
     const exampleSec = document.getElementById("section-example");
     const proposerSec = document.getElementById("section-proposers");
@@ -121,7 +128,7 @@ export function renderPanelSections() {
     let proposers = currentWord.proposers;
     proposers.forEach((proposer) => {
         const proposerBlock = document.createElement("div");
-        proposerBlock.classList="proposer-block";
+        proposerBlock.classList = "proposer-block";
         proposerBlock.innerHTML = `
         <img alt="proposer's img" src=${proposer.image}></img>
         <div>
@@ -160,7 +167,7 @@ function renderCommentSection() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
 
-    const contentScroll = document.querySelector('.panel-content');
+    const contentScroll = document.querySelector('.panel-bottom');
     contentScroll.innerHTML = `
         <section id="section-comment">
             <p>评论</p>
@@ -181,12 +188,9 @@ function initTabs() {
 
             if (btn.dataset.tab === 'entry') {
                 renderPanelSections();
+                scrollToTop();
             } else if (btn.dataset.tab === 'comment') {
                 renderCommentSection();
-            } else if (btn.dataset.tab === 'top') {
-                // 滚动到顶端，但保持entry内容显示
-                renderPanelSections(); // 确保显示entry内容
-                scrollToTop(); // 然后滚动到顶端
             }
         });
     });
@@ -462,7 +466,7 @@ proposerDiv.addEventListener("click", (e) => {
 imageDiv.addEventListener("click", (e) => {
     e.stopPropagation();
     showFloatingPanel();
-    scrollToTop(); 
+    scrollToTop();
 });
 
 // 初始化浮窗功能
