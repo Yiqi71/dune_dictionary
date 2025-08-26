@@ -14,8 +14,15 @@
       "references": "《公共选择理论》",
       "contributors": ["Fei", "Diane"],
       "reviewers": [],
-      "related_terms": [      { "id": 2, "relation": "近义词" }, 
-      { "id": 5, "relation": "同类概念" }],
+      "related_terms": [{
+          "id": 2,
+          "relation": "近义词"
+        },
+        {
+          "id": 5,
+          "relation": "同类概念"
+        }
+      ],
       "createdAt": "2025-08-13",
       "updatedAt": "2025-08-13"
     },
@@ -34,7 +41,10 @@
       "references": "弗洛伊德《日常生活的精神病理学》",
       "contributors": ["Fei", "Yalun"],
       "reviewers": [],
-      "related_terms": [      { "id": 1, "relation": "近义词" }],
+      "related_terms": [{
+        "id": 1,
+        "relation": "近义词"
+      }],
       "createdAt": "2025-01-17",
       "updatedAt": "2025-01-17"
     },
@@ -53,7 +63,10 @@
       "references": "《现代天文学导论》",
       "contributors": ["Fei", "Yalun"],
       "reviewers": [],
-      "related_terms": [      { "id": 4, "relation": "近义词" }],
+      "related_terms": [{
+        "id": 4,
+        "relation": "近义词"
+      }],
       "createdAt": "2025-01-01",
       "updatedAt": "2025-01-01"
     },
@@ -72,7 +85,10 @@
       "references": "霍金《时间简史》",
       "contributors": ["Fei", "Yalun"],
       "reviewers": [],
-      "related_terms": [      { "id": 3, "relation": "近义词" }],
+      "related_terms": [{
+        "id": 3,
+        "relation": "近义词"
+      }],
       "createdAt": "2024-10-20",
       "updatedAt": "2024-10-20"
     },
@@ -91,8 +107,10 @@
       "references": "阿德勒《自卑与超越》",
       "contributors": ["Shelly", "Fei"],
       "reviewers": [],
-      "related_terms": [      { "id": 1, "relation": "同类概念" }
-],
+      "related_terms": [{
+        "id": 1,
+        "relation": "同类概念"
+      }],
       "createdAt": "2024-07-01",
       "updatedAt": "2024-07-01"
     },
@@ -111,8 +129,10 @@
       "references": "《表层阅读与批评方法》",
       "contributors": ["Sati", "Yalun", "Fei"],
       "reviewers": [],
-      "related_terms": [      { "id": 7, "relation": "同类概念" }
-],
+      "related_terms": [{
+        "id": 7,
+        "relation": "同类概念"
+      }],
       "createdAt": "2024-07-15",
       "updatedAt": "2024-07-15"
     },
@@ -131,8 +151,10 @@
       "references": "特纳《仪式过程》",
       "contributors": ["Yunxi", "Yalun", "Fei"],
       "reviewers": [],
-      "related_terms": [      { "id": 6, "relation": "同类概念" }
-],
+      "related_terms": [{
+        "id": 6,
+        "relation": "同类概念"
+      }],
       "createdAt": "2024-07-22",
       "updatedAt": "2024-07-22"
     },
@@ -323,6 +345,51 @@
       "contributors": ["Taibai", "Yalun", "Fei"],
       "reviewers": [],
       "related_terms": ["牲人"],
+      "createdAt": "2024-04-18",
+      "updatedAt": "2024-04-18"
+    }, 
+    
+    {
+      "id": 18,
+      "term": "主体见性",
+      "termOri": "Intersubjectivity",
+      "concept_image": "images/18.jpg",
+
+      "brief_definition": "在交往中生成的体验性现实",
+      "extended_definition": "想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。",
+      "example_sentence": "在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题，更是整个家庭系统的主体间性——譬如，他们如何通过互动模式，共同创造并维持了一个充满焦虑的家庭氛围。",
+
+      "diagrams": [{
+        "src": "images/17.jpg",
+        "caption": "照片来自玛丽娜·阿布拉莫维奇（Marina Abramović）2010年在MoMA的行为艺术作品《艺术家在场》（The Artist is Present）。在凝视中，两个世界相遇。Photo by Andrew Russeth, CC BY-SA 2.0, via Wikimedia Commons"
+      }],
+
+      "proposers": [{
+          "name": "乔治·E.阿特伍德（George E. Atwood）",
+          "year": "1944—",
+          "role": "美国的临床心理学家",
+          "image": "images/GeorgeAtwood.jpg"
+        },
+        {
+          "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
+          "year": "1942—",
+          "role": "美国的精神分析家、哲学家",
+          "image": "images/17Proposer.jpg"
+        }
+      ],
+
+      
+      
+      "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
+      "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
+      "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
+      "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
+
+      "reviewers": [],
+      "related_terms": ["牲人"],
+      "proposing_country": "CN",
+      "proposing_time": "2024年",
+      "domain": "社会学 / 人类学",
       "createdAt": "2024-04-18",
       "updatedAt": "2024-04-18"
     },

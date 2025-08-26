@@ -9,10 +9,13 @@
     background: #FFFCF4;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    /* 改为row，让slide在右侧 */
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
     transform: translateX(100%);
+    overflow: hidden;
+    /* 防止溢出 */
 }
 
 #floating-panel.hidden {
@@ -27,41 +30,12 @@
     pointer-events: auto;
 }
 
-/* 上半部分 */
-.panel-top {
-    flex: 0 0 200px;
-    /* 高度你可以调，比如 200px */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* 垂直居中 */
-    align-items: center;
-    /* 水平居中 */
-    border-bottom: 1px solid #392F17;
-    padding: 16px;
-    gap:30px;
-}
-
-
-/* 下半部分：其他标签内容 */
-.panel-bottom {
-    display: flex;
+/* 主内容区域 - 包含top和bottom，可整体滚动 */
+.panel-main {
     flex: 1;
-    border-radius: 0 0 8px 8px;
-    overflow: hidden;
-}
-.panel-content {
-    border-radius: 0 0 0 8px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex: 1;
+    height: 100vh;
     overflow-y: scroll;
-    /* 开启滚动 */
     padding-right: 12px;
-    /* 给滚动条留点空间 */
 
     /* 隐藏原生滚动条 */
     scrollbar-width: none;
@@ -69,46 +43,245 @@
     -ms-overflow-style: none;
     /* IE 10+ */
 }
-.panel-content::-webkit-scrollbar {
+
+.panel-main::-webkit-scrollbar {
     display: none;
     /* Chrome / Safari */
 }
-.panel-content section {
-    margin: 0 24px;
-    padding: 48px 0;
-    border-bottom: #392F17 dashed 1px;
-}
-.panel-content section * {
-    margin: 16px 0;
+
+/* 上半部分 */
+.panel-top {
+    min-height: 200px;
+    /* 改为min-height，让它可以根据内容调整 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #392F17;
+    padding: 16px;
+    padding-bottom: 70px;
 }
 
-.panel-content section p {
+.panel-top p {
+    margin: 0;
+    padding: 0;
     color: #392F17;
     font-family: ChillDINGothic;
     font-size: 20px;
     font-weight: 400;
-}
-.panel-content section h2 {
-    color: #392F17;
-    font-family: ChillDINGothic;
-    font-size: 30px;
-    font-weight: 500;
+    /* ID距离顶端96px，减去padding 16px = 80px */
+    margin-top: 80px;
+    margin-bottom: 50px;
 }
 
-#section-brief * {
+.panel-top img {
+    width: 541px;
+    height: 339px;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 50px;
+    /* img到div之间50px */
+}
+
+.panel-top div {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    /* 中英文之间的间距 */
+}
+
+.panel-top .term-main {
+    margin: 0;
+    padding: 0;
     color: #392F17;
     font-family: ChillDINGothic;
-    font-size: 30px;
+    font-size: 44px;
+    font-style: normal;
+    font-weight: 600;
+    text-align: center;
+}
+
+.panel-top .term-ori {
+    margin: 0;
+    padding: 0;
+    color: #392F17;
+    font-family: "Stint Ultra Condensed";
+    font-size: 66px;
     font-style: normal;
     font-weight: 400;
+    text-align: center;
 }
+
+/* 下半部分：其他标签内容 */
+.panel-bottom {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 0 0 8px;
+    width: 100%;
+}
+
+#section-example,
+#section-related-works {
+    border-bottom: #392F17 dashed 1px;
+}
+
+
+.panel-bottom section {
+    padding: 32px 24px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.panel-bottom section * {
+    padding: 0 0 24px 0;
+}
+
+#section-brief {
+    padding-top: 180px;
+}
+
+#section-brief h2 {
+    margin: 0 0 76px 0;
+}
+
+.panel-bottom .left-title {
+    width: 114px;
+    margin: 0 0 0 8px;
+    flex-shrink: 0;
+}
+
+.panel-bottom .proposer-block {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.panel-bottom .proposer-block img {
+    padding:0;
+
+    width: 81px !important;
+    height: 112px !important;
+    object-fit: cover !important;
+    
+    background: #D58020;
+    /* mix-blend-mode: screen; */
+    filter: brightness(1.5) contrast(0.5) sepia(1.8) hue-rotate(0deg) saturate(2.2);
+}
+.panel-bottom .proposer-block p {
+   margin:8px 0;
+   padding:0;
+}
+
+/* 字 */
+.panel-bottom p {
+    color: #6B624F;
+    font-family: ChillDINGothic;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 23px;
+    letter-spacing: 1px;
+}
+
+.panel-bottom h2 {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px;
+    /* 100% */
+    letter-spacing: 2px;
+}
+
+.panel-bottom h3 {
+    color: #392F17;
+    text-align: justify;
+    font-family: ChillDINGothic;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+    /* 125% */
+    letter-spacing: 1.2px;
+}
+
+.panel-bottom .left-title {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+
+    width: 114px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.panel-bottom .diagram-caption {
+    color: #6B624F;
+    text-align: justify;
+    font-family: ChillDINGothic;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    /* 125% */
+    letter-spacing: 0.8px;
+}
+
+.panel-bottom .proposer-name {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    /* line-height: 20px; */
+    letter-spacing: 1.2px;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+.panel-bottom .proposer-year p {
+    color: #392F17;
+    font-family: ChillDINGothic;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 1px;
+}
+
+.panel-bottom #editors-container p {
+    color: #6B624F;
+    font-family: ChillDINGothic;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    /* 114.286% */
+    letter-spacing: 0.7px;
+
+    margin: 0;
+    padding: 0;
+}
+
+
 
 /* tabs 样式 */
 .panel-tabs {
     position: absolute;
     bottom: 10px;
     left: -80px;
-    /* 让它在面板外左边 */
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -129,14 +302,14 @@
     color: #fff;
 }
 
-
 /* 自定义滚动条容器 */
 .panel-slide {
     width: 20px;
-    /* 滚动条宽度 */
     position: relative;
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
+    /* 防止被压缩 */
 }
 
 .panel-slide .scroll-track {
@@ -148,69 +321,26 @@
     width: 1px;
     background: #392F17;
     border-radius: 1px;
-    margin:5px 0;
+    /* 移除 margin，让轨道顶天立地 */
 }
 
 .panel-slide .scroll-thumb {
     position: absolute;
-    top: 0;
+    top: 50px;
+    /* 初始位置设在上边距处 */
     left: 50%;
-    /* 圆心对齐黑线 */
     transform: translate(-50%, 0);
     width: 14px;
     height: 14px;
     background: #FCF8EF;
     border-radius: 50%;
     border: solid 1px #474132;
-        margin:5px 0;
-
     cursor: grab;
 }
-
 
 .panel-slide .scroll-thumb:active {
     cursor: grabbing;
 }
-
-.content-area {
-    flex: 1;
-    overflow: hidden;
-    padding: 20px;
-}
-
-.content-scroll {
-    height: 100%;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-.content-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.content-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.content-scroll::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.content-scroll::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-
-.panel-tabs {
-    display: flex;
-    flex-direction: column;
-    background: #f8f9fa;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
 
 .scroll-marker {
     position: absolute;
@@ -230,7 +360,6 @@
 .scroll-tooltip {
     position: absolute;
     left: -110px;
-    /* 根据需要调整到点的左侧 */
     background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 2px 6px;

@@ -24,14 +24,26 @@
 
     <!-- 浮窗容器 -->
     <div id="floating-panel" class="hidden">
-        <div class="panel-top"></div>
+        <div class="panel-main">
+            <div class="panel-top"></div>
+            <div class="panel-bottom">
 
-        <div class="panel-bottom">
-            <div class="panel-content"> </div>
-            <div class="panel-slide">
-                <div class="scroll-track"></div>
-                <div class="scroll-thumb"></div>
+                <section id="section-brief"> </section>
+                <section id="section-example"> </section>
+                <section id="section-proposers"> </section>
+                <section id="section-source"> </section>
+                <section id="section-related-works"> </section>
+                <section id="section-contributors"> </section>
+                <section id="section-editors"> </section>
+
+
             </div>
+        </div>
+
+        <!-- 整个top+bottom一起scroll -->
+        <div class="panel-slide">
+            <div class="scroll-track"></div>
+            <div class="scroll-thumb"></div>
         </div>
 
         <!-- 左下角 tab -->
@@ -73,7 +85,7 @@
         </div>
     </menu>
 
-  <!-- 主视图 -->
+    <!-- 主视图 -->
     <div id="universe-view" class="view">
         <canvas id="universe-canvas"></canvas>
         <svg id="connection-lines"></svg>
