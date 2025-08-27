@@ -40,18 +40,27 @@ export function zoomToWord(id, newScale) {
     if (!node) return;
 
     const oldScale = state.currentScale;
-    
-    const rect = node.getBoundingClientRect();
-    let x = rect.left + rect.width / 2;
-    let y = rect.top + rect.height / 2;
+
+    // 用逻辑坐标而不是 rect
+    const logicalX = parseFloat(node.dataset.x); // 假设0-1范围
+    const logicalY = parseFloat(node.dataset.y);
+
+    const container = document.getElementById('word-nodes-container');
+    const containerRect = container.getBoundingClientRect();
+    const worldX = logicalX * containerRect.width;
+    const worldY = logicalY * containerRect.height;
 
     // 屏幕中心
     const viewportCenterX = window.innerWidth / 2;
     const viewportCenterY = window.innerHeight / 2;
 
-    // 更新缩放中心逻辑（保持点击点在中心）
-    state.panX = viewportCenterX - ((x - state.panX) / oldScale) * newScale;
-    state.panY = viewportCenterY - ((y - state.panY) / oldScale) * newScale;
+    // 补偿 node 尺寸
+    const rect = node.getBoundingClientRect();
+    const nodeWidth = rect.width / oldScale; 
+    const nodeHeight = rect.height / oldScale;
+
+    state.panX = viewportCenterX - (worldX * newScale + 318 / 2);
+    state.panY = viewportCenterY - (worldY * newScale + 210 / 2);
 
     state.currentScale = newScale;
 
@@ -60,6 +69,7 @@ export function zoomToWord(id, newScale) {
     updateRelations();
     updateScaleForNodes(newScale);
 }
+
 
 export function updateWordFocus() {
     const overlay = document.getElementById("overlay");
@@ -130,7 +140,7 @@ export function updateWordFocus() {
             hideNearbyNodes(closestWord);
 
             // 自动吸附到屏幕中心
-            zoomToWord(focusedWord.id, state.currentScale);
+            zoomToWord(focusedWord.id, scaleThreshold);
             updateWordDetails();
         }
     }

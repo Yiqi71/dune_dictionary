@@ -166,7 +166,6 @@ h1.English {
     pointer-events: auto;
     position: absolute;
     cursor: pointer;
-    transform-origin: center;
 }
 .word-node * {
     margin: 0;
