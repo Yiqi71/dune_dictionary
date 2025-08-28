@@ -10,9 +10,9 @@
 
     display: flex;
     flex-direction: row;
-    /* 改为row，让slide在右侧 */
+    /* 让slide在右侧 */
     z-index: 1000;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
     transform: translateX(100%);
     /* overflow: hidden; */
     /* 防止溢出 */
@@ -314,6 +314,116 @@
 
 
 
+/* 展开按钮样式 */
+#expand-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: #EEE9DB;
+    border: 1px solid #392F17;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    transition: all 0.3s ease;
+    color: #392F17;
+}
+
+#expand-btn:hover {
+    background: #E2DCC9;
+    transform: scale(1.05);
+}
+
+#expand-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* 展开状态的样式 */
+#floating-panel.expanded {
+    width: 1260px; /* 或者你想要的宽度 */
+}
+
+/* 展开状态下底部section的padding调整 */
+#floating-panel.expanded .panel-bottom .left-title {
+    width: 190px;
+}
+
+/* 展开状态下的图片调整 */
+#floating-panel.expanded .panel-top img {
+    width: 1053px; /* 比默认的541px更大 */
+    height: 405px; /* 比默认的339px更大 */
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 50px;
+}
+#floating-panel.expanded #section-example img {
+    width: 566px !important; /* 比默认的406px更大 */
+    height: 373px !important; /* 比默认的270px更大 */
+    object-fit: cover !important;
+}
+
+/* 展开状态下字体 */
+#floating-panel.expanded .panel-bottom p {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 450;
+    line-height: 28px;
+    letter-spacing: 1.2px;
+}
+
+#floating-panel.expanded .panel-bottom h2 {
+    font-size: 45px; 
+    font-weight: 600;
+    letter-spacing: 2.25px;
+}
+
+#floating-panel.expanded .panel-bottom h3 {
+    font-size: 28px; 
+    line-height: 35px; 
+    font-weight: 400;
+    letter-spacing: 1.4px;
+}
+#floating-panel.expanded .panel-bottom .diagram-caption {
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+#floating-panel.expanded .panel-bottom .proposer-name {
+    font-size: 28px;
+    letter-spacing: 1.4px;
+}
+#floating-panel.expanded .panel-bottom .proposer-year p {
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: 1.2px;
+}
+
+
+/* 确保按钮在展开状态下仍然可见 */
+#floating-panel.expanded #expand-btn {
+    left: 20px; /* 保持在左上角 */
+}
+
+/* 隐藏状态保持不变 */
+#floating-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+}
+
+#floating-panel:not(.hidden) {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+
 /* tabs 样式 */
 .panel-tabs {
     position: absolute;
@@ -358,7 +468,6 @@
     flex-shrink: 0;
     /* 防止被压缩 */
 }
-
 .panel-slide .scroll-track {
     position: absolute;
     top: 0;
@@ -370,7 +479,6 @@
     border-radius: 1px;
     /* 移除 margin，让轨道顶天立地 */
 }
-
 .panel-slide .scroll-thumb {
     position: absolute;
     top: 50px;
@@ -384,11 +492,9 @@
     border: solid 1px #474132;
     cursor: grab;
 }
-
 .panel-slide .scroll-thumb:active {
     cursor: grabbing;
 }
-
 .scroll-marker {
     position: absolute;
     left: 50%;
@@ -399,11 +505,9 @@
     border-radius: 50%;
     cursor: pointer;
 }
-
 .scroll-marker:hover {
     background-color: #333;
 }
-
 .scroll-tooltip {
     position: absolute;
     left: -110px;
@@ -415,7 +519,6 @@
     white-space: nowrap;
     display: none;
 }
-
 .scroll-marker:hover .scroll-tooltip {
     display: block;
 }

@@ -10,6 +10,7 @@ import {
 
 // 浮窗相关变量
 let isPanelVisible = false;
+let isExpanded = false;
 
 function filterProposer(name) {
     const focusedWord = window.allWords.find(w => w.id == state.focusedNodeId);
@@ -45,11 +46,44 @@ function filterProposer(name) {
     return relatedContainer;
 }
 
+function togglePanelWidth(){
+    const panel = document.getElementById('floating-panel');
+    const expandBtn = document.getElementById('expand-btn');
+    
+    if (!panel || !expandBtn) return;
+    
+    isExpanded = !isExpanded;
+    
+    if (isExpanded) {
+        panel.classList.add('expanded');
+        expandBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4,14 10,14 10,20"></polyline>
+                <polyline points="20,10 14,10 14,4"></polyline>
+                <line x1="14" y1="10" x2="21" y2="3"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+        `;
+    } else {
+        panel.classList.remove('expanded');
+        expandBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,3 21,3 21,9"></polyline>
+                <polyline points="9,21 3,21 3,15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+        `;
+    }
+}
+
 // 浮窗功能函数
 export function showFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.remove('hidden');
     isPanelVisible = true;
+
+    ensureExpandButton();
 
     renderPanelSections();
 
@@ -59,10 +93,53 @@ export function showFloatingPanel() {
     const entryTab = document.querySelector('.panel-tabs button[data-tab="entry"]');
     if (entryTab) entryTab.classList.add('active');
 }
+
+function ensureExpandButton(){
+    let expandBtn = document.getElementById('expand-btn');
+    
+    if (!expandBtn) {
+        // 创建按钮
+        expandBtn = document.createElement('button');
+        expandBtn.id = 'expand-btn';
+        expandBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,3 21,3 21,9"></polyline>
+                <polyline points="9,21 3,21 3,15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+        `;
+        
+        // 添加点击事件
+        expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePanelWidth();
+        });
+        
+        // 将按钮添加到 panel 中
+        const panel = document.getElementById('floating-panel');
+        panel.appendChild(expandBtn);
+    }
+}
 export function hideFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
+    panel.classList.remove('expanded'); // 重置展开状态
     isPanelVisible = false;
+    isExpanded = false; // 重置展开状态
+    
+    // 重置按钮图标
+    const expandBtn = document.getElementById('expand-btn');
+    if (expandBtn) {
+        expandBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,3 21,3 21,9"></polyline>
+                <polyline points="9,21 3,21 3,15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+        `;
+    }
 }
 
 export function renderPanelSections() {

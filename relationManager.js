@@ -33,19 +33,19 @@ function drawLine(id1, id2, relation) {
     // 根据关系类型设置样式
     switch (relation) {
         case '近义词':
-            visualLine.setAttribute('stroke', 'green');
+            visualLine.setAttribute('stroke', '#FFFCF4');
             visualLine.setAttribute('stroke-dasharray', '5,5');
             break;
         case '反义词':
-            visualLine.setAttribute('stroke', 'red');
+            visualLine.setAttribute('stroke', '#FFFCF4');
             visualLine.setAttribute('stroke-width', '2');
             break;
         case '同类概念':
-            visualLine.setAttribute('stroke', 'blue');
+            visualLine.setAttribute('stroke', '#FFFCF4');
             visualLine.setAttribute('stroke-width', '1.5');
             break;
         default:
-            visualLine.setAttribute('stroke', 'gray');
+            visualLine.setAttribute('stroke', '#FFFCF4');
     }
 
     // 点击/hover hitbox
