@@ -176,12 +176,16 @@ function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
 
     for (let lonIdx = 0; lonIdx < lonCount; lonIdx++) {
         const centerX = lonIdx * gridWidth + offsetX + gridWidth / 2;
-        const y = offsetY + 25;
+        const topY = offsetY + 25; // 上方
+        const bottomY = offsetY + state.baseHeight * state.currentScale - 10; // 下方
 
         const tz = -11 + lonIdx;
         const label = tz > 0 ? `+${tz}` : `${tz}`;
 
-        ctx.fillText(label, centerX, y);
+        // 顶部标签
+        ctx.fillText(label, centerX, topY);
+        // 底部标签
+        ctx.fillText(label, centerX, bottomY);
     }
     ctx.restore();
 }
@@ -212,60 +216,37 @@ function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
 
 function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth) {
     ctx.save();
-    const latitudes = [{
-            lat: 0,
-            label: "0°",
-            color: "#F0B549",
-            dash: [],
-            lineWidth: 1
-        },
-        {
-            lat: 23.5,
-            label: "23.5°N",
-            color: "#F0B549",
-            dash: [],
-            lineWidth: 1
-        },
-        {
-            lat: -23.5,
-            label: "23.5°S",
-            color: "#F0B549",
-            dash: [],
-            lineWidth: 1
-        }
+    const latitudes = [
+        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 1 },
+        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [], lineWidth: 1 },
+        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [], lineWidth: 1 }
     ];
 
-    latitudes.forEach(({
-        lat,
-        label,
-        color,
-        dash,
-        lineWidth
-    }) => {
+    latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {
         const latIdx = (90 - lat) / 180;
         const y = latIdx * gridHeight + offsetY;
 
-        // 绘制纬线（从第二列开始，不覆盖 -11 时区）
+        // 绘制纬线
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.setLineDash(dash);
 
         ctx.beginPath();
         ctx.moveTo(offsetX + gridWidth, y);
-        ctx.lineTo(offsetX + totalWidth, y);
+        ctx.lineTo(offsetX + totalWidth - gridWidth, y);
         ctx.stroke();
 
-        // 绘制标签
+        // 绘制左右标签
         ctx.setLineDash([]);
         ctx.fillStyle = color;
         ctx.font = "14px ChillDINGothic";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(
-            label,
-            offsetX + gridWidth / 2,
-            y
-        );
+
+        // 左边（第一列中点）
+        ctx.fillText(label, offsetX + gridWidth / 2, y);
+        // 右边（最后一列中点）
+        ctx.fillText(label, offsetX + totalWidth - gridWidth / 2, y);
     });
 
     ctx.restore();
