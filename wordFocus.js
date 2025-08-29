@@ -248,9 +248,9 @@ export function updateWordDetails() {
     // image section
     const imageTitle = document.querySelector('#image .detail-title');
     const imageEl = document.querySelector('#image img');
-    imageTitle.textContent = '相关图片';
+    imageTitle.textContent = '概念图片';
     if (word.diagrams && word.diagrams.length > 0) {
-        imageEl.src = word.diagrams[0];
+        imageEl.src = word.concept_image;
         imageEl.alt = word.term;
         imageEl.style.display = 'block';
     } else {
@@ -263,12 +263,13 @@ export function updateWordDetails() {
     const proposerP = document.querySelector('#proposer p');
     const proposerImg = document.querySelector('#proposer img');
     proposerTitle.textContent = '提出人';
-    proposerP.textContent = word.proposer || '未知';
-    if (word.proposer_img) {
-        proposerImg.src = word.proposer_img;
-        proposerImg.alt = word.proposer || '';
+    if (word.proposers && word.proposers.length>0) {
+        proposerP.textContent = word.proposers[0].name;
+        proposerImg.src = word.proposers[0].image;
+        proposerImg.alt = word.proposers[0].name || '';
         proposerImg.style.display = 'block';
     } else {
+        proposerP.textContent = '未知';
         proposerImg.style.display = 'none';
     }
 
@@ -277,8 +278,8 @@ export function updateWordDetails() {
     const commentH3 = document.querySelector('#comment h3');
     const commentP = document.querySelector('#comment p');
     commentTitle.textContent = '相关评论';
-    if (word.commentAbs && word.commentAbs.length > 0) {
-        const comment = word.commentAbs[0];
+    if (word.commentAbs) {
+        const comment = word.commentAbs;
         commentH3.textContent = comment.content;
         commentP.innerHTML = `--${comment.author}`;
     } else {

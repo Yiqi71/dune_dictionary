@@ -247,7 +247,6 @@ function renderCommentSection() {
     const contentScroll = document.querySelector('.panel-bottom');
     contentScroll.innerHTML = `
         <section id="section-comment">
-            <p>评论</p>
             <div class="comment-list">
                 ${currentWord.comments?.map(c => `<p><b>${c.author}：</b>${c.content}</p>`).join('') || '暂无评论'}
             </div>
