@@ -19,11 +19,14 @@ function filterProposer(name) {
     // 先渲染 proposer 相关的词
     const relatedContainer = document.createElement("div");
     relatedContainer.classList = `related-words`;
-
     relatedContainer.innerHTML = '';
-    const relatedWords = window.allWords.filter(
-        w => w.proposer === name && w.id !== focusedWord.id
-    );
+
+    // 检索所有 proposers 里有该名字的词
+    const relatedWords = window.allWords.filter(w => {
+        if (w.id === focusedWord.id) return false;
+        return Array.isArray(w.proposers) && w.proposers.some(p => p.name === name);
+    });
+    
     relatedWords.forEach(w => {
         const link = document.createElement('div');
         link.id = `related-${w.id}`;

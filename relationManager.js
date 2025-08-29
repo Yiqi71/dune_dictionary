@@ -71,7 +71,7 @@ function addLineInteractions(hitbox, word1, word2, relation, targetId) {
     let tooltipDiv = document.getElementById("tooltipDiv");
 
     hitbox.addEventListener('mouseenter', (e) => {
-        tooltipDiv.textContent = `连接词：${word1.term} ⇔ ${word2.term} 关系：${relation}`;
+        tooltipDiv.textContent = `${relation}： ${word2.term}`;
         tooltipDiv.style.position = 'fixed';
         tooltipDiv.style.background = 'rgba(0, 0, 0, 0.75)';
         tooltipDiv.style.color = '#fff';
@@ -118,4 +118,21 @@ export function updateRelations() {
     thisWord.related_terms.forEach(relation => {
         drawLine(state.focusedNodeId, relation.id, relation.relation);
     });
+
+    // ✅ 2. 额外画 "共同 proposer" 的关系
+    if (Array.isArray(thisWord.proposers)) {
+        // 当前词的 proposer 名称列表
+        const proposerNames = thisWord.proposers.map(p => p.name);
+
+        window.allWords.forEach(otherWord => {
+            if (otherWord.id === thisWord.id) return; // 跳过自己
+            if (!Array.isArray(otherWord.proposers)) return;
+
+            // 判断是否有共同 proposer
+            const hasCommon = otherWord.proposers.some(p => proposerNames.includes(p.name));
+            if (hasCommon) {
+                drawLine(thisWord.id, otherWord.id, "共同提出者");
+            }
+        });
+    }
 }
