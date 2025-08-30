@@ -26,7 +26,7 @@ function filterProposer(name) {
         if (w.id === focusedWord.id) return false;
         return Array.isArray(w.proposers) && w.proposers.some(p => p.name === name);
     });
-    
+
     relatedWords.forEach(w => {
         const link = document.createElement('div');
         link.id = `related-${w.id}`;
@@ -49,14 +49,14 @@ function filterProposer(name) {
     return relatedContainer;
 }
 
-function togglePanelWidth(){
+function togglePanelWidth() {
     const panel = document.getElementById('floating-panel');
     const expandBtn = document.getElementById('expand-btn');
-    
+
     if (!panel || !expandBtn) return;
-    
+
     isExpanded = !isExpanded;
-    
+
     if (isExpanded) {
         panel.classList.add('expanded');
         expandBtn.innerHTML = `
@@ -99,7 +99,7 @@ export function showFloatingPanel() {
 
 function ensureExpandButton(){
     let expandBtn = document.getElementById('expand-btn');
-    
+
     if (!expandBtn) {
         // 创建按钮
         expandBtn = document.createElement('button');
@@ -112,13 +112,13 @@ function ensureExpandButton(){
                 <line x1="3" y1="21" x2="10" y2="14"></line>
             </svg>
         `;
-        
+
         // 添加点击事件
         expandBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             togglePanelWidth();
         });
-        
+
         // 将按钮添加到 panel 中
         const panel = document.getElementById('floating-panel');
         panel.appendChild(expandBtn);
@@ -130,7 +130,7 @@ export function hideFloatingPanel() {
     panel.classList.remove('expanded'); // 重置展开状态
     isPanelVisible = false;
     isExpanded = false; // 重置展开状态
-    
+
     // 重置按钮图标
     const expandBtn = document.getElementById('expand-btn');
     if (expandBtn) {
@@ -321,7 +321,7 @@ function updateTabContent(tabType = "brief") {
 
 // 滑轨配置参数
 const SCROLL_CONFIG = {
-    thumbMargin: 50, // thumb上下边距，可调整参数
+    thumbMargin: 0, // thumb上下边距，可调整参数
     thumbSize: 14 // thumb大小
 };
 
@@ -330,37 +330,25 @@ const panelMain = document.querySelector('.panel-main'); // 改为选择 panel-m
 const scrollThumb = document.querySelector('.scroll-thumb');
 const scrollTrack = document.querySelector('.scroll-track');
 
-function updateThumbPosition() {
-    if (!panelMain) return;
 
+panelMain.addEventListener("scroll", () => {
+    const scrollTop = panelMain.scrollTop;
     const contentHeight = panelMain.scrollHeight;
     const visibleHeight = panelMain.clientHeight;
-    const scrollTop = panelMain.scrollTop;
 
-    if (contentHeight <= visibleHeight) {
-        scrollThumb.style.display = 'none';
-        return;
-    }
-
-    scrollThumb.style.display = 'block';
-
-    // 计算thumb可活动范围
+    
     const trackHeight = panelMain.clientHeight;
-    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2);
+    const thumbHeight = scrollThumb.offsetHeight;
 
-    // 计算当前滚动比例
+    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - thumbHeight;
+    
     const scrollRatio = scrollTop / (contentHeight - visibleHeight);
 
-    // 计算thumb位置（在活动范围内）
-    const thumbPosition = SCROLL_CONFIG.thumbMargin + (scrollRatio * thumbActiveRange);
+    const thumbTop = SCROLL_CONFIG.thumbMargin + scrollRatio * thumbActiveRange;
+    scrollThumb.style.display = 'block';
+    scrollThumb.style.top = `${thumbTop}px`;
+});
 
-    scrollThumb.style.top = `${thumbPosition}px`;
-}
-
-// 监听主容器滚动 → 更新圆点位置
-if (panelMain) {
-    panelMain.addEventListener('scroll', updateThumbPosition);
-}
 
 // 拖动功能
 let isDragging = false;
@@ -409,45 +397,23 @@ function renderScrollMarkers() {
     // 清空旧的 marker
     scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
 
-    const sections = [{
-            id: "panel-top",
-            label: "顶部",
-            isTop: true
-        }, // 新增顶部marker
-        {
-            id: "section-brief",
-            label: "释义"
-        },
-        {
-            id: "section-example",
-            label: "例句"
-        },
-        {
-            id: "section-proposers",
-            label: "提出人"
-        },
-        {
-            id: "section-source",
-            label: "来源"
-        },
-        {
-            id: "section-related-works",
-            label: "相关著作"
-        },
-        {
-            id: "section-contributors",
-            label: "contributors"
-        },
-        {
-            id: "section-editors",
-            label: "编辑"
-        }
+    const sections = [
+        { id: "panel-top", label: "顶部", isTop: true },
+        { id: "section-brief", label: "释义" },
+        { id: "section-example", label: "例句" },
+        { id: "section-proposers", label: "提出人" },
+        { id: "section-source", label: "来源" },
+        { id: "section-related-works", label: "相关著作" },
+        { id: "section-contributors", label: "contributors" },
+        { id: "section-editors", label: "编辑" }
     ];
 
     const contentHeight = panelMain.scrollHeight;
     const visibleHeight = panelMain.clientHeight;
+    const contentScrollableRange = contentHeight - visibleHeight;
+
     const trackHeight = panelMain.clientHeight;
-    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2);
+    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2)-SCROLL_CONFIG.thumbSize;
 
     // 如果内容不需要滚动，不显示markers
     if (contentHeight <= visibleHeight) return;
@@ -465,8 +431,10 @@ function renderScrollMarkers() {
             if (!el) return;
 
             // 计算section在整个内容中的相对位置
-            const sectionTop = el.offsetTop;
-            const contentScrollableRange = contentHeight - visibleHeight;
+            const sectionRect = el.getBoundingClientRect();
+            const panelRect = panelMain.getBoundingClientRect();
+            const sectionTop = panelMain.scrollTop + (sectionRect.top - panelRect.top);
+
 
             // 计算滚动比例（当section滚动到顶部时的比例）
             const scrollRatio = Math.min(sectionTop / contentScrollableRange, 1);
@@ -495,9 +463,9 @@ function renderScrollMarkers() {
             });
 
             // 更新thumb位置使其对齐到marker
-            setTimeout(() => {
-                scrollThumb.style.top = `${markerTop}px`;
-            }, 50); // 延迟一点确保滚动开始后再更新
+            // setTimeout(() => {
+            //     scrollThumb.style.top = `${markerTop}px`;
+            // }, 50); 
         });
 
         scrollTrack.appendChild(marker);

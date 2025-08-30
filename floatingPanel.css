@@ -67,8 +67,8 @@
     padding: 0;
 
     /* ID距离顶端96px，减去padding 16px = 80px */
-    margin-top: 80px;
-    margin-bottom: 50px;
+    padding-top: 80px;
+    padding-bottom: 50px;
 }
 
 
@@ -88,7 +88,7 @@
     object-fit: cover;
     margin: 0;
     padding: 0;
-    margin-bottom: 50px;
+    padding-bottom: 50px;
     /* img到div之间50px */
 }
 
@@ -191,8 +191,8 @@
 }
 
 .panel-bottom .proposer-block p {
-    margin: 8px 0;
-    padding: 0;
+    padding: 4px 0;
+    margin: 0;
 }
 
 #section-related-works {
@@ -472,18 +472,17 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 50%;
+    left: 0;
     transform: translateX(-50%);
     width: 1px;
     background: #392F17;
     border-radius: 1px;
-    /* 移除 margin，让轨道顶天立地 */
 }
 .panel-slide .scroll-thumb {
     position: absolute;
-    top: 50px;
+    top: 0;
     /* 初始位置设在上边距处 */
-    left: 50%;
+    left: 0%;
     transform: translate(-50%, 0);
     width: 14px;
     height: 14px;
