@@ -26,20 +26,20 @@ const numbersContainer = document.querySelector('.scale-numbers');
 ticksContainer.innerHTML = '';
 numbersContainer.innerHTML = '';
 
-// for (let i = 0; i < numSteps; i++) {
-//     const percent = (i / (numSteps - 1)) * 100;
+for (let i = 0; i < numSteps; i++) {
+    const percent = (i / (numSteps - 1)) * 100;
 
-//     // 刻度线
-//     const tick = document.createElement('div');
-//     tick.style.left = percent + '%';
-//     ticksContainer.appendChild(tick);
+    // 刻度线
+    const tick = document.createElement('div');
+    tick.style.left = percent + '%';
+    ticksContainer.appendChild(tick);
 
-//     // 数字
-//     const num = document.createElement('span');
-//     num.textContent = (i + 1);
-//     num.style.left = percent + '%';
-//     numbersContainer.appendChild(num);
-// }
+    // 数字
+    const num = document.createElement('span');
+    num.textContent = (i + 1);
+    num.style.left = percent + '%';
+    numbersContainer.appendChild(num);
+}
 
 const indicator = document.getElementById('indicator');
 const container = document.getElementById('scaleContainer');

@@ -83,6 +83,7 @@
     width: 313px;
     height: 37px;
     display: flex;
+    gap:16px;
     align-items: center;
     justify-content: center;
     border-radius: 22.733px;
