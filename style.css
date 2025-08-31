@@ -172,8 +172,7 @@ h1.English {
     padding: 0;
 }
 .word-node .terms {
-    overflow: hidden;
-    /* 裁掉文字 */
+    /* overflow: hidden; */
     text-overflow: ellipsis;
     white-space: nowrap;
     display: flex;
@@ -182,8 +181,7 @@ h1.English {
     align-items: flex-start;
 }
 .word-node .detail-title {
-    overflow: hidden;
-    /* 裁掉文字 */
+    /* overflow: hidden; */
     text-overflow: ellipsis;
     white-space: nowrap;
     /* 保证一行内显示 */

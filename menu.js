@@ -111,7 +111,7 @@ function snapToStep() {
 
 // 可程序化移动 indicator
 export function moveIndicator(value) {
-    value = value * 5 / scaleThreshold;
+    value = (value-1) * 4 / (scaleThreshold-1)+1;
     if (value < 1) value = 1;
     if (value > 5) value = 5;
     const percent = (value - 1) * 25; // 5 个刻度
