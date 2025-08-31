@@ -1,25 +1,22 @@
-import {
-    state
-} from "./state.js";
-import {
-    scaleThreshold
-} from "./wordFocus.js";
-import {
-    updateRelations
-} from "./relationManager.js";
-import {
-    moveIndicator
-} from "./menu.js";
-import {
-    hideFloatingPanel
-} from "./detail.js"
+import { state } from "./state.js";
+import { scaleThreshold } from "./wordFocus.js";
+import { updateRelations } from "./relationManager.js";
+import { moveIndicator } from "./menu.js";
+import { hideFloatingPanel } from "./detail.js"
 
 const canvas = document.getElementById("universe-canvas");
 const ctx = canvas.getContext("2d");
 
-// 初始化尺寸
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// 初始化尺寸 + 高清屏支持
+function setupCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // 重置
+    ctx.scale(dpr, dpr);
+}
 
 function updateGridSizeToFitHeight() {
     state.baseWidth = window.innerWidth / 24;
@@ -29,15 +26,15 @@ function updateGridSizeToFitHeight() {
 // 限制 Y 方向边界
 export function clampOffsetY(offsetY) {
     const totalHeight = state.baseHeight * state.currentScale;
-    const minY = -totalHeight + canvas.height; // 南极边缘
-    const maxY = 0; // 北极边缘
+    const minY = -totalHeight + canvas.height / (window.devicePixelRatio || 1); 
+    const maxY = 0;
     return Math.min(Math.max(offsetY, minY), maxY);
 }
 
 // 限制 X 方向边界
 export function clampOffsetX(offsetX) {
     const totalWidth = state.baseWidth * state.currentScale * 24;
-    const minX = -totalWidth + canvas.width;
+    const minX = -totalWidth + canvas.width / (window.devicePixelRatio || 1);
     const maxX = 0;
     return Math.min(Math.max(offsetX, minX), maxX);
 }
@@ -95,12 +92,12 @@ canvas.addEventListener("mousemove", (e) => {
     }
 });
 
-canvas.addEventListener("mouseup", (e) => {
+canvas.addEventListener("mouseup", () => {
     isDragging = false;
     updateRelations();
 });
 
-canvas.addEventListener("mouseleave", (e) => {
+canvas.addEventListener("mouseleave", () => {
     isDragging = false;
     updateRelations();
 });
@@ -128,25 +125,15 @@ canvas.addEventListener("wheel", (e) => {
     hideFloatingPanel();
 
     updateScaleForNodes(newScale);
-    console.log(state.currentScale);
-}, {
-    passive: false
-});
+}, { passive: false });
 
 export function updateScaleForNodes(newScale, scaleThreshold = 20) {
     let snapped;
-
-    if (newScale < 1.5) {
-        snapped = 1;
-    } else if (newScale < 5) {
-        snapped = 2;
-    } else if (newScale < 13) {
-        snapped = 3;
-    } else if (newScale < 19.5) {
-        snapped = 4;
-    } else {
-        snapped = 5;
-    }
+    if (newScale < 1.5) snapped = 1;
+    else if (newScale < 5) snapped = 2;
+    else if (newScale < 13) snapped = 3;
+    else if (newScale < 19.5) snapped = 4;
+    else snapped = 5;
 
     document.body.dataset.scale = snapped;
 }
@@ -176,41 +163,42 @@ function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
 
     for (let lonIdx = 0; lonIdx < lonCount; lonIdx++) {
         const centerX = lonIdx * gridWidth + offsetX + gridWidth / 2;
-        const topY = offsetY + 25; // 上方
-        const bottomY = offsetY + state.baseHeight * state.currentScale - 10; // 下方
+        const topY = offsetY + 25;
+        const bottomY = offsetY + state.baseHeight * state.currentScale - 10;
 
         const tz = -11 + lonIdx;
         const label = tz > 0 ? `+${tz}` : `${tz}`;
 
-        // 顶部标签
         ctx.fillText(label, centerX, topY);
-        // 底部标签
         ctx.fillText(label, centerX, bottomY);
     }
     ctx.restore();
 }
 
+// ✅ 高清屏优化版网格绘制
 function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
     ctx.strokeStyle = "#F0B549";
+    ctx.lineWidth = 1;
 
-    // 绘制垂直线
+    // 垂直线
     for (let lonIdx = 0; lonIdx <= lonCount; lonIdx++) {
-        const x = lonIdx * gridWidth + offsetX;
+        const x = lonIdx * gridWidth + offsetX + 0.5; // 半像素对齐
         ctx.beginPath();
         ctx.moveTo(x, offsetY);
         ctx.lineTo(x, offsetY + gridHeight);
         ctx.stroke();
     }
 
-    // 绘制水平线
+    // 顶部
     ctx.beginPath();
-    ctx.moveTo(offsetX, offsetY);
-    ctx.lineTo(offsetX + gridWidth * lonCount, offsetY);
+    ctx.moveTo(offsetX + 0.5, offsetY + 0.5);
+    ctx.lineTo(offsetX + gridWidth * lonCount + 0.5, offsetY + 0.5);
     ctx.stroke();
 
+    // 底部
     ctx.beginPath();
-    ctx.moveTo(offsetX, offsetY + gridHeight);
-    ctx.lineTo(offsetX + gridWidth * lonCount, offsetY + gridHeight);
+    ctx.moveTo(offsetX + 0.5, offsetY + gridHeight + 0.5);
+    ctx.lineTo(offsetX + gridWidth * lonCount + 0.5, offsetY + gridHeight + 0.5);
     ctx.stroke();
 }
 
@@ -224,9 +212,8 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
 
     latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {
         const latIdx = (90 - lat) / 180;
-        const y = latIdx * gridHeight + offsetY;
+        const y = latIdx * gridHeight + offsetY + 0.5; // 半像素对齐
 
-        // 绘制纬线
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.setLineDash(dash);
@@ -236,16 +223,13 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
         ctx.lineTo(offsetX + totalWidth - gridWidth, y);
         ctx.stroke();
 
-        // 绘制左右标签
         ctx.setLineDash([]);
         ctx.fillStyle = color;
         ctx.font = "14px ChillDINGothic";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        // 左边（第一列中点）
         ctx.fillText(label, offsetX + gridWidth / 2, y);
-        // 右边（最后一列中点）
         ctx.fillText(label, offsetX + totalWidth - gridWidth / 2, y);
     });
 
@@ -253,9 +237,8 @@ function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth
 }
 
 function initialize() {
+    setupCanvas(); // 替换原始初始化
     updateGridSizeToFitHeight();
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
     draw();
     updateWordNodeTransforms();
 }

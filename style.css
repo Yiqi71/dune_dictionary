@@ -16,7 +16,7 @@ html, body {
 body {
     overflow: hidden;
     height: 100vh;
-    background: #AA925B;
+    background: #625136;
     color: #544011;
     font-family: "Barlow Condensed", "ChillDIN";
     transition: opacity 0.8s, transform 0.8s;
@@ -470,7 +470,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #947727;
+    background-color: #625136;
     opacity: 0.5;
     transition: opacity 0.8s;
     pointer-events: none;
