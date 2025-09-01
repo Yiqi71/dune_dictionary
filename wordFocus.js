@@ -22,7 +22,7 @@ const detailPositions = {
         leftRange: 8  // ±8vw
     },
     comment: {
-        baseTop: 75, // vh
+        baseTop: 80, // vh
         baseLeft: 60, // vw
         topRange: 5,  // ±5vh
         leftRange: 12 // ±12vw
