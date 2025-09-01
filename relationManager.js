@@ -71,6 +71,8 @@ function addLineInteractions(hitbox, word1, word2, relation, targetId) {
     let tooltipDiv = document.getElementById("tooltipDiv");
 
     hitbox.addEventListener('mouseenter', (e) => {
+        hideTooltip();
+
         tooltipDiv.textContent = `${relation}： ${word2.term}`;
         tooltipDiv.style.position = 'fixed';
         tooltipDiv.style.background = 'rgba(0, 0, 0, 0.75)';
@@ -93,22 +95,31 @@ function addLineInteractions(hitbox, word1, word2, relation, targetId) {
     });
 
     hitbox.addEventListener('mouseleave', () => {
-        if (tooltipDiv) {
-            tooltipDiv.style.opacity = '0';
-        }
+        hideTooltip() 
     });
 
     hitbox.addEventListener('click', () => {
         zoomToWord(targetId, state.currentScale);
-        tooltipDiv.style.opacity = '0';
+        hideTooltip() ;
         updateWordFocus();
     });
+}
+
+// 统一的tooltip隐藏函数
+function hideTooltip() {
+    const tooltipDiv = document.getElementById("tooltipDiv");
+    if (tooltipDiv) {
+        tooltipDiv.style.opacity = '0';
+        tooltipDiv.textContent = ''; // 清空内容
+    }
 }
 
 // 更新所有关系连线
 export function updateRelations() {
     const svg = document.getElementById('connection-lines');
     svg.innerHTML = '';
+
+    hideTooltip();
 
     if (!state.focusedNodeId) return;
 
