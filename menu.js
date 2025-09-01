@@ -116,6 +116,7 @@ export function moveIndicator(value) {
     if (value > 5) value = 5;
     const percent = (value - 1) * 25; // 5 个刻度
     indicator.style.left = percent + '%';
+    console.log(value, document.body.dataset.scale);
 }
 
 

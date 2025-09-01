@@ -107,9 +107,32 @@ canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
 
     let scale = state.currentScale;
-    const zoomStep = 0.2;
+    const zoomStep = 0.28;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    const newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
+    let newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
+
+    // 获取当前的 snapped scale 级别
+    const currentSnapped = getSnappedScale(scale);
+    const newSnapped = getSnappedScale(newScale);
+
+    // 如果当前在 scale 4-5 范围内，直接跳转
+    if (currentSnapped === 4 || currentSnapped === 5) {
+        if (delta > 0) {
+            // 向上滚动 - zoom in
+            if (currentSnapped === 4) {
+                newScale = scaleThreshold; // 跳到 scale 5
+            } else {
+                newScale = scaleThreshold; // 已经是 scale 5，继续放大到最大
+            }
+        } else {
+            // 向下滚动 - zoom out  
+            if (currentSnapped === 5) {
+                newScale = 10; // 跳到 scale 4 的最大值，避免重复触发
+            } else {
+                newScale = scale+delta; // 从 scale 4 跳到 scale 3 的最大值
+            }
+        }
+    }
 
     state.panX = e.clientX - (e.clientX - state.panX) * (newScale / scale);
     state.panY = e.clientY - (e.clientY - state.panY) * (newScale / scale);
@@ -127,12 +150,21 @@ canvas.addEventListener("wheel", (e) => {
     updateScaleForNodes(newScale);
 }, { passive: false });
 
+// 辅助函数：获取 snapped scale 级别
+function getSnappedScale(scale) {
+    if (scale < 1.5) return 1;
+    else if (scale < 5) return 2;
+    else if (scale < 10) return 3;
+    else if (scale < 11) return 4;
+    else return 5;
+}
+
 export function updateScaleForNodes(newScale, scaleThreshold = 20) {
     let snapped;
     if (newScale < 1.5) snapped = 1;
     else if (newScale < 5) snapped = 2;
-    else if (newScale < 13) snapped = 3;
-    else if (newScale < 19.5) snapped = 4;
+    else if (newScale < 10) snapped = 3;
+    else if (newScale < 11) snapped = 4;
     else snapped = 5;
 
     document.body.dataset.scale = snapped;
