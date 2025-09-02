@@ -32,11 +32,11 @@
       "reviewers": [],
       "related_terms": [{
           "id": 2,
-          "relation": "近义词"
+          "relation": "概念相关"
         },
         {
           "id": 5,
-          "relation": "同类概念"
+          "relation": "概念相关"
         }
       ],
       "proposing_country": "US",
@@ -78,7 +78,13 @@
       "reviewers": [],
       "related_terms": [{
         "id": 1,
-        "relation": "近义词"
+        "relation": "概念相关"
+      },{
+        "id": 18,
+        "relation": "概念相关"
+      },{
+        "id": 192,
+        "relation": "概念相关"
       }],
       "proposing_country": "AT",
       "proposing_time": "1901年",
@@ -103,7 +109,7 @@
       "reviewers": [],
       "related_terms": [{
         "id": 4,
-        "relation": "近义词"
+        "relation": "概念相关"
       }],
       "createdAt": "2025-01-01",
       "updatedAt": "2025-01-01"
@@ -125,7 +131,7 @@
       "reviewers": [],
       "related_terms": [{
         "id": 3,
-        "relation": "近义词"
+        "relation": "概念相关"
       }],
       "createdAt": "2024-10-20",
       "updatedAt": "2024-10-20"
@@ -147,7 +153,13 @@
       "reviewers": [],
       "related_terms": [{
         "id": 1,
-        "relation": "同类概念"
+        "relation": "概念相关"
+      },{
+        "id": 18,
+        "relation": "概念相关"
+      },{
+        "id": 192,
+        "relation": "概念相关"
       }],
       "createdAt": "2024-07-01",
       "updatedAt": "2024-07-01"
@@ -169,7 +181,7 @@
       "reviewers": [],
       "related_terms": [{
         "id": 7,
-        "relation": "同类概念"
+        "relation": "概念相关"
       }],
       "createdAt": "2024-07-15",
       "updatedAt": "2024-07-15"
@@ -191,7 +203,7 @@
       "reviewers": [],
       "related_terms": [{
         "id": 6,
-        "relation": "同类概念"
+        "relation": "概念相关"
       }],
       "createdAt": "2024-07-22",
       "updatedAt": "2024-07-22"
@@ -441,10 +453,10 @@
       "reviewers": [],
       "related_terms": [{
         "id": 2,
-        "relation": "近义词"
+        "relation": "概念相关"
       }, {
         "id": 5,
-        "relation": "同类概念"
+        "relation": "概念相关"
       }],
       "proposing_country": "CN",
       "proposing_time": "2024年",
@@ -926,10 +938,10 @@
       "reviewers": [],
       "related_terms": [{
         "id": 2,
-        "relation": "近义词"
+        "relation": "概念相关"
       }, {
         "id": 5,
-        "relation": "同类概念"
+        "relation": "概念相关"
       }],
       "proposing_country": "CN",
       "proposing_time": "2024年",

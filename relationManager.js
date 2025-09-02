@@ -10,27 +10,6 @@ function getCenterPosition(element) {
     };
 }
 
-// 计算曲线路径
-function createCurvePath(pos1, pos2) {
-    const dx = pos2.x - pos1.x;
-    const dy = pos2.y - pos1.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    // 曲线控制点，距离越远弯曲越明显
-    const bendFactor = Math.min(distance * 0.5, 150);
-    const midX = (pos1.x + pos2.x) / 2;
-    const midY = (pos1.y + pos2.y) / 2;
-    
-    // 垂直于连线方向的控制点
-    const perpX = -dy / distance * bendFactor;
-    const perpY = dx / distance * bendFactor;
-    
-    const controlX = midX + perpX;
-    const controlY = midY + perpY;
-    
-    return `M ${pos1.x} ${pos1.y} Q ${controlX} ${controlY} ${pos2.x} ${pos2.y}`;
-}
-
 // 创建直线路径（hover时使用）
 function createStraightPath(pos1, pos2) {
     return `M ${pos1.x} ${pos1.y} L ${pos2.x} ${pos2.y}`;
@@ -40,7 +19,7 @@ function createStraightPath(pos1, pos2) {
 const wormPathCache = new Map();
 
 // 创建蚯蚓般的不规则波浪线路径（使用固定种子确保形状不变）
-function createWormPath(pos1, pos2, lineId) {
+function createWormPath(pos1, pos2, lineId, relation) {
     const dx = pos2.x - pos1.x;
     const dy = pos2.y - pos1.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -52,13 +31,18 @@ function createWormPath(pos1, pos2, lineId) {
     
     // 检查缓存中是否已有这条线的波浪参数
     if (!wormPathCache.has(lineId)) {
-        // 为这条线生成固定的波浪参数
+        // 根据关系类型设置不同的波浪参数
         const segments = Math.max(3, Math.floor(distance / 60));
         const waveParams = [];
         
+        // 概念相关：更弯曲，波浪更明显
+        // 共同提出者：相对平缓一些
+        const baseAmplitude = relation === '概念相关' ? 0 : 20;
+        const amplitudeVariation = relation === '概念相关' ? 25 : 10;
+        
         for (let i = 1; i <= segments; i++) {
             waveParams.push({
-                amplitude: 15 + Math.random() * 20,
+                amplitude: baseAmplitude + Math.random() * amplitudeVariation,
                 direction: (Math.random() - 0.5) * 2,
                 irregularity: 0.7 + Math.random() * 0.6,
                 frequency: 1 + Math.sin(i * Math.PI * 2 + Math.random() * Math.PI) * 0.3
@@ -128,19 +112,12 @@ function drawLine(id1, id2, relation) {
     const pos1 = getCenterPosition(node1);
     const pos2 = getCenterPosition(node2);
 
-    // 根据关系类型选择路径
-    let mainPath, hoverPath;
-    const lineId = `${id1}-${id2}-${relation}`; // 为每条线创建唯一ID
+    // 为每条线创建唯一ID
+    const lineId = `${id1}-${id2}-${relation}`;
     
-    if (relation === '共同提出者') {
-        // 对共同提出者使用蚯蚓波浪线
-        mainPath = createWormPath(pos1, pos2, lineId);
-        hoverPath = createStraightPath(pos1, pos2); // hover时变直线
-    } else {
-        // 其他关系使用原来的曲线
-        mainPath = createCurvePath(pos1, pos2);
-        hoverPath = createStraightPath(pos1, pos2);
-    }
+    // 两种关系都使用蚯蚓波浪线
+    const mainPath = createWormPath(pos1, pos2, lineId, relation);
+    const hoverPath = createStraightPath(pos1, pos2); // hover时变直线
 
     // 视觉线 - 使用path元素
     const visualLine = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -152,25 +129,18 @@ function drawLine(id1, id2, relation) {
     // 添加平滑过渡效果
     visualLine.style.transition = 'all 0.3s ease';
 
-    // 根据关系类型设置样式
+    // 根据关系类型设置不同样式
     switch (relation) {
-        case '近义词':
+        case '概念相关':
             visualLine.setAttribute('stroke', '#FFFCF4');
-            visualLine.setAttribute('stroke-dasharray', '5,5');
-            visualLine.setAttribute('stroke-width', '1.5');
-            break;
-        case '反义词':
-            visualLine.setAttribute('stroke', '#FFFCF4');
-            visualLine.setAttribute('stroke-width', '2');
-            break;
-        case '同类概念':
-            visualLine.setAttribute('stroke', '#FFFCF4');
-            visualLine.setAttribute('stroke-width', '1.5');
+            visualLine.setAttribute('stroke-width', '1.8'); // 稍微粗一点
+            visualLine.setAttribute('stroke-dasharray', '6,5'); // 虚线：3像素实线，2像素间隔
             break;
         case '共同提出者':
             visualLine.setAttribute('stroke', '#FFFCF4');
-            visualLine.setAttribute('stroke-width', '1.2'); // 稍微细一点，突出波浪效果
-            visualLine.setAttribute('stroke-dasharray', '2,1'); // 更细密的虚线
+            visualLine.setAttribute('stroke-width', '1.4'); // 稍微细一点
+            // visualLine.setAttribute('stroke-dasharray', '1,1'); 
+            // 更细密的点线
             break;
         default:
             visualLine.setAttribute('stroke', '#FFFCF4');
@@ -204,13 +174,13 @@ function addLineInteractions(hitbox, visualLine, word1, word2, relation, targetI
         
         // 高亮效果：变粗、变亮
         const currentWidth = parseFloat(visualLine.getAttribute('stroke-width'));
-        visualLine.setAttribute('stroke-width', currentWidth * 2);
+        visualLine.setAttribute('stroke-width', currentWidth * 1.8);
         visualLine.setAttribute('stroke', '#FFE135'); // 高亮颜色
         
-        // 对于共同提出者，hover时变成直线，其他保持原样
-        if (relation === '共同提出者') {
-            visualLine.setAttribute('d', hoverPath);
-        }
+        // hover时变成直线
+        visualLine.setAttribute('d', hoverPath);
+        // hover时取消虚线效果，显示为实线
+        visualLine.setAttribute('stroke-dasharray', 'none');
         
         visualLine.style.filter = 'drop-shadow(0 0 4px rgba(255, 225, 53, 0.6))'; // 发光效果
         
@@ -247,21 +217,15 @@ function addLineInteractions(hitbox, visualLine, word1, word2, relation, targetI
         
         // 恢复原始颜色和粗细
         switch (relation) {
-            case '近义词':
+            case '概念相关':
                 visualLine.setAttribute('stroke', '#FFFCF4');
-                visualLine.setAttribute('stroke-width', '1.5');
-                break;
-            case '反义词':
-                visualLine.setAttribute('stroke', '#FFFCF4');
-                visualLine.setAttribute('stroke-width', '2');
-                break;
-            case '同类概念':
-                visualLine.setAttribute('stroke', '#FFFCF4');
-                visualLine.setAttribute('stroke-width', '1.5');
+                visualLine.setAttribute('stroke-width', '1.8');
+                visualLine.setAttribute('stroke-dasharray', '6,5'); // 恢复虚线
                 break;
             case '共同提出者':
                 visualLine.setAttribute('stroke', '#FFFCF4');
-                visualLine.setAttribute('stroke-width', '1.2');
+                visualLine.setAttribute('stroke-width', '1.4');
+                visualLine.setAttribute('stroke-dasharray', '1,1'); // 恢复点线
                 break;
             default:
                 visualLine.setAttribute('stroke', '#FFFCF4');
@@ -306,11 +270,12 @@ export function updateRelations() {
     const thisWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!thisWord || !thisWord.related_terms) return;
     
+    // 1. 绘制概念相关的关系
     thisWord.related_terms.forEach(relation => {
-        drawLine(state.focusedNodeId, relation.id, relation.relation);
+        drawLine(state.focusedNodeId, relation.id, '概念相关');
     });
 
-    // ✅ 2. 额外画 "共同 proposer" 的关系
+    // 2. 绘制共同提出者的关系
     if (Array.isArray(thisWord.proposers)) {
         // 当前词的 proposer 名称列表
         const proposerNames = thisWord.proposers.map(p => p.name);
