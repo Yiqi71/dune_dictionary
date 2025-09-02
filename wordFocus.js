@@ -148,7 +148,7 @@ export function updateWordFocus() {
         focusedWord = null;
         state.focusedNodeId = null;
         restoreAllNodes();
-        resetPositions(); // 重置位置
+        resetPositions();
     }
 
     overlay.classList.add("hidden");

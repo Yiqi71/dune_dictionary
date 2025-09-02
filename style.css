@@ -132,7 +132,6 @@ h1.English {
 }
 
 #connection-lines {
-    z-index: 9000;
     pointer-events: none;
 }
 
@@ -399,6 +398,8 @@ body[data-scale="5"] .word-node .terms .term-ori {
     top: 50vh;
     left: 50vw;
     background-color: #FAD67B;
+
+    opacity:0;
 }
 #term .terms {
     margin: 10px;
@@ -425,6 +426,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
     font-style: normal;
     font-weight: 600;
     letter-spacing: -1.287px;
+    text-wrap: nowrap;
 }
 #term .term-ori {
     margin: 0;
@@ -434,6 +436,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
     font-size: 61.06px;
     font-style: normal;
     font-weight: 400;
+    text-wrap: nowrap;
 }
 
 
@@ -469,7 +472,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
     width: 100vw;
     height: 100vh;
     background-color: #625136;
-    opacity: 0.5;
+    opacity: 0;
     transition: opacity 0.8s;
     pointer-events: none;
 }
