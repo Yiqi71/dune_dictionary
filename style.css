@@ -54,47 +54,7 @@ h1.English {
     font-size: 42px;
 }
 
-/* .word-node p #English {
-    color: #544011;
-    font-family: "Barlow Condensed" !important;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    text-wrap: nowrap;
-} */
 
-
-#upper-menu .Chinese {
-    color: #392F17;
-    font-family: "ChillDINGothic";
-    font-size: 29.538px;
-    font-style: normal;
-    font-weight: 400;
-    /* 187.5% */
-    letter-spacing: -1.477px;
-    margin: 0;
-}
-
-#upper-menu .English {
-    color: #392F17;
-    font-family: "Barlow Condensed";
-    font-size: 21.846px;
-    font-style: normal;
-    font-weight: 600;
-    /* 253.521% */
-    letter-spacing: -0.437px;
-    margin: 0;
-}
-
-#upper-menu p {
-    color: #392F17;
-    font-family: "Barlow Condensed";
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    /* 253.521% */
-    letter-spacing: -0.437px;
-}
 
 
 

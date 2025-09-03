@@ -1,3 +1,35 @@
+#upper-menu .Chinese {
+    color: #EEE9DB;
+    font-family: "ChillDINGothic";
+    font-size: 29.538px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -1.477px;
+    margin: 0;
+
+    /* font-family: FZJunHeiS-B-GB; */
+}
+
+#upper-menu .English {
+    color: #EEE9DB;
+    font-family: "Barlow Condensed";
+    font-size: 21.846px;
+    font-style: normal;
+    font-weight: 600;
+    /* 253.521% */
+    letter-spacing: -0.437px;
+    margin: 0;
+}
+
+#upper-menu p {
+    color: #392F17;
+    font-family: "Barlow Condensed";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    /* 253.521% */
+    letter-spacing: -0.437px;
+}
 
 #side-menu {
     position: fixed;
