@@ -11,8 +11,44 @@ import {
     scaleThreshold
 } from "./wordFocus.js";
 
+import { yearPeriods } from "./menu.js";
+
 window.allWords = [];
 
+const yearPeriodColors = [
+    "#F9D67A", // 空白/-2000
+    "#FADD91", // 1700
+    "#FAE2A5", // 1800
+    "#FAE8BA", // 1850
+    "#FAEED0", // 1900
+    "#F9F3E3" // 1950-now
+];
+
+function getWordColor(wordYear) {
+    // Handle invalid years
+    if (isNaN(wordYear)) {
+        return yearPeriodColors[0]; // Default to first period color
+    }
+    
+    // Find which year period this word belongs to
+    let periodIndex = 0;
+    
+    for (let i = yearPeriods.length - 2; i >= 0; i--) {
+        const period = yearPeriods[i];
+        if (period.year !== null && wordYear >= period.year) {
+            periodIndex = i;
+            break;
+        }
+    }
+    
+    // Ensure we don't go out of bounds
+    if (periodIndex >= yearPeriodColors.length) {
+        periodIndex = yearPeriodColors.length - 1;
+    }
+    console.log(wordYear, periodIndex);
+    return yearPeriodColors[periodIndex];
+    
+}
 
 // nodes
 let wordsOnGrid = {};
@@ -190,16 +226,6 @@ function allocatePositionsForCountries(wordsByCountry) {
     return countryPositions;
 }
 
-function getYearRange(terms) {
-  const years = terms
-    .map(t => parseInt(t.proposing_time))
-    .filter(y => !isNaN(y)); // 防止有不是数字的情况
-
-  const minYear = Math.min(...years);
-  const maxYear = Math.max(...years);
-
-  return { minYear, maxYear };
-}
 
 // 优化后的渲染函数
 function renderWordUniverse(wordsData) {
@@ -254,25 +280,13 @@ function renderWordUniverse(wordsData) {
             node.style.top = `${topPercent}%`;
             node.style.transform = `translate(-50%, -50%)`;
 
-            const { minYear, maxYear } = getYearRange(wordsData);
             
-            const year = Number(word.proposing_time.replace("年", ""));
-            const ratio = (year - minYear) / (maxYear - minYear); // 0~1
-            let nodeColor = null;
-            if(ratio<1/6){
-                nodeColor="#F9D67A";
-            }else if(ratio<2/6){
-                nodeColor="#FADD91";
-            }else if(ratio<3/6){
-                nodeColor="#FAE2A5";
-            }else if(ratio<4/6){
-                nodeColor="#FAE8BA";
-            }else if(ratio<5/6){
-                nodeColor="#FAEED0";
-            }else{
-                nodeColor="#F9F3E3";
-            }
+            // Use yearPeriods-based coloring instead of equal distribution
+            const year = parseInt(word.proposing_time);
+            const nodeColor = getWordColor(year);
             node.style.backgroundColor = nodeColor;
+
+         
 
             node.dataset.lon = word.longitude;
             node.dataset.lat = word.latitude;

@@ -195,3 +195,123 @@
 #indicator.dragging {
     cursor: grabbing;
 }
+
+
+
+/* Year Filter Slide Bar */
+#year-menu {
+    width: 313px;
+    height: 37px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22.733px;
+    background: #EEE9DB;
+    margin-top: 8px; 
+}
+
+#yearContainer {
+    position: relative;
+    width: 313px;
+    height: 37px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.year-segments {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.year-segment {
+    flex: 1;
+    height: 100%;
+    transition: opacity 0.3s ease;
+}
+
+.year-segment:nth-child(1) { background-color: #F9D67A; } /* 空白 - Light blue */
+.year-segment:nth-child(2) { background-color: #FADD91; } /* 1700 - Blue */
+.year-segment:nth-child(3) { background-color: #FAE2A5; } /* 1800 - Medium blue */
+.year-segment:nth-child(4) { background-color: #FAE8BA; } /* 1850 - Teal blue */
+.year-segment:nth-child(5) { background-color: #FAEED0; } /* 1900 - Dark teal */
+.year-segment:nth-child(6) { background-color: #F9F3E3; } /* 1950 - Darker teal */
+
+.year-segment.faded {
+    opacity: 0.3;
+}
+
+/* Vertical tick marks */
+.year-ticks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.year-ticks div {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: #392F17;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+/* Year numbers */
+.year-numbers {
+    position: absolute;
+    top: 1px;
+    left: -14px;
+    width: 100%;
+    height: 20px;
+    pointer-events: none;
+}
+
+.year-numbers span {
+    position: absolute;
+    transform: translateX(-50%);
+    color: #392F17;
+    text-align: center;
+    font-family: "Barlow Condensed";
+    font-size: 13.778px;
+    font-style: normal;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.year-numbers span.faded {
+    opacity: 0.3;
+}
+
+/* Year indicator */
+.year-indicator {
+    position: absolute;
+    top: 50%;
+    width: 13px;
+    height: 13px;
+    background-color: #392F17;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.year-indicator:hover {
+    background-color: #2C2419;
+}
+
+.year-indicator.dragging {
+    cursor: grabbing;
+}
+
+#yearIndicator {
+    cursor: grab;
+}
