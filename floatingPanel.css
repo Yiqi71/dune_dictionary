@@ -345,7 +345,7 @@
 
 /* 展开状态的样式 */
 #floating-panel.expanded {
-    width: 1260px; /* 或者你想要的宽度 */
+    width: 70vw; /* 或者你想要的宽度 */
 }
 
 /* 展开状态下底部section的padding调整 */

@@ -186,7 +186,6 @@ body[data-scale="2"] .word-node {
     text-wrap: nowrap;
 
     justify-content: center;
-    /* 在垂直方向居中 */
     gap: 0;
 }
 body[data-scale="2"] .word-node .detail-title {
@@ -201,6 +200,7 @@ body[data-scale="3"] .word-node,
 body[data-scale="4"] .word-node {
     width: 180px;
     height: 117px;
+    justify-content: space-between;
 }
 body[data-scale="3"] .word-node .detail-title,
 body[data-scale="4"] .word-node .detail-title {
@@ -237,6 +237,7 @@ body[data-scale="5"] .word-node {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: space-between;
 }
 body[data-scale="5"] .word-node .terms {
     margin: 10px;

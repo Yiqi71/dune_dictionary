@@ -33,14 +33,14 @@
 
 #side-menu {
     position: fixed;
-    left: 64px;
-    bottom: 32px;
+    left: 3vw;
+    bottom: 2.8vh;
     transform: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 11000;
-    gap: 16px;
+    gap: 12px;
 }
 
 
@@ -134,7 +134,7 @@
     top: 80%;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 1.37px;
     background-color: #392F17;
     transform: translateY(-50%);
 }
@@ -179,7 +179,7 @@
 
 .scale-ticks div {
     position: absolute;
-    width: 2px;
+    width: 1.37px;
     height: 10px;
     background-color: black;
     top: 50%;
@@ -215,7 +215,7 @@
     width: 313px;
     height: 37px;
     flex-shrink: 0;
-    border-radius: 16px;
+    border-radius: 37px;
     overflow: hidden;
 }
 
@@ -257,7 +257,7 @@
 
 .year-ticks div {
     position: absolute;
-    width: 2px;
+    width: 1px;
     height: 100%;
     background-color: #392F17;
     top: 0;
