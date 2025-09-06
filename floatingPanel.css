@@ -78,7 +78,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0;
+    gap: 5px;
     /* 中英文之间的间距 */
 }
 
@@ -96,21 +96,22 @@
 .panel-top p {
     color: #392F17;
     text-align: center;
-    font-family: ChillDINGothic;
+    font-family: "ChillDIN";
     font-size: 20.735px;
     font-style: normal;
-    font-weight: 575;
+    font-weight: 600;
 }
 
 .panel-top .term-main {
     margin: 0;
     padding: 0;
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDIN";
     font-size: 44px;
     font-style: normal;
     font-weight: 600;
     text-align: center;
+    line-height: 45.553px;
 }
 
 .panel-top .term-ori {
@@ -217,7 +218,7 @@
 /* 字 */
 .panel-bottom p {
     color: #6B624F;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic", "ChillDIN";
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -227,30 +228,29 @@
 
 .panel-bottom h2 {
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDIN";
     font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 40px;
-    /* 100% */
     letter-spacing: 2px;
 }
 
 .panel-bottom h3 {
     color: #392F17;
     text-align: justify;
-    font-family: ChillDINGothic;
-    font-size: 24px;
+    font-family: "ChillDIN";
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
-    line-height: 30px;
+    line-height: 34px;
     /* 125% */
-    letter-spacing: 1.2px;
+    letter-spacing: 0.4px;
 }
 
 .panel-bottom .left-title {
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic";
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
@@ -259,7 +259,7 @@
 .panel-bottom .diagram-caption {
     color: #6B624F;
     text-align: justify;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic";
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -270,7 +270,7 @@
 
 .panel-bottom .proposer-name {
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic";
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -286,7 +286,7 @@
 
 .panel-bottom .proposer-year p {
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic";
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -296,7 +296,7 @@
 
 .panel-bottom #editors-container p {
     color: #6B624F;
-    font-family: ChillDINGothic;
+    font-family: "ChillDINGothic";
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -428,30 +428,35 @@
 .panel-tabs {
     position: absolute;
     bottom: 40px;
-    left: -35px;
+    left: -38px;
     display: flex;
     flex-direction: column;
     gap: 45px;
 }
 
 .panel-tabs button {
-    width: 35px;
-    height: 106px;
-    padding: 25px 11px;
+    width: 39px;
+    height: 110px;
     border: none;
     border-radius: 6px 0 0 6px;
     background: #EEE9DB;
     box-shadow: -2px 2px 2px rgba(79, 70, 45, 0.25);
     cursor: pointer;
+    padding: 25px 14px;
 
     color: #392F17;
-    font-family: ChillDINGothic;
+    font-family: "ChillDIN";
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
     line-height: 26px;
     /* 144.444% */
 
+    /* 用 SVG path 裁剪 */
+    -webkit-clip-path: path("M4 25.6222C4 18.6955 8.20257 12.4615 14.6236 9.86337L39 0V106L15.1311 97.22C8.44371 94.7601 4 88.3907 4 81.2652V25.6222Z");
+    clip-path: path("M4 25.6222C4 18.6955 8.20257 12.4615 14.6236 9.86337L39 0V106L15.1311 97.22C8.44371 94.7601 4 88.3907 4 81.2652V25.6222Z");
+
+    
     transition: background 0.2s;
 }
 

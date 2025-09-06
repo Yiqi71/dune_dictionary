@@ -277,7 +277,7 @@ export function updateWordDetails() {
     const commentTitle = document.querySelector('#comment .detail-title');
     const commentH3 = document.querySelector('#comment h3');
     const commentP = document.querySelector('#comment p');
-    commentTitle.textContent = '相关评论';
+    commentTitle.textContent = '评论';
     if (word.commentAbs) {
         const comment = word.commentAbs;
         commentH3.textContent = comment.content;

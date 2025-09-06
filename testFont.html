@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Font Test</title>
+  <style>
+    /* === 定义字体 === */
+    @font-face {
+      font-family: "Barlow Condensed";
+      src: url("./fonts/Barlow_Condensed/BarlowCondensed-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Chilldin";
+      src: url("./fonts/Chilldin/ChillDINGothic_Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Noto Sans Duployan";
+      src: url("./fonts/Noto_Sans_Duployan/NotoSansDuployan-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Stint Ultra Condensed";
+      src: url("./fonts/Stint_Ultra_Condensed/StintUltraCondensed-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    /* === 基本样式 === */
+    body {
+      font-family: sans-serif;
+      line-height: 1.8;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+    .test {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Font Test Demo</h1>
+
+  <h2>Barlow Condensed</h2>
+  <p class="test" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 400;">
+    The quick brown fox jumps over the lazy dog. (Regular 400)
+  </p>
+  <p class="test" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700;">
+    The quick brown fox jumps over the lazy dog. (Bold 700 → 会伪加粗，因为没定义 bold 文件)
+  </p>
+
+  <h2>Chilldin</h2>
+  <p class="test" style="font-family: 'Chilldin', sans-serif; font-weight: 700;">
+    The quick brown fox jumps over the lazy dog. (Bold 700)
+  </p>
+
+  <h2>Noto Sans Duployan</h2>
+  <p class="test" style="font-family: 'Noto Sans Duployan', sans-serif; font-weight: 700;">
+    The quick brown fox jumps over the lazy dog. (Bold 700)
+  </p>
+
+  <h2>Stint Ultra Condensed</h2>
+  <p class="test" style="font-family: 'Stint Ultra Condensed', sans-serif; font-weight: 400;">
+    The quick brown fox jumps over the lazy dog. (Regular 400)
+  </p>
+  <p class="test" style="font-family: 'Stint Ultra Condensed', sans-serif; font-weight: 700;">
+    The quick brown fox jumps over the lazy dog. (Bold 700 → 会伪加粗，因为没定义 bold 文件)
+  </p>
+</body>
+</html>
