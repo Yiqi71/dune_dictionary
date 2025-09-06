@@ -263,7 +263,6 @@ body[data-scale="5"] .word-node .terms .term-ori {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    /* 不挡交互 */
     background-repeat: repeat;
     background-size: 120px 120px;
     /* 改这个 = 噪点“颗粒大小/缩放” */

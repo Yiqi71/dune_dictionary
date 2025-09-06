@@ -87,7 +87,6 @@ export function showFloatingPanel() {
     isPanelVisible = true;
 
     ensureExpandButton();
-
     renderPanelSections();
 
     // 重置 tab 按钮状态
@@ -125,11 +124,12 @@ function ensureExpandButton(){
     }
 }
 export function hideFloatingPanel() {
+    console.log("hide");
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
-    panel.classList.remove('expanded'); // 重置展开状态
+    panel.classList.remove('expanded');
     isPanelVisible = false;
-    isExpanded = false; // 重置展开状态
+    isExpanded = false;
 
     // 重置按钮图标
     const expandBtn = document.getElementById('expand-btn');
@@ -143,6 +143,15 @@ export function hideFloatingPanel() {
             </svg>
         `;
     }
+    
+    // 重置tabs显示
+    const tabs = document.querySelector('.panel-tabs');
+    if (tabs) tabs.style.display = 'flex';
+    
+    // 重置scroll markers显示
+    const scrollTrack = document.querySelector('.scroll-track');
+    const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
+    scrollMarkers.forEach(marker => marker.style.display = 'block');
 }
 
 export function renderPanelSections() {
@@ -476,7 +485,8 @@ function renderScrollMarkers() {
 function initClickOutsideHandler() {
     document.addEventListener('click', (e) => {
         const panel = document.getElementById('floating-panel');
-        if (isPanelVisible && !panel.contains(e.target)) {
+        const about = document.getElementById("about-button");
+        if (isPanelVisible && !panel.contains(e.target)&& !about.contains(e.target)) {
             hideFloatingPanel();
         }
     });
@@ -518,3 +528,56 @@ imageDiv.addEventListener("click", (e) => {
 
 // 初始化浮窗功能
 initClickOutsideHandler();
+
+
+// 新增：显示About页面的浮窗
+export function showAboutPanel() {
+    console.log("show");
+    const panel = document.getElementById('floating-panel');
+    panel.classList.remove('hidden');
+    isPanelVisible = true;
+
+    ensureExpandButton();
+    renderAboutContent();
+    
+    // 隐藏tabs
+    const tabs = document.querySelector('.panel-tabs');
+    if (tabs) tabs.style.display = 'none';
+    
+    // 隐藏scroll markers
+    const scrollTrack = document.querySelector('.scroll-track');
+    const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
+    scrollMarkers.forEach(marker => marker.style.display = 'none');
+}
+
+// 渲染About页面内容
+function renderAboutContent() {
+    // 上半部分
+    const title = document.querySelector('.panel-top');
+    title.innerHTML = `
+        <div>
+    <div class = "term-main"> 关于我们 </div>
+    <div class = "term-ori"> About Us </div></div>
+    `;
+
+    // 下半部分 - 留空给你填写内容
+    const bottomDiv = document.querySelector('.panel-bottom');
+    bottomDiv.innerHTML = `
+        <section>
+            <div>
+                <p>《沙丘词典》是一部持续生长的思想索引，收录了跨学科领域的关键概念与术语。<br>
+                我们将这些遴选出的概念与术语，视为剖开广袤学术疆域的一道道切口——由此开启一片由思想构成的星丛，并激发更深远的追问。我们旨在通过清晰晓畅的阐释，消融学术的藩篱，展现不同学科之间丰厚的内在联结。<br>
+                项目始于2019年，最初是沙丘研究所（一个由具建筑学背景的艺术家与研究者组成的团体）在社交媒体上发布的系列推送。此后，通过与跨学科青年学者合办的共创工作坊，项目得以不断生长。2025年，项目正式落地为一座精心构筑的网站，现已成为一个持续扩充的概念、定义及相关评注的资料库。<br>
+                若您有兴趣参与我们的共创工作坊，请阅读“参与指南”。我们也欢迎您针对现有词条撰写评注，或举荐新的词条。<br>
+                置身于互联网这片流动的、万物关联的图景中，我们希望赋予词典恰如其分的结构，让思想得以漫游；亦保留足够开放的空间，让灵感得以涌现。
+                </p>
+            </div>
+        </section>
+        <section>
+            <p class="left-title">Contact</p>
+                <div>
+                    <p>hello@dunesworkshop.org</p>
+                </div>
+        </section>
+    `;
+}

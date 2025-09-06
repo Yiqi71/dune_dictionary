@@ -19,6 +19,10 @@ import {
     updateScaleForNodes
 } from "./uni-canvas.js";
 
+// 在 menu.js 文件顶部的 import 部分添加
+import { showAboutPanel } from "./detail.js";
+
+
 const numSteps = 5;
 const ticksContainer = document.querySelector('.scale-ticks');
 const numbersContainer = document.querySelector('.scale-numbers');
@@ -312,3 +316,17 @@ window.addEventListener('DOMContentLoaded', () => {
 export function resetYearFilter() {
     moveYearIndicator(yearPeriods.length - 1);
 }
+
+
+
+// 在 menu.js 文件的 DOMContentLoaded 事件监听器中添加About按钮的事件处理
+window.addEventListener('DOMContentLoaded', () => {
+ 
+    // 新增：About按钮点击事件
+    const aboutButton = document.getElementById('about-button');
+    if (aboutButton) {
+        aboutButton.addEventListener('click', () => {
+            showAboutPanel();
+        });
+    }
+});
