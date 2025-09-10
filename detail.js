@@ -9,6 +9,10 @@ import {
     applyPositionVariations
 } from "./wordFocus.js";
 
+import {
+    updateRelations
+} from "./relationManager.js"
+
 // 浮窗相关变量
 let isPanelVisible = false;
 let isExpanded = false;
@@ -102,9 +106,17 @@ export function showFloatingPanel() {
 
     const view = document.getElementById("universe-view");
     view.style.left = "-20vw";
+
+    const relationLines = document.getElementById("connection-lines");
+
+    setTimeout(() => {
+        relationLines.style.left = "20vw";
+    }, 300); // 0.3s 后执行
+    setTimeout(updateRelations, 300);
+    setTimeout(updateRelations, 600);
 }
 
-function ensureExpandButton(){
+function ensureExpandButton() {
     let expandBtn = document.getElementById('expand-btn');
 
     if (!expandBtn) {
@@ -150,11 +162,11 @@ export function hideFloatingPanel() {
             </svg>
         `;
     }
-    
+
     // 重置tabs显示
     const tabs = document.querySelector('.panel-tabs');
     if (tabs) tabs.style.display = 'flex';
-    
+
     // 重置scroll markers显示
     const scrollTrack = document.querySelector('.scroll-track');
     const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
@@ -163,20 +175,15 @@ export function hideFloatingPanel() {
     const view = document.getElementById("universe-view");
     view.style.left = "0";
 
-    // applyPositionVariations(state.focusedNodeId);
-    
-    // const detailss = document.getElementById("word-details");
-    // const divs = detailss.querySelectorAll("div");
+    const relationLines = document.getElementById("connection-lines");
 
-    // // 计算 20vw 对应多少 px
-    // const offset = window.innerWidth * 0.2;
 
-    // divs.forEach(div => {
-    // // 取出原来的 left 值（字符串，比如 "120px"）
-    // const currentLeft = parseFloat(getComputedStyle(div).left) || 0;
-    // // 设置新位置
-    // div.style.left = (currentLeft + offset) + "px";
-    // });
+    setTimeout(() => {
+        relationLines.style.left = "0";
+    }, 300); // 0.3s 后执行
+    setTimeout(updateRelations, 300);
+    setTimeout(updateWordFocus, 300);
+    setTimeout(updateRelations, 600);
 }
 
 export function renderPanelSections() {
@@ -373,12 +380,12 @@ panelMain.addEventListener("scroll", () => {
     const contentHeight = panelMain.scrollHeight;
     const visibleHeight = panelMain.clientHeight;
 
-    
+
     const trackHeight = panelMain.clientHeight;
     const thumbHeight = scrollThumb.offsetHeight;
 
     const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - thumbHeight;
-    
+
     const scrollRatio = scrollTop / (contentHeight - visibleHeight);
 
     const thumbTop = SCROLL_CONFIG.thumbMargin + scrollRatio * thumbActiveRange;
@@ -434,15 +441,39 @@ function renderScrollMarkers() {
     // 清空旧的 marker
     scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
 
-    const sections = [
-        { id: "panel-top", label: "顶部", isTop: true },
-        { id: "section-brief", label: "释义" },
-        { id: "section-example", label: "例句" },
-        { id: "section-proposers", label: "提出人" },
-        { id: "section-source", label: "来源" },
-        { id: "section-related-works", label: "相关著作" },
-        { id: "section-contributors", label: "contributors" },
-        { id: "section-editors", label: "编辑" }
+    const sections = [{
+            id: "panel-top",
+            label: "顶部",
+            isTop: true
+        },
+        {
+            id: "section-brief",
+            label: "释义"
+        },
+        {
+            id: "section-example",
+            label: "例句"
+        },
+        {
+            id: "section-proposers",
+            label: "提出人"
+        },
+        {
+            id: "section-source",
+            label: "来源"
+        },
+        {
+            id: "section-related-works",
+            label: "相关著作"
+        },
+        {
+            id: "section-contributors",
+            label: "contributors"
+        },
+        {
+            id: "section-editors",
+            label: "编辑"
+        }
     ];
 
     const contentHeight = panelMain.scrollHeight;
@@ -450,7 +481,7 @@ function renderScrollMarkers() {
     const contentScrollableRange = contentHeight - visibleHeight;
 
     const trackHeight = panelMain.clientHeight;
-    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2)-SCROLL_CONFIG.thumbSize;
+    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - SCROLL_CONFIG.thumbSize;
 
     // 如果内容不需要滚动，不显示markers
     if (contentHeight <= visibleHeight) return;
@@ -514,7 +545,7 @@ function initClickOutsideHandler() {
     document.addEventListener('click', (e) => {
         const panel = document.getElementById('floating-panel');
         const about = document.getElementById("about-button");
-        if (isPanelVisible && !panel.contains(e.target)&& !about.contains(e.target)) {
+        if (isPanelVisible && !panel.contains(e.target) && !about.contains(e.target)) {
             hideFloatingPanel();
         }
     });
@@ -568,11 +599,11 @@ export function showAboutPanel() {
 
     ensureExpandButton();
     renderAboutContent();
-    
+
     // 隐藏tabs
     const tabs = document.querySelector('.panel-tabs');
     if (tabs) tabs.style.display = 'none';
-    
+
     // 隐藏scroll markers
     const scrollTrack = document.querySelector('.scroll-track');
     const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');

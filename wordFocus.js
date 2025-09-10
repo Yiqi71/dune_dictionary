@@ -150,8 +150,8 @@ export function updateWordFocus() {
 
     // const overlay = document.getElementById("overlay");
     // overlay.classList.add("hidden");
-    const detailDiv = document.getElementById("word-details");
-    detailDiv.classList.add("hidden");
+    // const detailDiv = document.getElementById("word-details");
+    // detailDiv.classList.add("hidden");
 
     // 获取视图中心坐标
     const viewportCenter = {

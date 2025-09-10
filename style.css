@@ -71,6 +71,8 @@ h1.English {
     transform-origin: center center;
     overflow: hidden;
     cursor: grab;
+
+    transition: left 0.3s ease-in-out;
 }
 
 #universe-view:active {
