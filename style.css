@@ -5,7 +5,7 @@ html, body {
 * {
     margin: 0;
     padding: 0;
-    user-select: none;
+    /* user-select: none; */
 }
 
 body {
@@ -73,6 +73,8 @@ h1.English {
     cursor: grab;
 
     transition: left 0.3s ease-in-out;
+
+    user-select: none;
 }
 
 #universe-view:active {

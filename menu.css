@@ -41,6 +41,8 @@
     align-items: center;
     z-index: 11000;
     gap: 12px;
+
+    user-select: none;
 }
 
 
