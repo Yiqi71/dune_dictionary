@@ -281,7 +281,7 @@ export function updateWordDetails() {
     if (word.commentAbs) {
         const comment = word.commentAbs;
         commentH3.textContent = comment.content;
-        commentP.innerHTML = `--${comment.author}`;
+        commentP.innerHTML = `—— ${comment.author}`;
     } else {
         commentH3.textContent = '暂无评论';
         commentP.innerHTML = '';

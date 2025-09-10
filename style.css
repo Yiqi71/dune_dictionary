@@ -1,8 +1,3 @@
-@import url("https://fontsapi.zeoseven.com/642/main/result.css");
-/* @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Stint+Ultra+Condensed'); */
-
-
 html, body {
   touch-action: manipulation; /* 禁止双击缩放 */
 }
@@ -18,7 +13,7 @@ body {
     height: 100vh;
     background: #625136;
     color: #544011;
-    font-family: "Barlow Condensed", "ChillDINGothic","ChillDIN";
+    font-family: "ChillDIN","Barlow Condensed", "ChillDINGothic";
     transition: opacity 0.8s, transform 0.8s;
 }
 
@@ -36,7 +31,7 @@ img {
 /* 文本样式 */
 p,
 h3 {
-    font-family: "ChillDINGothic";
+    font-family: "ChillDINGothic", "ChillDIN";
 }
 
 h1.Chinese {
@@ -154,7 +149,7 @@ h1.English {
 }
 .term-ori {
     color: #544011;
-    font-family: "Barlow Condensed";
+    font-family: "Stint Ultra Condensed";
     font-weight: 400;
     margin: 0;
     padding: 0;
@@ -193,6 +188,14 @@ body[data-scale="2"] .word-node .detail-title {
 }
 body[data-scale="2"] .word-node .terms {
     display: flex;
+}
+
+body[data-scale="2"] .word-node .terms .term-ori {
+    color: #544011;
+    font-family: "Barlow Condensed","ChillDIN";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
 }
 
 /* scale=3~4 → 加编号 */
@@ -258,6 +261,13 @@ body[data-scale="5"] .word-node .terms .term-ori {
     font-weight: 400;
 }
 
+body[data-scale="5"] .detail-title {
+    margin: 20px;
+}
+body[data-scale="5"] .detail-title {
+    font-size: 17.3px;
+}
+
 .word-node::after {
     content: "";
     position: absolute;
@@ -293,7 +303,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
 }
 
 .detail * {
-    margin: 10px;
+    margin: 15px;
 }
 
 .detail-title {
@@ -302,7 +312,7 @@ body[data-scale="5"] .word-node .terms .term-ori {
     margin: 10px;
     display: flex;
     align-items: center;
-    font-size: 17.3px;
+    font-size: 12px;
     letter-spacing: 0;
     gap: 6px;
     position: relative;
@@ -422,6 +432,25 @@ body[data-scale="5"] .word-node .terms .term-ori {
     top: 80vh;
     left: 60vw;
     background-color: #E1D37A;
+}
+
+#comment h3{
+    color: #392F17;
+    font-family: "ChillDIN";
+    font-size: 28.834px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 36.898px; /* 127.969% */
+    letter-spacing: -0.865px;
+}
+
+#comment p {
+    color: #392F17;
+text-align: right;
+font-family: "ChillDIN";
+font-size: 17.3px;
+font-style: normal;
+font-weight: 700;
 }
 
 

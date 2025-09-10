@@ -1,9 +1,9 @@
-@font-face {
+/* @font-face {
   font-family: "Barlow Condensed";
   src: url("../fonts/Barlow_Condensed/BarlowCondensed-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
-}
+} */
 
 @font-face {
   font-family: "ChillDIN";
@@ -19,9 +19,16 @@
   font-style: normal;
 }
 
-@font-face {
+/* @font-face {
   font-family: "Stint Ultra Condensed";
   src: url("../fonts/Stint_Ultra_Condensed/StintUltraCondensed-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
-}
+} */
+
+/* ChillDINGothic */
+@import url("https://fontsapi.zeoseven.com/642/main/result.css");
+/* Barlow Condensed */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* Stint Ultra Condensed  */
+/* @import url('https://fonts.googleapis.com/css?family=Stint+Ultra+Condensed'); */
