@@ -300,6 +300,8 @@ body[data-scale="5"] .detail-title {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+    z-index: 100;
 }
 
 .detail * {
@@ -370,6 +372,7 @@ body[data-scale="5"] .detail-title {
     background-color: #FAD67B;
 
     opacity:0;
+    display: none;
 }
 #term .terms {
     margin: 10px;

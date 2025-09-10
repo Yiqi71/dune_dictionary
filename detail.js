@@ -5,7 +5,8 @@ import {
 import {
     zoomToWord,
     updateWordDetails,
-    updateWordFocus
+    updateWordFocus,
+    applyPositionVariations
 } from "./wordFocus.js";
 
 // 浮窗相关变量
@@ -67,6 +68,8 @@ function togglePanelWidth() {
                 <line x1="3" y1="21" x2="10" y2="14"></line>
             </svg>
         `;
+        const overlay = document.getElementById("overlay");
+        overlay.classList.remove("hidden");
     } else {
         panel.classList.remove('expanded');
         expandBtn.innerHTML = `
@@ -77,6 +80,8 @@ function togglePanelWidth() {
                 <line x1="3" y1="21" x2="10" y2="14"></line>
             </svg>
         `;
+        const overlay = document.getElementById("overlay");
+        overlay.classList.add("hidden");
     }
 }
 
@@ -94,6 +99,9 @@ export function showFloatingPanel() {
     tabs.forEach(btn => btn.classList.remove('active'));
     const entryTab = document.querySelector('.panel-tabs button[data-tab="entry"]');
     if (entryTab) entryTab.classList.add('active');
+
+    const view = document.getElementById("universe-view");
+    view.style.left = "-20vw";
 }
 
 function ensureExpandButton(){
@@ -124,7 +132,6 @@ function ensureExpandButton(){
     }
 }
 export function hideFloatingPanel() {
-    console.log("hide");
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
     panel.classList.remove('expanded');
@@ -152,6 +159,24 @@ export function hideFloatingPanel() {
     const scrollTrack = document.querySelector('.scroll-track');
     const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
     scrollMarkers.forEach(marker => marker.style.display = 'block');
+
+    const view = document.getElementById("universe-view");
+    view.style.left = "0";
+
+    // applyPositionVariations(state.focusedNodeId);
+    
+    // const detailss = document.getElementById("word-details");
+    // const divs = detailss.querySelectorAll("div");
+
+    // // 计算 20vw 对应多少 px
+    // const offset = window.innerWidth * 0.2;
+
+    // divs.forEach(div => {
+    // // 取出原来的 left 值（字符串，比如 "120px"）
+    // const currentLeft = parseFloat(getComputedStyle(div).left) || 0;
+    // // 设置新位置
+    // div.style.left = (currentLeft + offset) + "px";
+    // });
 }
 
 export function renderPanelSections() {
@@ -191,7 +216,13 @@ export function renderPanelSections() {
     briefSec.innerHTML = `<p class="left-title">简要释义</p>
                        <div>
                            <h2>${currentWord.brief_definition || '暂无简要释义'}</h2>
-                           ${currentWord.extended_definition.map(paragraph => `<h3>${paragraph}</h3>`).join('')}
+                           ${
+                            Array.isArray(currentWord.extended_definition)
+                                ? currentWord.extended_definition.map(paragraph => `<h3>${paragraph}</h3>`).join('')
+                                : currentWord.extended_definition 
+                                ? `<h3>${currentWord.extended_definition}</h3>`
+                                : '<h3>暂无扩展释义</h3>'
+                            }
                       </div>`;
 
     exampleSec.innerHTML = `<p class="left-title">例句</p>
@@ -230,7 +261,6 @@ export function renderPanelSections() {
         const relatedContainer = filterProposer(proposer.name);
         proposerBlock.appendChild(relatedContainer);
         proposersContainer.appendChild(proposerBlock);
-        console.log(proposer.image);
     })
 
     sourceSec.innerHTML = `<p class="left-title">出处</p>
@@ -396,7 +426,7 @@ document.addEventListener('mouseup', () => {
 // 初始更新一次位置
 setTimeout(() => {
     updateThumbPosition();
-}, 100);
+}, 200);
 
 function renderScrollMarkers() {
     if (!panelMain) return;
@@ -491,17 +521,19 @@ function initClickOutsideHandler() {
 }
 
 // click detail - scroll to according section
-const termDiv = document.getElementById("term");
+// const termDiv = document.getElementById("term");
 const commentDiv = document.getElementById("comment");
 const proposerDiv = document.getElementById("proposer");
 const imageDiv = document.getElementById("image");
 
+
+
 // 点击「词条/标题」- 滚动到最顶端
-termDiv.addEventListener("click", (e) => {
-    e.stopPropagation();
-    showFloatingPanel();
-    scrollToTop(); // 使用新的滚动到顶端函数
-});
+// termDiv.addEventListener("click", (e) => {
+//     e.stopPropagation();
+//     showFloatingPanel();
+//     scrollToTop(); // 使用新的滚动到顶端函数
+// });
 
 // 点击「评论」
 commentDiv.addEventListener("click", (e) => {
@@ -530,7 +562,6 @@ initClickOutsideHandler();
 
 // 新增：显示About页面的浮窗
 export function showAboutPanel() {
-    console.log("show");
     const panel = document.getElementById('floating-panel');
     panel.classList.remove('hidden');
     isPanelVisible = true;

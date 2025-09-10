@@ -2,7 +2,7 @@
 import { state } from "./state.js";
 import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
 import { updateRelations } from "./relationManager.js";
-import { renderPanelSections } from "./detail.js";
+import { renderPanelSections , showFloatingPanel} from "./detail.js";
 
 export const scaleThreshold = 20; // 触发详细信息显示的缩放阈值
 let focusedWord = null;
@@ -30,7 +30,7 @@ const detailPositions = {
 };
 
 // 为detail sections生成微小的位置变化
-function applyPositionVariations(wordId) {
+export function applyPositionVariations(wordId) {
     // 使用单词ID作为种子来确保相同单词的位置是一致的
     const seed = parseInt(wordId) || 1;
     
@@ -139,9 +139,6 @@ export function zoomToWord(id, newScale) {
 }
 
 export function updateWordFocus() {
-    const overlay = document.getElementById("overlay");
-    const detailDiv = document.getElementById("word-details");
-    
     // 清除之前聚焦的单词
     if (focusedWord) {
         focusedWord.classList.remove('focused');
@@ -151,7 +148,9 @@ export function updateWordFocus() {
         resetPositions();
     }
 
-    overlay.classList.add("hidden");
+    // const overlay = document.getElementById("overlay");
+    // overlay.classList.add("hidden");
+    const detailDiv = document.getElementById("word-details");
     detailDiv.classList.add("hidden");
 
     // 获取视图中心坐标
@@ -203,7 +202,6 @@ export function updateWordFocus() {
             focusedWord = closestWord;
             state.focusedNodeId = closestWord.id;
 
-            overlay.classList.remove("hidden");
             updateRelations();
             hideNearbyNodes(closestWord);
 
@@ -213,6 +211,16 @@ export function updateWordFocus() {
             
             // 应用位置变化（除了term section）
             applyPositionVariations(closestWord.id);
+
+            const node = document.getElementById(state.focusedNodeId);
+            if(node){
+                node.addEventListener("click", (e) => {
+                e.stopPropagation();
+                showFloatingPanel();
+                scrollToTop(); // 使用新的滚动到顶端函数
+                });
+            }
+            
         }
     }
 }
@@ -234,16 +242,16 @@ export function updateWordDetails() {
     });
 
     // term section
-    const termTitle = document.querySelector('#term .detail-title');
-    const termMainEl = document.querySelector('#term .term-main');
-    const originalTermEl = document.querySelector('#term .term-ori');
-    termTitle.textContent = String(word.id).padStart(4, '0');
-    termMainEl.textContent = word.term || '未知单词';
-    originalTermEl.textContent = word.termOri || '无';
+    // const termTitle = document.querySelector('#term .detail-title');
+    // const termMainEl = document.querySelector('#term .term-main');
+    // const originalTermEl = document.querySelector('#term .term-ori');
+    // termTitle.textContent = String(word.id).padStart(4, '0');
+    // termMainEl.textContent = word.term || '未知单词';
+    // originalTermEl.textContent = word.termOri || '无';
 
-    const node = document.getElementById(word.id);
-    const termDiv = document.getElementById("term");
-    termDiv.style.backgroundColor = node.style.backgroundColor;
+    // const node = document.getElementById(word.id);
+    // const termDiv = document.getElementById("term");
+    // termDiv.style.backgroundColor = node.style.backgroundColor;
 
     // image section
     const imageTitle = document.querySelector('#image .detail-title');

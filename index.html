@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>沙丘词典</title>
-<!-- 
+    <!-- 
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet"> -->
 
     <link rel="stylesheet" href="resetCSS.css">
@@ -27,20 +27,17 @@
     <div id="center-dot"></div>
 
 
-    <!-- 浮窗容器 -->
     <div id="floating-panel" class="hidden">
         <div class="panel-main">
             <div class="panel-top"></div>
             <div class="panel-bottom"></div>
         </div>
 
-        <!-- 整个top+bottom一起scroll -->
         <div class="panel-slide">
             <div class="scroll-track"></div>
             <div class="scroll-thumb"></div>
         </div>
 
-        <!-- 左下角 tab -->
         <div class="panel-tabs">
             <button data-tab="entry" class="active">词条</button>
             <button data-tab="comment">笔记</button>
@@ -108,37 +105,38 @@
     <div id="universe-view" class="view">
         <canvas id="universe-canvas"></canvas>
         <svg id="connection-lines"></svg>
+        <!-- details -->
+        <div id="word-details" class="hidden">
+            <div class="detail" id="image">
+                <div class="detail-title"></div>
+                <img alt="">
+            </div>
+            <div class="detail" id="proposer">
+                <div class="detail-title"></div>
+                <p>proposer's name</p>
+                <img alt="proposer's img">
+            </div>
+            <div class="detail" id="comment">
+                <div class="detail-title"></div>
+                <div>
+                    <h3></h3>
+                    <p></p>
+                </div>
+            </div>
+            <!-- <div class="detail" id="term">
+                <div class="detail-title"></div>
+                <div class="terms">
+                    <div class="term-main Chinese"></div>
+                    <div class="term-ori English"></div>
+                </div>
+            </div> -->
+        </div>
         <div id="word-nodes-container"></div>
     </div>
 
     <div id="overlay" class="hidden"></div>
 
-    <!-- details -->
-    <div id="word-details" class="hidden">
-        <div class="detail" id="image">
-            <div class="detail-title"></div>
-            <img alt="">
-        </div>
-        <div class="detail" id="proposer">
-            <div class="detail-title"></div>
-            <p>proposer's name</p>
-            <img alt="proposer's img">
-        </div>
-        <div class="detail" id="comment">
-            <div class="detail-title"></div>
-            <div>
-                <h3></h3>
-                <p></p>
-            </div>
-        </div>
-        <div class="detail" id="term">
-            <div class="detail-title"></div>
-            <div class="terms">
-                <div class="term-main Chinese"></div>
-                <div class="term-ori English"></div>
-            </div>
-        </div>
-    </div>
+
 
 
     <div id="tooltipDiv"></div>
