@@ -54,40 +54,40 @@ function filterProposer(name) {
     return relatedContainer;
 }
 
-function togglePanelWidth() {
-    const panel = document.getElementById('floating-panel');
-    const expandBtn = document.getElementById('expand-btn');
+// function togglePanelWidth() {
+//     const panel = document.getElementById('floating-panel');
+//     const expandBtn = document.getElementById('expand-btn');
 
-    if (!panel || !expandBtn) return;
+//     if (!panel || !expandBtn) return;
 
-    isExpanded = !isExpanded;
+//     isExpanded = !isExpanded;
 
-    if (isExpanded) {
-        panel.classList.add('expanded');
-        expandBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="4,14 10,14 10,20"></polyline>
-                <polyline points="20,10 14,10 14,4"></polyline>
-                <line x1="14" y1="10" x2="21" y2="3"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-        `;
-        const overlay = document.getElementById("overlay");
-        overlay.classList.remove("hidden");
-    } else {
-        panel.classList.remove('expanded');
-        expandBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15,3 21,3 21,9"></polyline>
-                <polyline points="9,21 3,21 3,15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-        `;
-        const overlay = document.getElementById("overlay");
-        overlay.classList.add("hidden");
-    }
-}
+//     if (isExpanded) {
+//         panel.classList.add('expanded');
+//         expandBtn.innerHTML = `
+//             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+//                 <polyline points="4,14 10,14 10,20"></polyline>
+//                 <polyline points="20,10 14,10 14,4"></polyline>
+//                 <line x1="14" y1="10" x2="21" y2="3"></line>
+//                 <line x1="3" y1="21" x2="10" y2="14"></line>
+//             </svg>
+//         `;
+//         const overlay = document.getElementById("overlay");
+//         overlay.classList.remove("hidden");
+//     } else {
+//         panel.classList.remove('expanded');
+//         expandBtn.innerHTML = `
+//             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+//                 <polyline points="15,3 21,3 21,9"></polyline>
+//                 <polyline points="9,21 3,21 3,15"></polyline>
+//                 <line x1="21" y1="3" x2="14" y2="10"></line>
+//                 <line x1="3" y1="21" x2="10" y2="14"></line>
+//             </svg>
+//         `;
+//         const overlay = document.getElementById("overlay");
+//         overlay.classList.add("hidden");
+//     }
+// }
 
 // 浮窗功能函数
 export function showFloatingPanel() {
@@ -125,14 +125,61 @@ function ensureExpandButton() {
         // 创建按钮
         expandBtn = document.createElement('button');
         expandBtn.id = 'expand-btn';
-        expandBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15,3 21,3 21,9"></polyline>
-                <polyline points="9,21 3,21 3,15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
+        
+        // 添加样式
+        expandBtn.style.cssText = `
+            position: absolute;
+            left: -4vw;
+            top: 20px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            width: 40px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         `;
+        
+        // 创建箭头和竖线的HTML结构
+        expandBtn.innerHTML = `
+<div class="expand-btn-content" style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+">
+    <!-- 竖线 -->
+    <div class="edge-line" style="
+        width: 2px;
+        height: 20px;
+        background-color: #FFFCF4;
+        border-radius: 1px;
+        margin-right: 1px;
+    "></div>
+
+    <!-- 箭头 -->
+    <div class="arrow-container" style="
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    ">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFCF4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- 箭头竖线部分 -->
+            <polyline points="11,18 5,12 11,6"></polyline>
+            <!-- 箭头横线，x2拉长 -->
+            <line x1="5" y1="12" x2="20" y2="12"></line>
+        </svg>
+    </div>
+</div>
+`;
+
+
 
         // 添加点击事件
         expandBtn.addEventListener('click', (e) => {
@@ -143,8 +190,75 @@ function ensureExpandButton() {
         // 将按钮添加到 panel 中
         const panel = document.getElementById('floating-panel');
         panel.appendChild(expandBtn);
+        
+        // 添加动画样式到页面
+if (!document.getElementById('expand-btn-styles')) {
+    const style = document.createElement('style');
+    style.id = 'expand-btn-styles';
+    style.textContent = `
+        #expand-btn .arrow-container {
+            animation: poke 5s ease-in-out infinite;
+        }
+        
+        #expand-btn.expanded .arrow-container {
+            transform: rotate(180deg);
+            animation: none;
+        }
+        
+        @keyframes poke {
+            0%, 20%, 100% { 
+                transform: translateX(0); 
+            }
+            10% { 
+                transform: translateX(-4px); 
+            }
+            15% {
+                transform: translateX(0);
+            }
+            30% { 
+                transform: translateX(-4px); 
+            }
+            35% {
+                transform: translateX(0);
+            }
+        }
+        
+        #expand-btn:hover .arrow-container {
+            transform: translateX(-2px);
+        }
+        
+        #expand-btn.expanded:hover .arrow-container {
+            transform: rotate(180deg) translateX(-2px);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
     }
 }
+
+function togglePanelWidth() {
+    const panel = document.getElementById('floating-panel');
+    const expandBtn = document.getElementById('expand-btn');
+
+    if (!panel || !expandBtn) return;
+
+    isExpanded = !isExpanded;
+
+    if (isExpanded) {
+        panel.classList.add('expanded');
+        expandBtn.classList.add('expanded');
+        const overlay = document.getElementById("overlay");
+        overlay.classList.remove("hidden");
+    } else {
+        panel.classList.remove('expanded');
+        expandBtn.classList.remove('expanded');
+        const overlay = document.getElementById("overlay");
+        overlay.classList.add("hidden");
+    }
+}
+
+
 export function hideFloatingPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.add('hidden');
@@ -153,16 +267,9 @@ export function hideFloatingPanel() {
     isExpanded = false;
 
     // 重置按钮图标
-    const expandBtn = document.getElementById('expand-btn');
-    if (expandBtn) {
-        expandBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15,3 21,3 21,9"></polyline>
-                <polyline points="9,21 3,21 3,15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-        `;
+    let expandBtn = document.getElementById('expand-btn');
+    if(expandBtn){
+        expandBtn.remove();
     }
 
     // 重置tabs显示
