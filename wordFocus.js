@@ -29,7 +29,7 @@ const detailPositions = {
     }
 };
 
-// 为detail sections生成微小的位置变化
+// 修改现有的 applyPositionVariations 函数，添加呼吸感的 CSS 属性
 export function applyPositionVariations(wordId) {
     // 使用单词ID作为种子来确保相同单词的位置是一致的
     const seed = parseInt(wordId) || 1;
@@ -55,10 +55,14 @@ export function applyPositionVariations(wordId) {
         const newTop = config.baseTop + topOffset;
         const newLeft = config.baseLeft + leftOffset;
         
-        // 添加平滑过渡效果
+        // 添加平滑过渡效果和为动画准备的样式
         section.style.transition = 'top 0.3s ease-out, left 0.3s ease-out';
         section.style.top = `${newTop}vh`;
         section.style.left = `${newLeft}vw`;
+        
+        // 为呼吸动画准备样式
+        section.style.willChange = 'transform, opacity';
+        section.style.backfaceVisibility = 'hidden'; // 优化动画性能
     });
 }
 
@@ -138,6 +142,7 @@ export function zoomToWord(id, newScale) {
     updateScaleForNodes(newScale);
 }
 
+// 修改现有的 updateWordFocus 函数
 export function updateWordFocus() {
     // 清除之前聚焦的单词
     if (focusedWord) {
@@ -148,12 +153,10 @@ export function updateWordFocus() {
         resetPositions();
         const detailDiv = document.getElementById("word-details");
         detailDiv.classList.add("hidden");
+        
+        // 停止呼吸动画
+        stopBreathingAnimation();
     }
-
-    // const overlay = document.getElementById("overlay");
-    // overlay.classList.add("hidden");
-    // const detailDiv = document.getElementById("word-details");
-    // detailDiv.classList.add("hidden");
 
     // 获取视图中心坐标
     const viewportCenter = {
@@ -189,17 +192,6 @@ export function updateWordFocus() {
 
         // 聚焦最近的单词
         if (closestWord) {
-            // 检查是否有足够空间显示详情
-            let left = parseFloat(closestWord.dataset.x) * 100;
-            let top = parseFloat(closestWord.dataset.y) * 100;
-
-            // let neighbors = getNeighbors(left, top);
-            // const hasNearbyNodes = neighbors.some(n => n.hasValue);
-
-            // if (hasNearbyNodes && state.currentScale < 7.9) {
-            //     return;
-            // }
-
             closestWord.classList.add('focused');
             focusedWord = closestWord;
             state.focusedNodeId = closestWord.id;
@@ -214,15 +206,17 @@ export function updateWordFocus() {
             // 应用位置变化（除了term section）
             applyPositionVariations(closestWord.id);
 
+            // 启动呼吸动画
+            setTimeout(startBreathingAnimation, 500); // 延迟启动，让位置动画先完成
+
             const node = document.getElementById(state.focusedNodeId);
             if(node){
                 node.addEventListener("click", (e) => {
-                e.stopPropagation();
-                showFloatingPanel();
-                scrollToTop(); // 使用新的滚动到顶端函数
+                    e.stopPropagation();
+                    showFloatingPanel();
+                    scrollToTop(); // 使用新的滚动到顶端函数
                 });
             }
-            
         }
     }
 }
@@ -310,3 +304,85 @@ function restoreAllNodes() {
         node.style.opacity = '1';
     });
 }
+
+// 在 wordFocus.js 中添加以下代码
+
+// 呼吸动画相关变量
+let breathingAnimationId = null;
+let startTime = null;
+
+// 呼吸动画配置
+const breathingConfig = {
+    image: {
+        amplitude: 3,      // 振幅（像素）
+        frequency: 0.8,    // 频率
+        phaseOffset: 0     // 相位偏移
+    },
+    proposer: {
+        amplitude: 2.5,
+        frequency: 0.9,
+        phaseOffset: Math.PI * 0.6  // 错开约108度
+    },
+    comment: {
+        amplitude: 4,
+        frequency: 0.7,
+        phaseOffset: Math.PI * 1.3  // 错开约234度
+    }
+};
+
+// 启动呼吸动画
+function startBreathingAnimation() {
+    if (breathingAnimationId) return; // 防止重复启动
+    
+    startTime = performance.now();
+    
+    function animate(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const elapsed = (currentTime - startTime) / 1000; // 转换为秒
+        
+        // 为每个 detail 元素应用呼吸动画
+        Object.keys(breathingConfig).forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (!section || section.classList.contains('hidden')) return;
+            
+            const config = breathingConfig[sectionId];
+            
+            // 计算 sin 波动值
+            const sineValue = Math.sin(elapsed * config.frequency + config.phaseOffset);
+            const offset = sineValue * config.amplitude;
+            
+            // 应用到 transform，保持原有的居中定位并添加微小偏移
+            section.style.transform = `translate(-50%, -50%) translateY(${offset}px)`;
+            
+            // 可选：添加轻微的透明度变化增强呼吸感
+            // const opacityOffset = sineValue * 0.1; // 很小的透明度变化
+            // const baseOpacity = 0.95; // 基础透明度
+            // section.style.opacity = Math.max(0.8, baseOpacity + opacityOffset);
+        });
+        
+        breathingAnimationId = requestAnimationFrame(animate);
+    }
+    
+    breathingAnimationId = requestAnimationFrame(animate);
+}
+
+// 停止呼吸动画
+function stopBreathingAnimation() {
+    if (breathingAnimationId) {
+        cancelAnimationFrame(breathingAnimationId);
+        breathingAnimationId = null;
+        startTime = null;
+        
+        // 重置所有元素的 transform 和 opacity
+        Object.keys(breathingConfig).forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.transform = '';
+                section.style.opacity = '';
+            }
+        });
+    }
+}
+
+
+

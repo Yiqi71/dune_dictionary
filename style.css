@@ -422,24 +422,24 @@ body[data-scale="5"] .detail-title {
 #image {
     min-width: 120px;
     min-height: 150px;
-    top: 30vh;
-    left: 70vw;
+    /* top: 30vh;
+    left: 70vw; */
     background-color: #F0B549;
 }
 
 #proposer {
     width: 260px;
     min-height: 160px;
-    top: 65vh;
-    left: 30vw;
+    /* top: 65vh;
+    left: 30vw; */
     background-color: #D58020;
 }
 
 #comment {
     width: 400px;
     height: 240px;
-    top: 80vh;
-    left: 60vw;
+    /* top: 80vh;
+    left: 60vw; */
     background-color: #E1D37A;
 }
 
