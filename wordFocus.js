@@ -146,6 +146,8 @@ export function updateWordFocus() {
         state.focusedNodeId = null;
         restoreAllNodes();
         resetPositions();
+        const detailDiv = document.getElementById("word-details");
+        detailDiv.classList.add("hidden");
     }
 
     // const overlay = document.getElementById("overlay");

@@ -401,10 +401,30 @@
 
     {
       "id": 18,
+
       "term": "主体见性",
       "termOri": "Intersubjectivity",
       "concept_image": "images/18.jpg",
-
+      "sm_title":"我的存在和你的存在，创造了一个无形的场域",
+      "proposers": [{
+        "name": "乔治·E.阿特伍德（George E. Atwood）",
+        "year": "1944—",
+        "role": "美国的临床心理学家",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9pyB9-J0oUdlbf7f7XRiMtFmvCu0tyCF5f3wXx9XQf0-iWEGmJgvyVC54KJXqT9kGXa-S"
+      }, {
+        "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
+        "year": "1942—",
+        "role": "美国的精神分析家、哲学家",
+        "image": "https://0.academia-photos.com/179779/468400/589707/s200_robert.d._stolorow.jpg"
+      }],
+      "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
+      "source_image":"https://books.google.com/books/content?id=xsgKAAAACAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE70Bgw66AOPCkv-W8c3IKIBbCr4yXIDMAh0t94xD6TcIbftdMsIeVuKHlyNC1WLuXbkzDCTNISLf_hpDUrTg25oiTj1ru-6Y2g6HCsjuyfWR04wxlqv2M8augpjtaj8hycUGwGO-",
+      "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
+      "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
+      "contribute_date": "2024-04-18",      
+      "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
+      "edit_date": "2024-04-18",
+      
       "brief_definition": "在交往中生成的体验性现实。",
       "extended_definition": ["想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。", "这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。"],
       "example_sentence": "在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题，更是整个家庭系统的主体间性——譬如，他们如何通过互动模式，共同创造并维持了一个充满焦虑的家庭氛围。",
@@ -413,22 +433,17 @@
         "caption": "照片来自玛丽娜·阿布拉莫维奇（Marina Abramović）2010年在MoMA的行为艺术作品《艺术家在场》（The Artist is Present）。在凝视中，两个世界相遇。Photo by Andrew Russeth, CC BY-SA 2.0, via Wikimedia Commons"
       }],
 
-      "proposers": [{
-        "name": "乔治·E.阿特伍德（George E. Atwood）",
-        "year": "1944—",
-        "role": "美国的临床心理学家",
-        "image": "images/GeorgeAtwood.jpg"
+      "domain": "社会学 / 人类学",      
+      "related_terms": [{
+        "id": 2,
+        "relation": "概念相关"
       }, {
-        "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
-        "year": "1942—",
-        "role": "美国的精神分析家、哲学家",
-        "image": "images/17Proposer.jpg"
+        "id": 5,
+        "relation": "概念相关"
       }],
 
-      "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
-      "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
-      "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
-      "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
+      "proposing_country": "CN",
+      "proposing_time": "2024年",
 
       "comments": [{
           "content": "<p>首先非常感谢沙丘赋予“主体间性”这个词如此具有学术美感的表达。</p><p>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。我们讲究“天时地利人和”，这就是在追求人作为主体，在情境互动之间所形成的契合场域。</p><p>我们也常体验到人际关系互动中的复杂性，有的人“酒逢知己千杯少”，有的人“话不投机半句多”。主体间性便是在解释关系是由各种条件的聚合交互而出现的心理现象，同时也在强调我们在互动体验中借“他人之镜”感受自我的不同侧面。</p><p>另外，主体间性还带给人们关于自我在时间维度上的思考。自我不是永恒不变的，而是具有过程性、情境性和体验性的存在。</p><p>作为一名心理咨询师，我常常真切地感受到，不是咨询师“治疗”了来访者，而是咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实，来访者会在这个双主体的系统中生长出新的意义。</p><p>根本来看，主体间性的概念丰富了我们对于人类创伤的理解：创伤不仅是个体遭受的伤害，更是主体间联结的断裂。因此，人们的创伤是在关系中产生，也是在关系中得到治愈。只有在主体间的镜映和交互中，我们才能重新获得栖息世间的勇气与力量。</p><p>Ps 反观我写下这些文字的过程，这也是一个主体间性的结果。当沙丘主创邀请我写一个后记的时候，我就在感受沙丘这个主体，包括和它的读者所构建的这个公共场域，然后我就开始想该如何让我的文字具有一些美感和可读性，甚至是文学性和艺术性（如你所见，我已经尽力了）…而平时我自己备忘录上写字可不会追求这么多…哈哈…</p>",
@@ -445,24 +460,11 @@
           "date": "08/19/2025"
         }
       ],
+
       "commentAbs": {
         "content": "咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实。",
         "author": "Shelley"
-      },
-
-      "reviewers": [],
-      "related_terms": [{
-        "id": 2,
-        "relation": "概念相关"
-      }, {
-        "id": 5,
-        "relation": "概念相关"
-      }],
-      "proposing_country": "CN",
-      "proposing_time": "2024年",
-      "domain": "社会学 / 人类学",
-      "createdAt": "2024-04-18",
-      "updatedAt": "2024-04-18"
+      }
     },
 
 

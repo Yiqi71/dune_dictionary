@@ -109,9 +109,11 @@ export function showFloatingPanel() {
 
     const relationLines = document.getElementById("connection-lines");
 
-    setTimeout(() => {
-        relationLines.style.left = "20vw";
-    }, 300); // 0.3s 后执行
+    relationLines.style.left = "20vw";
+    updateRelations();
+    setTimeout(updateRelations, 75);
+    setTimeout(updateRelations, 150);
+    setTimeout(updateRelations, 225);
     setTimeout(updateRelations, 300);
     setTimeout(updateRelations, 600);
 }
@@ -177,13 +179,16 @@ export function hideFloatingPanel() {
 
     const relationLines = document.getElementById("connection-lines");
 
+    relationLines.style.left = "0";
 
-    setTimeout(() => {
-        relationLines.style.left = "0";
-    }, 300); // 0.3s 后执行
+    updateRelations();
+    setTimeout(updateRelations, 75);
+    setTimeout(updateRelations, 150);
+    setTimeout(updateRelations, 225);
     setTimeout(updateRelations, 300);
+    setTimeout(updateRelations, 600);  
     setTimeout(updateWordFocus, 300);
-    setTimeout(updateRelations, 600);
+    
 }
 
 export function renderPanelSections() {
