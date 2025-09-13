@@ -121,7 +121,6 @@ export function moveIndicator(scaleValue) {
     if (scaleValue > 5) scaleValue = 5;
     const percent = (scaleValue - 1) * 25; // 5 个刻度
     indicator.style.left = percent + '%';
-    console.log(scaleValue, document.body.dataset.scale);
 }
 
 
@@ -257,8 +256,6 @@ function filterWordsByYear() {
             node.style.display = 'none';
         }
     });
-    
-    console.log(`Filtering words up to year: ${cutoffYear || 'all'}`);
 }
 
 // Year indicator drag handlers

@@ -209,7 +209,7 @@ body[data-scale="3"] .word-node,
 body[data-scale="4"] .word-node {
     width: 180px;
     height: 117px;
-    justify-content: space-between;
+    justify-content: space-between !important;
 }
 body[data-scale="3"] .word-node .detail-title,
 body[data-scale="4"] .word-node .detail-title {
@@ -246,10 +246,10 @@ body[data-scale="5"] .word-node {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: space-between !important;
 }
 body[data-scale="5"] .word-node .terms {
-    margin: 10px;
+    margin: 20px;
 }
 body[data-scale="5"] .word-node .terms .term-main {
     color: #392F17;

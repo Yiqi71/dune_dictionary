@@ -44,9 +44,7 @@ function getWordColor(wordYear) {
     if (periodIndex >= yearPeriodColors.length) {
         periodIndex = yearPeriodColors.length - 1;
     }
-    console.log(wordYear, periodIndex);
     return yearPeriodColors[periodIndex];
-    
 }
 
 // nodes
@@ -341,7 +339,6 @@ function renderWordUniverse(wordsData) {
         updateRelations();
     });
 
-    console.log(usedPositions);
 }
 
 
