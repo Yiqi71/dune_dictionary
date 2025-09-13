@@ -3,8 +3,9 @@ import { state } from "./state.js";
 import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
 import { updateRelations } from "./relationManager.js";
 import { renderPanelSections , showFloatingPanel} from "./detail.js";
+import { moveIndicator } from "./menu.js";
 
-export const scaleThreshold = 20; // 触发详细信息显示的缩放阈值
+
 let focusedWord = null;
 
 // 定义每个section的基础位置和变化范围
@@ -140,6 +141,7 @@ export function zoomToWord(id, newScale) {
     updateWordNodeTransforms();
     updateRelations();
     updateScaleForNodes(newScale);
+    moveIndicator(newScale);
 }
 
 // 修改现有的 updateWordFocus 函数
@@ -165,7 +167,7 @@ export function updateWordFocus() {
     };
 
     // 如果缩放足够大（达到或超过阈值）
-    if (state.currentScale >= scaleThreshold) {
+    if (state.currentScale >= state.scaleThreshold) {
         // 找出距离视图中心最近的单词
         let closestWord = null;
         let minDistance = window.innerHeight / 4;
@@ -200,7 +202,7 @@ export function updateWordFocus() {
             hideNearbyNodes(closestWord);
 
             // 自动吸附到屏幕中心
-            zoomToWord(focusedWord.id, scaleThreshold);
+            zoomToWord(focusedWord.id, state.scaleThreshold);
             updateWordDetails();
             
             // 应用位置变化（除了term section）

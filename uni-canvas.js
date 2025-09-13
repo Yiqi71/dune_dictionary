@@ -1,5 +1,4 @@
 import { state } from "./state.js";
-import { scaleThreshold } from "./wordFocus.js";
 import { updateRelations } from "./relationManager.js";
 import { moveIndicator } from "./menu.js";
 import { hideFloatingPanel } from "./detail.js"
@@ -109,7 +108,7 @@ canvas.addEventListener("wheel", (e) => {
     let scale = state.currentScale;
     const zoomStep = 0.28;
     const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-    let newScale = Math.min(scaleThreshold, Math.max(1, scale + delta));
+    let newScale = Math.min(state.scaleThreshold, Math.max(1, scale + delta));
 
     // 获取当前的 snapped scale 级别
     const currentSnapped = getSnappedScale(scale);
@@ -120,9 +119,9 @@ canvas.addEventListener("wheel", (e) => {
         if (delta > 0) {
             // 向上滚动 - zoom in
             if (currentSnapped === 4) {
-                newScale = scaleThreshold; // 跳到 scale 5
+                newScale = state.scaleThreshold; // 跳到 scale 5
             } else {
-                newScale = scaleThreshold; // 已经是 scale 5，继续放大到最大
+                newScale = state.scaleThreshold; // 已经是 scale 5，继续放大到最大
             }
         } else {
             // 向下滚动 - zoom out  
@@ -159,7 +158,7 @@ function getSnappedScale(scale) {
     else return 5;
 }
 
-export function updateScaleForNodes(newScale, scaleThreshold = 20) {
+export function updateScaleForNodes(newScale) {
     let snapped;
     if (newScale < 1.5) snapped = 1;
     else if (newScale < 5) snapped = 2;

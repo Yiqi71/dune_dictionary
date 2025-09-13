@@ -7,8 +7,7 @@ import {updateRelations} from "./relationManager.js";
 import {
     zoomToWord,
     updateWordDetails,
-    updateWordFocus,
-    scaleThreshold
+    updateWordFocus
 } from "./wordFocus.js";
 
 import { yearPeriods } from "./menu.js";
@@ -316,7 +315,7 @@ function renderWordUniverse(wordsData) {
                 // 只有不是拖拽操作时才处理点击
                 if (!isDragging) {
                     if (node.classList.contains('focused')) {} else {
-                        zoomToWord(node.id, scaleThreshold);
+                        zoomToWord(node.id, state.scaleThreshold);
                         updateWordFocus();
                         renderPanelSections();
                     }
@@ -360,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
-            zoomToWord(state.focusedNodeId,scaleThreshold);
+            zoomToWord(state.focusedNodeId,state.scaleThreshold);
             updateWordFocus();
         })
         .catch(error => {

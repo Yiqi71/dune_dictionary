@@ -5,7 +5,6 @@ import {
 import {
     zoomToWord,
     updateWordFocus,
-    scaleThreshold,
     updateWordDetails
 } from "./wordFocus.js";
 import {
@@ -52,7 +51,9 @@ let containerRect;
 
 
 // 初始化 indicator 在中间
-moveIndicator(scaleThreshold);
+if(state.scaleThreshold){
+    moveIndicator(state.scaleThreshold);
+}
 
 indicator.addEventListener('mousedown', startDrag);
 window.addEventListener('mouseup', endDrag);
@@ -114,20 +115,20 @@ function snapToStep() {
 }
 
 // 可程序化移动 indicator
-export function moveIndicator(value) {
-    value = (value-1) * 4 / (scaleThreshold-1)+1;
-    if (value < 1) value = 1;
-    if (value > 5) value = 5;
-    const percent = (value - 1) * 25; // 5 个刻度
+export function moveIndicator(scaleValue) {
+    scaleValue = (scaleValue-1) * 4 / (state.scaleThreshold-1)+1;
+    if (scaleValue < 1) scaleValue = 1;
+    if (scaleValue > 5) scaleValue = 5;
+    const percent = (scaleValue - 1) * 25; // 5 个刻度
     indicator.style.left = percent + '%';
-    console.log(value, document.body.dataset.scale);
+    console.log(scaleValue, document.body.dataset.scale);
 }
 
 
 // menu
 let dunesIcon = document.getElementById("dunes-icon");
 dunesIcon.addEventListener('click', () => {
-    zoomToWord(17, scaleThreshold);
+    zoomToWord(17, state.scaleThreshold);
     updateWordFocus();
 });
 
@@ -135,7 +136,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const shuffleIcon = document.getElementById('shuffle-icon');
     shuffleIcon.addEventListener('click', () => {
         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
-        zoomToWord(randomId, scaleThreshold);
+        zoomToWord(randomId, state.scaleThreshold);
         updateWordFocus();
     });
 });
