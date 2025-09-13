@@ -145,40 +145,39 @@ function ensureExpandButton() {
         
         // 创建箭头和竖线的HTML结构
         expandBtn.innerHTML = `
-<div class="expand-btn-content" style="
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    position: relative;
-">
-    <!-- 竖线 -->
-    <div class="edge-line" style="
-        width: 2px;
-        height: 20px;
-        background-color: #FFFCF4;
-        border-radius: 1px;
-        margin-right: 1px;
-    "></div>
+            <div class="expand-btn-content" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                position: relative;
+            ">
+                <!-- 竖线 -->
+                <div class="edge-line" style="
+                    width: 2px;
+                    height: 20px;
+                    background-color: #FFFCF4;
+                    border-radius: 1px;
+                    margin-right: 1px;
+                "></div>
 
-    <!-- 箭头 -->
-    <div class="arrow-container" style="
-        transition: transform 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    ">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFCF4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <!-- 箭头竖线部分 -->
-            <polyline points="11,18 5,12 11,6"></polyline>
-            <!-- 箭头横线，x2拉长 -->
-            <line x1="5" y1="12" x2="20" y2="12"></line>
-        </svg>
-    </div>
-</div>
-`;
-
+                <!-- 箭头 -->
+                <div class="arrow-container" style="
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFCF4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- 箭头竖线部分 -->
+                        <polyline points="11,18 5,12 11,6"></polyline>
+                        <!-- 箭头横线，x2拉长 -->
+                        <line x1="5" y1="12" x2="20" y2="12"></line>
+                    </svg>
+                </div>
+            </div>
+        `;
 
 
         // 添加点击事件
@@ -192,47 +191,47 @@ function ensureExpandButton() {
         panel.appendChild(expandBtn);
         
         // 添加动画样式到页面
-if (!document.getElementById('expand-btn-styles')) {
-    const style = document.createElement('style');
-    style.id = 'expand-btn-styles';
-    style.textContent = `
-        #expand-btn .arrow-container {
-            animation: poke 5s ease-in-out infinite;
+        if (!document.getElementById('expand-btn-styles')) {
+            const style = document.createElement('style');
+            style.id = 'expand-btn-styles';
+            style.textContent = `
+                #expand-btn .arrow-container {
+                    animation: poke 5s ease-in-out infinite;
+                }
+                
+                #expand-btn.expanded .arrow-container {
+                    transform: rotate(180deg);
+                    animation: none;
+                }
+                
+                @keyframes poke {
+                    0%, 20%, 100% { 
+                        transform: translateX(0); 
+                    }
+                    10% { 
+                        transform: translateX(-4px); 
+                    }
+                    15% {
+                        transform: translateX(0);
+                    }
+                    30% { 
+                        transform: translateX(-4px); 
+                    }
+                    35% {
+                        transform: translateX(0);
+                    }
+                }
+                
+                #expand-btn:hover .arrow-container {
+                    transform: translateX(-2px);
+                }
+                
+                #expand-btn.expanded:hover .arrow-container {
+                    transform: rotate(180deg) translateX(-2px);
+                }
+            `;
+            document.head.appendChild(style);
         }
-        
-        #expand-btn.expanded .arrow-container {
-            transform: rotate(180deg);
-            animation: none;
-        }
-        
-        @keyframes poke {
-            0%, 20%, 100% { 
-                transform: translateX(0); 
-            }
-            10% { 
-                transform: translateX(-4px); 
-            }
-            15% {
-                transform: translateX(0);
-            }
-            30% { 
-                transform: translateX(-4px); 
-            }
-            35% {
-                transform: translateX(0);
-            }
-        }
-        
-        #expand-btn:hover .arrow-container {
-            transform: translateX(-2px);
-        }
-        
-        #expand-btn.expanded:hover .arrow-container {
-            transform: rotate(180deg) translateX(-2px);
-        }
-    `;
-    document.head.appendChild(style);
-}
 
     }
 }
@@ -301,6 +300,11 @@ export function hideFloatingPanel() {
 export function renderPanelSections() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
+
+    scrollToTop();
+
+    const panel = document.getElementById('floating-panel');
+    panel.style.backgroundColor = "#FFFCF4";
 
     // 上半部分
     const title = document.querySelector('.panel-top');
@@ -378,7 +382,7 @@ export function renderPanelSections() {
     `;
 
         const relatedContainer = filterProposer(proposer.name);
-        proposerBlock.appendChild(relatedContainer);
+        // proposerBlock.appendChild(relatedContainer);
         proposersContainer.appendChild(proposerBlock);
     })
 
@@ -405,21 +409,43 @@ function renderCommentSection() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
 
+    scrollToTop();
+
+    const panel = document.getElementById('floating-panel');
+    panel.style.backgroundColor = "#EEE9DB";
+
+
+    // 上半部分
+    const title = document.querySelector('.panel-top');
+    title.innerHTML = `
+    <p> ${String(currentWord.id).padStart(4, '0')} </p>
+    <div>
+    <div class = "term-main"> ${currentWord.term || '未知单词'} </div>
+    <div class = "term-ori"> ${currentWord.termOri || '无'} </div></div>
+    `
+
+    // 下半部分
     const contentScroll = document.querySelector('.panel-bottom');
     contentScroll.innerHTML = `
-
-                ${currentWord.comments?.map(c => `<section><p class="left-title">编辑者后记<br>${c.author}</p><h3>${c.content}</h3></section>`).join('') || '暂无评论'}
-
+        ${currentWord.comments?.map(c => 
+            `<section>
+                <p class="left-title">编辑者后记<br>${c.author}</p>
+                <h3>${c.content}</h3>
+            </section>`
+        ).join('') || '暂无评论'}
     `;
+
+    renderCommentMarkers(); // ✅ 渲染评论的 markers
 }
+
 
 // tab 切换逻辑
 function initTabs() {
     const tabs = document.querySelectorAll('.panel-tabs button');
     tabs.forEach(btn => {
         btn.addEventListener('click', () => {
-            tabs.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            // tabs.forEach(b => b.classList.remove('active'));
+            // btn.classList.add('active');
 
             if (btn.dataset.tab === 'entry') {
                 renderPanelSections();
@@ -435,7 +461,7 @@ function initTabs() {
 initTabs();
 
 // 滚动到最顶端（panel-top位置）
-function scrollToTop() {
+export function scrollToTop() {
     const panel = document.getElementById('floating-panel');
     const panelMain = panel.querySelector('.panel-main');
 
@@ -542,10 +568,6 @@ document.addEventListener('mouseup', () => {
     document.body.style.userSelect = '';
 });
 
-// 初始更新一次位置
-setTimeout(() => {
-    updateThumbPosition();
-}, 200);
 
 function renderScrollMarkers() {
     if (!panelMain) return;
@@ -592,7 +614,7 @@ function renderScrollMarkers() {
     const visibleHeight = panelMain.clientHeight;
     const contentScrollableRange = contentHeight - visibleHeight;
 
-    const trackHeight = panelMain.clientHeight;
+    const trackHeight = scrollTrack.clientHeight;
     const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - SCROLL_CONFIG.thumbSize;
 
     // 如果内容不需要滚动，不显示markers
@@ -603,23 +625,20 @@ function renderScrollMarkers() {
         let scrollTarget;
 
         if (sec.isTop) {
-            // 顶部marker固定在thumb活动范围的最上方
+            // 顶部 marker 固定在 thumb 活动范围的最上方
             markerTop = SCROLL_CONFIG.thumbMargin;
-            scrollTarget = 0; // 滚动到最顶部
+            scrollTarget = 0;
         } else {
             const el = document.getElementById(sec.id);
             if (!el) return;
 
-            // 计算section在整个内容中的相对位置
-            const sectionRect = el.getBoundingClientRect();
-            const panelRect = panelMain.getBoundingClientRect();
-            const sectionTop = panelMain.scrollTop + (sectionRect.top - panelRect.top);
+            // 相对 panelMain 内容顶部的位置
+            const sectionTop = el.offsetTop;
 
-
-            // 计算滚动比例（当section滚动到顶部时的比例）
+            // 计算滚动比例（section 到达 panel 顶部时的比例）
             const scrollRatio = Math.min(sectionTop / contentScrollableRange, 1);
 
-            // 映射到thumb活动范围内的位置
+            // 映射到 thumb 活动范围
             markerTop = SCROLL_CONFIG.thumbMargin + (scrollRatio * thumbActiveRange);
             scrollTarget = sectionTop;
         }
@@ -634,23 +653,68 @@ function renderScrollMarkers() {
         tooltip.textContent = sec.label;
         marker.appendChild(tooltip);
 
-        // 点击marker → 滚动到目标位置并让thumb居中对齐
         marker.addEventListener("click", () => {
-            // 滚动到目标位置
             panelMain.scrollTo({
                 top: scrollTarget,
                 behavior: "smooth"
             });
-
-            // 更新thumb位置使其对齐到marker
-            // setTimeout(() => {
-            //     scrollThumb.style.top = `${markerTop}px`;
-            // }, 50); 
         });
 
         scrollTrack.appendChild(marker);
     });
 }
+
+function renderCommentMarkers() {
+    if (!panelMain) return;
+
+    // 清空旧的 marker
+    scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
+
+    let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
+    if (!currentWord || !currentWord.comments) return;
+
+    const comments = currentWord.comments;
+
+    const contentHeight = panelMain.scrollHeight;
+    const visibleHeight = panelMain.clientHeight;
+    const contentScrollableRange = contentHeight - visibleHeight;
+
+    const trackHeight = scrollTrack.clientHeight;
+    const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - SCROLL_CONFIG.thumbSize;
+
+    // 如果评论数量过少，不需要滚动
+    if (contentHeight <= visibleHeight) return;
+
+    comments.forEach((c, idx) => {
+        const sectionEl = panelMain.querySelectorAll("section")[idx];
+        if (!sectionEl) return;
+
+        // 相对 panelMain 内容顶部的位置
+        const sectionTop = sectionEl.offsetTop;
+        const scrollRatio = Math.min(sectionTop / contentScrollableRange, 1);
+
+        const markerTop = SCROLL_CONFIG.thumbMargin + (scrollRatio * thumbActiveRange);
+
+        const marker = document.createElement("div");
+        marker.className = "scroll-marker";
+        marker.style.top = `${markerTop}px`;
+
+        const tooltip = document.createElement("div");
+        tooltip.className = "scroll-tooltip";
+        tooltip.textContent = c.author || `评论${idx+1}`;
+        marker.appendChild(tooltip);
+
+        marker.addEventListener("click", () => {
+            panelMain.scrollTo({
+                top: sectionTop,
+                behavior: "smooth"
+            });
+        });
+
+        scrollTrack.appendChild(marker);
+    });
+}
+
 
 // 点击外部关闭浮窗
 function initClickOutsideHandler() {

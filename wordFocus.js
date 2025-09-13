@@ -2,7 +2,7 @@
 import { state } from "./state.js";
 import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
 import { updateRelations } from "./relationManager.js";
-import { renderPanelSections , showFloatingPanel} from "./detail.js";
+import { renderPanelSections , showFloatingPanel, scrollToTop} from "./detail.js";
 import { moveIndicator } from "./menu.js";
 
 
@@ -297,7 +297,7 @@ export function updateWordDetails() {
 function hideNearbyNodes(focusedNode) {
     document.querySelectorAll('.word-node').forEach(node => {
         if (node === focusedNode) return;
-        node.style.opacity = '0.5';
+        node.style.opacity = '0.2';
     });
 }
 
