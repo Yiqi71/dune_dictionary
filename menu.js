@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-let searchIcon = document.getElementById("searchIcon");
+let searchIcon = document.getElementById("search-icon");
 
 
 
@@ -326,5 +326,144 @@ window.addEventListener('DOMContentLoaded', () => {
         aboutButton.addEventListener('click', () => {
             showAboutPanel();
         });
+    }
+
+    // 新增：Search按钮点击事件
+    const searchIcon = document.getElementById('search-icon');
+    if (searchIcon) {
+        searchIcon.addEventListener('click', () => {
+            showSearchModal();
+        });
+    }
+});
+
+// Search Modal functionality
+let isSearchModalOpen = false;
+
+function showSearchModal() {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input');
+    
+    if (!modal || !input) return;
+    
+    modal.classList.remove('hidden');
+    isSearchModalOpen = true;
+    
+    // Focus the input after a short delay to ensure the modal is visible
+    setTimeout(() => {
+        input.focus();
+    }, 100);
+    
+    // Initialize with all words
+    displaySearchResults(window.allWords || []);
+}
+
+function hideSearchModal() {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input');
+    
+    if (!modal || !input) return;
+    
+    modal.classList.add('hidden');
+    isSearchModalOpen = false;
+    input.value = '';
+    
+    // Clear results
+    const resultsContainer = document.getElementById('search-results');
+    if (resultsContainer) {
+        resultsContainer.innerHTML = '';
+    }
+}
+
+function searchWords(query) {
+    if (!window.allWords) return [];
+    
+    const lowerQuery = query.toLowerCase().trim();
+    if (!lowerQuery) return window.allWords;
+    
+    return window.allWords.filter(word => {
+        const term = (word.term || '').toLowerCase();
+        const originalLanguage = (word.original_language || '').toLowerCase();
+        const briefDefinition = (word.brief_definition || '').toLowerCase();
+        const extendedDefinition = (word.extended_definition || '').toLowerCase();
+        const proposer = (word.proposer || '').toLowerCase();
+        
+        return term.includes(lowerQuery) ||
+               originalLanguage.includes(lowerQuery) ||
+               briefDefinition.includes(lowerQuery) ||
+               extendedDefinition.includes(lowerQuery) ||
+               proposer.includes(lowerQuery);
+    });
+}
+
+function displaySearchResults(words) {
+    const resultsContainer = document.getElementById('search-results');
+    if (!resultsContainer) return;
+    
+    if (words.length === 0) {
+        resultsContainer.innerHTML = '<div class="search-no-results">No results found</div>';
+        return;
+    }
+    
+    resultsContainer.innerHTML = words.map(word => `
+        <div class="search-result-item" data-word-id="${word.id}">
+            <div>
+                <div class="search-result-term">${word.term || 'Unknown Term'}</div>
+                ${word.original_language ? `<div class="search-result-original">${word.original_language}</div>` : ''}
+                ${word.brief_definition ? `<div class="search-result-definition">${word.brief_definition.substring(0, 100)}${word.brief_definition.length > 100 ? '...' : ''}</div>` : ''}
+            </div>
+        </div>
+    `).join('');
+    
+    // Add click handlers to result items
+    resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const wordId = parseInt(item.dataset.wordId);
+            hideSearchModal();
+            zoomToWord(wordId, state.scaleThreshold);
+            updateWordFocus();
+        });
+    });
+}
+
+// Event listeners for search modal
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const searchModal = document.getElementById('search-modal');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            const results = searchWords(query);
+            displaySearchResults(results);
+        });
+        
+        // Handle keyboard navigation
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideSearchModal();
+            }
+        });
+    }
+    
+    if (searchModal) {
+        searchModal.addEventListener('click', (e) => {
+            // Close modal when clicking on the backdrop (not the content)
+            if (e.target === searchModal) {
+                hideSearchModal();
+            }
+        });
+    }
+});
+
+// Global keyboard shortcut for search (Cmd/Ctrl + K)
+document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (isSearchModalOpen) {
+            hideSearchModal();
+        } else {
+            showSearchModal();
+        }
     }
 });
