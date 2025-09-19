@@ -429,11 +429,24 @@ function renderCommentSection() {
     contentScroll.innerHTML = `
         ${currentWord.comments?.map(c => 
             `<section>
-                <p class="left-title">编辑者后记<br>${c.author}</p>
+                <p class="left-title">${c.author}</p>
                 <h3>${c.content}</h3>
             </section>`
         ).join('') || '暂无评论'}
+
+        <section id="section-contributors"> </section>
+        <section id="section-editors"> </section>        
     `;
+
+    const contributorsSec = document.getElementById("section-contributors");
+    const editorsSec = document.getElementById("section-editors");
+
+    contributorsSec.innerHTML = `<p>${currentWord.contributor}</p>`;
+
+    editorsSec.innerHTML = `<p class="left-title">编辑</p>
+                        <div id="editors-container">
+                        ${currentWord.editors.map(editor => `<p>${editor}</p>`).join('')}
+                        </div>`
 
     renderCommentMarkers(); // ✅ 渲染评论的 markers
 }

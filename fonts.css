@@ -1,34 +1,44 @@
-/* @font-face {
-  font-family: "Barlow Condensed";
-  src: url("../fonts/Barlow_Condensed/BarlowCondensed-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-} */
-
+/* ChillDIN - Local font for consistent loading */
 @font-face {
   font-family: "ChillDIN";
   src: url("../fonts/Chilldin/ChillDINGothic_Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
+  font-display: block;
 }
 
+/* ChillDINGothic - Local font for consistent loading */
+@font-face {
+  font-family: "ChillDINGothic";
+  src: url("../fonts/Chilldin/ChillDINGothic_Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Barlow Condensed - Local font for consistent loading */
+@font-face {
+  font-family: "Barlow Condensed";
+  src: url("../fonts/Barlow_Condensed/BarlowCondensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Stint Ultra Condensed - Local font for consistent loading */
+@font-face {
+  font-family: "Stint Ultra Condensed";
+  src: url("../fonts/Stint_Ultra_Condensed/StintUltraCondensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+/* NotoSans - Local font for consistent loading */
 @font-face {
   font-family: "NotoSans";
   src: url("../fonts/Noto_Sans_Duployan/NotoSansDuployan-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
+  font-display: block;
 }
-
-/* @font-face {
-  font-family: "Stint Ultra Condensed";
-  src: url("../fonts/Stint_Ultra_Condensed/StintUltraCondensed-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-} */
-
-/* ChillDINGothic */
-@import url("https://fontsapi.zeoseven.com/642/main/result.css");
-/* Barlow Condensed */
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-/* Stint Ultra Condensed  */
-/* @import url('https://fonts.googleapis.com/css?family=Stint+Ultra+Condensed'); */
