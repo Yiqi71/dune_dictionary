@@ -105,11 +105,11 @@ export function showFloatingPanel() {
     if (entryTab) entryTab.classList.add('active');
 
     const view = document.getElementById("universe-view");
-    view.style.left = "-20vw";
+    view.style.left = "-19vw";
 
     const relationLines = document.getElementById("connection-lines");
 
-    relationLines.style.left = "20vw";
+    relationLines.style.left = "19vw";
     updateRelations();
     setTimeout(updateRelations, 75);
     setTimeout(updateRelations, 150);
@@ -129,7 +129,7 @@ function ensureExpandButton() {
         // 添加样式
         expandBtn.style.cssText = `
             position: absolute;
-            left: -4vw;
+            left: -2.5vw;
             top: 20px;
             background: none;
             border: none;
@@ -306,7 +306,7 @@ export function renderPanelSections() {
     const panel = document.getElementById('floating-panel');
     panel.style.backgroundColor = "#FFFCF4";
 
-    // 上半部分
+    // Upper section
     const title = document.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
@@ -316,7 +316,7 @@ export function renderPanelSections() {
     <div class = "term-ori"> ${currentWord.termOri || '无'} </div></div>
     `
 
-    // 下半部分
+    // Lower section
     const bottomDiv = document.querySelector('.panel-bottom');
     bottomDiv.innerHTML = `
         <section id="section-brief"> </section>
@@ -336,23 +336,26 @@ export function renderPanelSections() {
     const contributorsSec = document.getElementById("section-contributors");
     const editorsSec = document.getElementById("section-editors");
 
+    // FIXED: Don't wrap in h2/h3 since JSON already contains HTML tags
     briefSec.innerHTML = `<p class="left-title">简要释义</p>
                        <div>
-                           <h2>${currentWord.brief_definition || '暂无简要释义'}</h2>
+                           ${currentWord.brief_definition || '暂无简要释义'}
                            ${
                             Array.isArray(currentWord.extended_definition)
-                                ? currentWord.extended_definition.map(paragraph => `<h3>${paragraph}</h3>`).join('')
+                                ? currentWord.extended_definition.join('')
                                 : currentWord.extended_definition 
-                                ? `<h3>${currentWord.extended_definition}</h3>`
+                                ? currentWord.extended_definition
                                 : '<h3>暂无扩展释义</h3>'
                             }
                       </div>`;
 
+    // FIXED: Don't wrap in h3 since JSON already contains HTML tags  
     exampleSec.innerHTML = `<p class="left-title">例句</p>
                         <div>
-                            <h3>${currentWord.example_sentence || '暂无例句'}</h3>
+                            ${currentWord.example_sentence || '暂无例句'}
                             <div id="diagram-container"></div>
                         </div>`;
+
     const diagramContainer = document.getElementById("diagram-container");
     if (currentWord.diagrams && currentWord.diagrams.length > 0) {
         currentWord.diagrams.forEach(diagram => {
@@ -382,7 +385,6 @@ export function renderPanelSections() {
     `;
 
         const relatedContainer = filterProposer(proposer.name);
-        // proposerBlock.appendChild(relatedContainer);
         proposersContainer.appendChild(proposerBlock);
     })
 
@@ -414,8 +416,7 @@ function renderCommentSection() {
     const panel = document.getElementById('floating-panel');
     panel.style.backgroundColor = "#EEE9DB";
 
-
-    // 上半部分
+    // Upper section
     const title = document.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
@@ -424,13 +425,13 @@ function renderCommentSection() {
     <div class = "term-ori"> ${currentWord.termOri || '无'} </div></div>
     `
 
-    // 下半部分
+    // FIXED: Don't wrap in additional tags since JSON already contains HTML
     const contentScroll = document.querySelector('.panel-bottom');
     contentScroll.innerHTML = `
         ${currentWord.comments?.map(c => 
             `<section>
-                <p class="left-title">${c.author}</p>
-                <h3>${c.content}</h3>
+                <p class="left-title">${c.role}<br>${c.author}<br>${c.background}</p>
+                <div><br><br><br>${c.content}</div>
             </section>`
         ).join('') || '暂无评论'}
 
@@ -448,7 +449,7 @@ function renderCommentSection() {
                         ${currentWord.editors.map(editor => `<p>${editor}</p>`).join('')}
                         </div>`
 
-    renderCommentMarkers(); // ✅ 渲染评论的 markers
+    renderCommentMarkers();
 }
 
 
@@ -780,7 +781,7 @@ imageDiv.addEventListener("click", (e) => {
 initClickOutsideHandler();
 
 
-// 新增：显示About页面的浮窗
+// 显示About页面的浮窗
 export function showAboutPanel() {
     const panel = document.getElementById('floating-panel');
     panel.classList.remove('hidden');

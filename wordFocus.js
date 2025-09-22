@@ -283,13 +283,13 @@ export function updateWordDetails() {
     const commentTitle = document.querySelector('#comment .detail-title');
     const commentH3 = document.querySelector('#comment h3');
     const commentP = document.querySelector('#comment p');
-    commentTitle.textContent = '评论';
+    commentTitle.textContent = '笔记';
     if (word.commentAbs) {
         const comment = word.commentAbs;
-        commentH3.textContent = comment.content;
+        commentH3.innerHTML = comment.content;
         commentP.innerHTML = `—— ${comment.author}`;
     } else {
-        commentH3.textContent = '暂无评论';
+        commentH3.textContent = '暂无笔记';
         commentP.innerHTML = '';
     }
 }

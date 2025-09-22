@@ -11,7 +11,7 @@
     top: 0;
     right: 0;
     height: 100vh;
-    width: 647px;
+    width: 37vw;
     border-radius: 8px 0 0 8px;
     background: #FFFCF4;
 
@@ -42,7 +42,7 @@
     flex: 1;
     height: 100vh;
     overflow-y: scroll;
-    padding-right: 12px;
+    /* padding-right: 12px; */
 
     /* 隐藏原生滚动条 */
     scrollbar-width: none;
