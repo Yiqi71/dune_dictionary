@@ -1,5 +1,7 @@
-html, body {
-  touch-action: manipulation; /* 禁止双击缩放 */
+html,
+body {
+    touch-action: manipulation;
+    /* 禁止双击缩放 */
 }
 
 * {
@@ -13,7 +15,7 @@ body {
     height: 100vh;
     background: #625136;
     color: #544011;
-    font-family: "ChillDIN","Barlow Condensed", "ChillDINGothic";
+    font-family: "ChillDIN", "Barlow Condensed", "ChillDINGothic";
     transition: opacity 0.8s, transform 0.8s;
 }
 
@@ -92,7 +94,7 @@ h1.English {
 
 #connection-lines {
     pointer-events: none;
-    
+
     transition: left 0.3s ease-in-out;
 }
 
@@ -127,10 +129,12 @@ h1.English {
     position: absolute;
     cursor: pointer;
 }
+
 .word-node * {
     margin: 0;
     padding: 0;
 }
+
 .word-node .terms {
     /* overflow: hidden; */
     text-overflow: ellipsis;
@@ -140,11 +144,13 @@ h1.English {
     gap: 0;
     align-items: flex-start;
 }
+
 .word-node .detail-title {
     /* overflow: hidden; */
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .term-main {
     color: #544011;
     font-family: "ChillDIN";
@@ -153,6 +159,7 @@ h1.English {
     padding: 0;
     letter-spacing: -1.287px;
 }
+
 .term-ori {
     color: #544011;
     font-family: "Stint Ultra Condensed";
@@ -167,6 +174,7 @@ body[data-scale="1"] .word-node {
     width: 46px;
     height: 16px;
 }
+
 body[data-scale="1"] .word-node .detail-title,
 body[data-scale="1"] .word-node .terms {
     display: none;
@@ -189,16 +197,18 @@ body[data-scale="2"] .word-node {
     justify-content: center;
     gap: 0;
 }
+
 body[data-scale="2"] .word-node .detail-title {
     display: none;
 }
+
 body[data-scale="2"] .word-node .terms {
     display: flex;
 }
 
 body[data-scale="2"] .word-node .terms .term-ori {
     color: #544011;
-    font-family: "Barlow Condensed","ChillDIN";
+    font-family: "Barlow Condensed", "ChillDIN";
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
@@ -211,14 +221,17 @@ body[data-scale="4"] .word-node {
     height: 117px;
     justify-content: space-between !important;
 }
+
 body[data-scale="3"] .word-node .detail-title,
 body[data-scale="4"] .word-node .detail-title {
     display: flex;
 }
+
 body[data-scale="3"] .word-node .terms,
 body[data-scale="4"] .word-node .terms {
     margin: 8px;
 }
+
 body[data-scale="3"] .word-node .terms .term-main,
 body[data-scale="4"] .word-node .terms .term-main {
     color: #392F17;
@@ -248,9 +261,11 @@ body[data-scale="5"] .word-node {
     align-items: flex-start;
     justify-content: space-between !important;
 }
+
 body[data-scale="5"] .word-node .terms {
     margin: 20px;
 }
+
 body[data-scale="5"] .word-node .terms .term-main {
     color: #392F17;
     font-family: "ChillDIN";
@@ -259,6 +274,7 @@ body[data-scale="5"] .word-node .terms .term-main {
     font-weight: 600;
     letter-spacing: -1.287px;
 }
+
 body[data-scale="5"] .word-node .terms .term-ori {
     color: #392F17;
     font-family: "Stint Ultra Condensed";
@@ -268,8 +284,9 @@ body[data-scale="5"] .word-node .terms .term-ori {
 }
 
 body[data-scale="5"] .detail-title {
-    margin: 20px;
+    margin: 24px;
 }
+
 body[data-scale="5"] .detail-title {
     font-size: 17.3px;
 }
@@ -311,13 +328,13 @@ body[data-scale="5"] .detail-title {
 }
 
 .detail * {
-    margin: 15px;
+    margin: 15px 12px;
 }
 
 .detail-title {
     font-family: "ChillDIN";
     font-weight: 700;
-    margin: 10px;
+    margin: 10px 40px;
     display: flex;
     align-items: center;
     font-size: 12px;
@@ -335,15 +352,7 @@ body[data-scale="5"] .detail-title {
     display: inline-block;
 }
 
-.detail img {
-    max-width: 280px;
-    max-height: 280px;
-    object-fit: contain;
-    border-radius: 4px;
-    margin: 10px;
-    opacity: 0.7;
-    mix-blend-mode: darken;
-}
+
 
 /* 噪点覆盖层 */
 .detail::after {
@@ -377,15 +386,16 @@ body[data-scale="5"] .detail-title {
     left: 50vw;
     background-color: #FAD67B;
 
-    opacity:0;
+    opacity: 0;
     display: none;
 }
+
 #term .terms {
     margin: 10px;
     display: flex;
     flex-direction: column;
     gap: 0px;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
 
 #term h1 {
@@ -407,6 +417,7 @@ body[data-scale="5"] .detail-title {
     letter-spacing: -1.287px;
     text-wrap: nowrap;
 }
+
 #term .term-ori {
     margin: 0;
     padding: 0;
@@ -425,32 +436,63 @@ body[data-scale="5"] .detail-title {
     background-color: #F0B549;
 }
 
+#image img {
+    max-width: 16vw;
+    max-height: 16vw;
+    object-fit: contain;
+    border-radius: 4px;
+    opacity: 0.7;
+    mix-blend-mode: darken;
+    padding: 0 12px 15px 12px;
+}
+
+
 #proposer {
     width: 260px;
     min-height: 160px;
     background-color: #D58020;
 }
 
+#proposer img {
+    max-width: 20vw;
+    max-height: 20vw;
+    object-fit: contain;
+    border-radius: 4px;
+    /* margin: 10px; */
+    opacity: 0.7;
+    mix-blend-mode: darken;
+    padding: 0 12px 15px 12px;
+}
+
+#proposer p {
+    padding: 0 12px;
+    font-family: ChillDINGothic;
+    font-size: 17.3px;
+    font-style: normal;
+    font-weight: 600;
+}
+
 #comment {
     width: 400px;
-    height: 240px;
+    min-height: 240px;
     background-color: #E1D37A;
 }
 
-#comment h3{
+#comment h3 {
     color: #392F17;
     font-family: "ChillDIN";
     font-size: 28.834px;
     font-style: normal;
     font-weight: 600;
-    line-height: 36.898px; /* 127.969% */
+    line-height: 36.898px;
+    /* 127.969% */
     letter-spacing: -0.865px;
 }
 
 #comment p {
     color: #392F17;
     text-align: right;
-    font-family: "ChillDIN";
+    font-family: "ChillDINGothic";
     font-size: 17.3px;
     font-style: normal;
     font-weight: 700;
@@ -480,10 +522,13 @@ body[data-scale="5"] .detail-title {
 
 
 @keyframes breathing {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate(0, 0);
         opacity: 0.85;
     }
+
     50% {
         transform: translate(0, -8px);
         opacity: 1;
@@ -501,5 +546,6 @@ body[data-scale="5"] .detail-title {
     background-color: red;
     transform: translate(-50%, -50%);
     z-index: 9999;
-    pointer-events: none; /* 可选：让它不挡住鼠标点击 */
+    pointer-events: none;
+    /* 可选：让它不挡住鼠标点击 */
 }

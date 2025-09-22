@@ -105,11 +105,11 @@ export function showFloatingPanel() {
     if (entryTab) entryTab.classList.add('active');
 
     const view = document.getElementById("universe-view");
-    view.style.left = "-19vw";
+    view.style.left = "-18vw";
 
     const relationLines = document.getElementById("connection-lines");
 
-    relationLines.style.left = "19vw";
+    relationLines.style.left = "18vw";
     updateRelations();
     setTimeout(updateRelations, 75);
     setTimeout(updateRelations, 150);

@@ -281,16 +281,14 @@ export function updateWordDetails() {
 
     // comment section
     const commentTitle = document.querySelector('#comment .detail-title');
-    const commentH3 = document.querySelector('#comment h3');
-    const commentP = document.querySelector('#comment p');
+    const commentContent = document.querySelector('#comment #comment-content');
+
     commentTitle.textContent = '笔记';
     if (word.commentAbs) {
         const comment = word.commentAbs;
-        commentH3.innerHTML = comment.content;
-        commentP.innerHTML = `—— ${comment.author}`;
+        commentContent.innerHTML = `${comment.content} <p>—— ${comment.author}</p>`;
     } else {
-        commentH3.textContent = '暂无笔记';
-        commentP.innerHTML = '';
+        commentContent.innerHTML = `<h3>暂无笔记</h3> <p></p>`;
     }
 }
 
@@ -316,17 +314,17 @@ let startTime = null;
 // 呼吸动画配置
 const breathingConfig = {
     image: {
-        amplitude: 3,      // 振幅（像素）
+        amplitude: 5,      // 振幅（像素）
         frequency: 0.8,    // 频率
         phaseOffset: 0     // 相位偏移
     },
     proposer: {
-        amplitude: 2.5,
+        amplitude: 4,
         frequency: 0.9,
         phaseOffset: Math.PI * 0.6  // 错开约108度
     },
     comment: {
-        amplitude: 4,
+        amplitude: 8,
         frequency: 0.7,
         phaseOffset: Math.PI * 1.3  // 错开约234度
     }
@@ -355,11 +353,6 @@ function startBreathingAnimation() {
             
             // 应用到 transform，保持原有的居中定位并添加微小偏移
             section.style.transform = `translate(-50%, -50%) translateY(${offset}px)`;
-            
-            // 可选：添加轻微的透明度变化增强呼吸感
-            // const opacityOffset = sineValue * 0.1; // 很小的透明度变化
-            // const baseOpacity = 0.95; // 基础透明度
-            // section.style.opacity = Math.max(0.8, baseOpacity + opacityOffset);
         });
         
         breathingAnimationId = requestAnimationFrame(animate);
