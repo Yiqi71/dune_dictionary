@@ -117,12 +117,17 @@ h1.English {
 
 .word-node {
     box-sizing: border-box;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 46px;
+    
+    /* 原来固定的宽度改成最小宽度 */
+    min-width: 46px;
+    width: auto;
     height: 16px;
+
+    overflow: visible; /* 让文字可以撑开 */
     border-radius: 5px;
 
     pointer-events: auto;
@@ -171,7 +176,8 @@ h1.English {
 
 /* scale=1 → 纯色矩形 */
 body[data-scale="1"] .word-node {
-    width: 46px;
+    min-width: 46px;
+    width: auto;
     height: 16px;
 }
 
@@ -183,7 +189,8 @@ body[data-scale="1"] .word-node .terms {
 /* scale=2 → 中文+英文 */
 body[data-scale="2"] .word-node {
     padding: 1px 5px;
-    width: 93px;
+    min-width: 93px;
+    width: auto;
     height: 32px;
     flex-shrink: 0;
     opacity: 1;
@@ -217,14 +224,17 @@ body[data-scale="2"] .word-node .terms .term-ori {
 /* scale=3~4 → 加编号 */
 body[data-scale="3"] .word-node,
 body[data-scale="4"] .word-node {
-    width: 180px;
+    min-width: 180px;
+    width: auto;
     height: 117px;
     justify-content: space-between !important;
+    align-items: flex-start;
 }
 
 body[data-scale="3"] .word-node .detail-title,
 body[data-scale="4"] .word-node .detail-title {
     display: flex;
+    margin: 8px;
 }
 
 body[data-scale="3"] .word-node .terms,
@@ -253,7 +263,8 @@ body[data-scale="4"] .word-node .terms .term-ori {
 
 /* scale=5 → 字体更大，布局微调 */
 body[data-scale="5"] .word-node {
-    width: 328px;
+    min-width: 328px;
+    width: auto;
     height: 213px;
     font-size: 20px;
     display: flex;
@@ -285,11 +296,9 @@ body[data-scale="5"] .word-node .terms .term-ori {
 
 body[data-scale="5"] .detail-title {
     margin: 24px;
-}
-
-body[data-scale="5"] .detail-title {
     font-size: 17.3px;
 }
+
 
 .word-node::after {
     content: "";
