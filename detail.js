@@ -297,6 +297,17 @@ export function hideFloatingPanel() {
 
 }
 
+// 定义标题中英文映射
+const sectionTitles = {
+    brief: { zh: "简要释义", en: "Brief Definition" },
+    example: { zh: "例句", en: "Example Sentences" },
+    proposers: { zh: "提出者", en: "Proposers" },
+    source: { zh: "出处", en: "Source" },
+    relatedWorks: { zh: "相关著作", en: "Related Works" },
+    contributors: { zh: "贡献者", en: "Contributors" },
+    editors: { zh: "编辑", en: "Editors" }
+};
+
 export function renderPanelSections() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
@@ -338,8 +349,7 @@ export function renderPanelSections() {
     const contributorsSec = document.getElementById("section-contributors");
     const editorsSec = document.getElementById("section-editors");
 
-    // FIXED: Don't wrap in h2/h3 since JSON already contains HTML tags
-    briefSec.innerHTML = `<p class="left-title">简要释义</p>
+    briefSec.innerHTML = `<p class="left-title">${sectionTitles.brief[lang]}</p>
                        <div>
                            ${currentWord.brief_definition?.[lang] || '暂无简要释义'}
                            ${
@@ -352,7 +362,7 @@ export function renderPanelSections() {
                       </div>`;
 
     // FIXED: Don't wrap in h3 since JSON already contains HTML tags  
-    exampleSec.innerHTML = `<p class="left-title">例句</p>
+    exampleSec.innerHTML = `<p class="left-title">${sectionTitles.example[lang]}</p>
                         <div>
                             ${currentWord.example_sentence?.[lang] || '暂无例句'}
                             <div id="diagram-container"></div>
@@ -370,7 +380,7 @@ export function renderPanelSections() {
         });
     }
 
-    proposerSec.innerHTML = `<p class="left-title">提出者</p>
+    proposerSec.innerHTML = `<p class="left-title">${sectionTitles.proposers[lang]}</p>
                         <div id="proposers-container"> </div>`;
     const proposersContainer = document.getElementById("proposers-container");
     let proposers = currentWord.proposers;
@@ -390,19 +400,19 @@ export function renderPanelSections() {
         proposersContainer.appendChild(proposerBlock);
     })
 
-    sourceSec.innerHTML = `<p class="left-title">出处</p>
+    sourceSec.innerHTML = `<p class="left-title">${sectionTitles.source[lang]}</p>
                         <div>
                             <p>${currentWord.source?.[lang] || '暂无出处'}</p>
                         </div>`;
 
-    relatedSec.innerHTML = `<p class="left-title">相关著作</p>
+    relatedSec.innerHTML = `<p class="left-title">${sectionTitles.relatedWorks[lang]}</p>
                         <div id="related-works-container">
                         ${currentWord.related_works.map(work => `<p>${work?.[lang]}</p>`).join('')}
                         </div>`;
 
     contributorsSec.innerHTML = `<p>${currentWord.contributor?.[lang]}</p>`;
 
-    editorsSec.innerHTML = `<p class="left-title">编辑</p>
+    editorsSec.innerHTML = `<p class="left-title">${sectionTitles.editors[lang]}</p>
                         <div id="editors-container">
                         ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
@@ -414,7 +424,7 @@ function renderCommentSection() {
     if (!currentWord) return;
 
     const lang = state.currentLang || "zh";
-    
+
     scrollToTop();
 
     const panel = document.getElementById('floating-panel');
@@ -448,7 +458,7 @@ function renderCommentSection() {
 
     contributorsSec.innerHTML = `<p>${currentWord.contributor?.[lang]}</p>`;
 
-    editorsSec.innerHTML = `<p class="left-title">编辑</p>
+    editorsSec.innerHTML = `<p class="left-title">${sectionTitles.editors[lang]}</p>
                         <div id="editors-container">
                         ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
@@ -868,25 +878,24 @@ export function showAboutPanel() {
 
 // 渲染About页面内容
 function renderAboutContent() {
+    let lang = state.currentLang;
     // 上半部分
     const title = document.querySelector('.panel-top');
-    title.innerHTML = `
-        <div>
-    <div class = "term-main"> 关于我们 </div>
-    <div class = "term-ori"> About Us </div></div>
-    `;
-
     // 下半部分 - 留空给你填写内容
     const bottomDiv = document.querySelector('.panel-bottom');
-    bottomDiv.innerHTML = `
+    
+    if(lang == "en"){
+        title.innerHTML = `
+        <div>
+            <div class = "term-main">  </div>
+            <div class = "term-ori"> About Us </div>
+        </div>
+        `;
+
+        bottomDiv.innerHTML = `
         <section>
             <div>
-                <p>《沙丘词典》是一部持续生长的思想索引，收录了跨学科领域的关键概念与术语。<br>
-                我们将这些遴选出的概念与术语，视为剖开广袤学术疆域的一道道切口——由此开启一片由思想构成的星丛，并激发更深远的追问。我们旨在通过清晰晓畅的阐释，消融学术的藩篱，展现不同学科之间丰厚的内在联结。<br>
-                项目始于2019年，最初是沙丘研究所（一个由具建筑学背景的艺术家与研究者组成的团体）在社交媒体上发布的系列推送。此后，通过与跨学科青年学者合办的共创工作坊，项目得以不断生长。2025年，项目正式落地为一座精心构筑的网站，现已成为一个持续扩充的概念、定义及相关评注的资料库。<br>
-                若您有兴趣参与我们的共创工作坊，请阅读“参与指南”。我们也欢迎您针对现有词条撰写评注，或举荐新的词条。<br>
-                置身于互联网这片流动的、万物关联的图景中，我们希望赋予词典恰如其分的结构，让思想得以漫游；亦保留足够开放的空间，让灵感得以涌现。
-                </p>
+                ${window.about.content.en}
             </div>
         </section>
         <section>
@@ -896,4 +905,27 @@ function renderAboutContent() {
                 </div>
         </section>
     `;
+    } else{
+        title.innerHTML = `
+        <div>
+            <div class = "term-main"> 关于我们 </div>
+            <div class = "term-ori"> About Us </div>
+        </div>
+        `;
+        
+        bottomDiv.innerHTML = `
+            <section>
+                <div>
+                    ${window.about.content.zh}
+                </div>
+            </section>
+            <section>
+                <p class="left-title">联系我们</p>
+                    <div>
+                        <p>hello@dunesworkshop.org</p>
+                    </div>
+            </section>
+        `;
+    }
+    
 }

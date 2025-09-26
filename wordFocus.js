@@ -229,7 +229,7 @@ export function updateWordDetails() {
     if (!word) return;
 
     const lang = state.currentLang || "zh";
-    
+
     // 显示details
     const detailDiv = document.getElementById("word-details");
     detailDiv.classList.remove('hidden');
@@ -256,7 +256,11 @@ export function updateWordDetails() {
     // image section
     const imageTitle = document.querySelector('#image .detail-title');
     const imageEl = document.querySelector('#image img');
-    imageTitle.textContent = '概念图片';
+    if(state.currentLang=="en"){
+        imageTitle.textContent = 'Concept Image';
+    }else if(state.currentLang=="zh"){
+        imageTitle.textContent = '概念图片';
+    }
     if (word.diagrams && word.diagrams.length > 0) {
         imageEl.src = word.concept_image;
         imageEl.alt = word.term?.[lang];
@@ -270,7 +274,11 @@ export function updateWordDetails() {
     const proposerTitle = document.querySelector('#proposer .detail-title');
     const proposerP = document.querySelector('#proposer p');
     const proposerImg = document.querySelector('#proposer img');
-    proposerTitle.textContent = '提出人';
+    if(state.currentLang=="en"){
+        proposerTitle.textContent = 'Proposer';
+    }else if(state.currentLang=="zh"){
+        proposerTitle.textContent = '提出人';
+    }
     if (word.proposers && word.proposers.length>0) {
         proposerP.textContent = word.proposers[0].name?.[lang];
         proposerImg.src = word.proposers[0].image;
@@ -285,7 +293,11 @@ export function updateWordDetails() {
     const commentTitle = document.querySelector('#comment .detail-title');
     const commentContent = document.querySelector('#comment #comment-content');
 
-    commentTitle.textContent = '笔记';
+    if(state.currentLang=="en"){
+        commentTitle.textContent = 'Notes';
+    }else if(state.currentLang=="zh"){
+        commentTitle.textContent = '笔记';
+    }
     if (word.commentAbs) {
         const comment = word.commentAbs;
         commentContent.innerHTML = `${comment.content?.[lang]} <p>—— ${comment.author?.[lang]}</p>`;

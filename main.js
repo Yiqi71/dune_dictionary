@@ -12,7 +12,70 @@ import {
 
 import { yearPeriods } from "./menu.js";
 
+const langBtn = document.getElementById("lang-toggle-btn");
+
+// 点击按钮切换语言
+langBtn.addEventListener("click", () => {
+    if (state.currentLang === "zh") {
+        state.currentLang = "en";
+        langBtn.textContent = "English";
+    } else {
+        state.currentLang = "zh";
+        langBtn.textContent = "中文";
+    }
+
+    // 重新渲染节点上的文字
+    document.querySelectorAll('.word-node').forEach(node => {
+        const wordId = node.id;
+        const word = window.allWords.find(w => w.id == wordId);
+        if (!word) return;
+        const lang = state.currentLang;
+
+        const termMain = node.querySelector('.term-main');
+        if(termMain) termMain.textContent = word.term?.[lang] || '未知单词';
+    });
+
+    // 重新渲染tab上的文字
+    document.querySelectorAll('button').forEach(button => {
+        if(!button) return;
+    
+        // 包一层 span，只旋转文字，不影响 SVG
+        let span = button.querySelector('span');
+        if (!span) {
+            const text = button.innerHTML;
+            button.innerHTML = `<span>${text}</span>`;
+            span = button.querySelector('span');
+        }
+
+        // 切换文字
+        if (button.innerHTML.includes("词条") || button.innerHTML.includes("Brief")) {
+            button.querySelector('span').textContent = state.currentLang === "en" ? "Brief" : "词条";
+        }
+        if (button.innerHTML.includes("笔记") || button.innerHTML.includes("Notes")) {
+            button.querySelector('span').textContent = state.currentLang === "en" ? "Notes" : "笔记";
+        }
+
+        // 设置旋转和偏移
+        if (state.currentLang === "en") {
+            span.style.display = "inline-block"; // 必须有 inline-block 才能旋转
+            span.style.transform = "translateX(-10px) rotate(90deg)";
+        } else {
+            span.style.transform = "rotate(0deg) translateY(0)";
+        }
+    });
+
+
+    // 如果需要更新浮窗
+    if(state.focusedNodeId) {
+        updateWordFocus();
+        renderPanelSections();
+    }else{
+        updateWordFocus();
+    }
+});
+
 window.allWords = [];
+window.about = {};
 
 const yearPeriodColors = [
     "#F9D67A", // 空白/-2000
@@ -227,7 +290,7 @@ function allocatePositionsForCountries(wordsByCountry) {
 // 优化后的渲染函数
 function renderWordUniverse(wordsData) {
     const lang = state.currentLang || "zh";
-
+    console.log(lang);
     const wordNodesContainer = document.getElementById('word-nodes-container');
     wordNodesContainer.innerHTML = '';
     wordsOnGrid = {};
@@ -355,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            window.about = data.about;
             window.allWords = data.words;
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
