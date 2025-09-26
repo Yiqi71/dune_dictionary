@@ -125,7 +125,7 @@ function ensureExpandButton() {
         // 创建按钮
         expandBtn = document.createElement('button');
         expandBtn.id = 'expand-btn';
-        
+
         // 添加样式
         expandBtn.style.cssText = `
             position: absolute;
@@ -142,7 +142,7 @@ function ensureExpandButton() {
             justify-content: center;
             z-index: 1000;
         `;
-        
+
         // 创建箭头和竖线的HTML结构
         expandBtn.innerHTML = `
             <div class="expand-btn-content" style="
@@ -189,7 +189,7 @@ function ensureExpandButton() {
         // 将按钮添加到 panel 中
         const panel = document.getElementById('floating-panel');
         panel.appendChild(expandBtn);
-        
+
         // 添加动画样式到页面
         if (!document.getElementById('expand-btn-styles')) {
             const style = document.createElement('style');
@@ -267,7 +267,7 @@ export function hideFloatingPanel() {
 
     // 重置按钮图标
     let expandBtn = document.getElementById('expand-btn');
-    if(expandBtn){
+    if (expandBtn) {
         expandBtn.remove();
     }
 
@@ -292,9 +292,9 @@ export function hideFloatingPanel() {
     setTimeout(updateRelations, 150);
     setTimeout(updateRelations, 225);
     setTimeout(updateRelations, 300);
-    setTimeout(updateRelations, 600);  
+    setTimeout(updateRelations, 600);
     setTimeout(updateWordFocus, 300);
-    
+
 }
 
 export function renderPanelSections() {
@@ -474,6 +474,68 @@ function initTabs() {
 // 初始化时调用
 initTabs();
 
+// === Tab 边缘切换逻辑 ===
+
+// 阈值（像素），表示一次 scroll 或 touchmove 的力度
+const SWITCH_THRESHOLD = 160;
+
+// 当前 tab 状态
+let currentTab = "entry"; // 默认是 entry
+
+// 监听 tab 按钮，保证 currentTab 同步
+document.querySelectorAll('.panel-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentTab = btn.dataset.tab;
+    });
+});
+
+function switchTab(tabName) {
+    if (tabName === "entry") {
+        renderPanelSections();
+        scrollToTop();
+    } else if (tabName === "comment") {
+        renderCommentSection();
+        const panel = document.getElementById('floating-panel');
+        const panelMain = panel.querySelector('.panel-main');
+        if (panelMain) panelMain.scrollTop = 0; // 直接设置，不要 smooth
+    }
+    currentTab = tabName;
+}
+
+const panelMain = document.querySelector('.panel-main'); // 改为选择 panel-main
+// PC 端滚轮
+panelMain.addEventListener("wheel", (e) => {
+    const atBottom = panelMain.scrollTop + panelMain.clientHeight >= panelMain.scrollHeight - 2;
+    const atTop = panelMain.scrollTop <= 2;
+
+    if (currentTab === "entry" && atBottom && e.deltaY > SWITCH_THRESHOLD) {
+        switchTab("comment");
+    } else if (currentTab === "comment" && atTop && e.deltaY < -SWITCH_THRESHOLD) {
+        switchTab("entry");
+    }
+});
+
+// 移动端触摸
+let touchStartY = 0;
+panelMain.addEventListener("touchstart", (e) => {
+    touchStartY = e.touches[0].clientY;
+});
+
+panelMain.addEventListener("touchend", (e) => {
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    const atBottom = panelMain.scrollTop + panelMain.clientHeight >= panelMain.scrollHeight - 2;
+    const atTop = panelMain.scrollTop <= 2;
+
+    if (currentTab === "entry" && atBottom && deltaY < -SWITCH_THRESHOLD) {
+        switchTab("comment");
+    } else if (currentTab === "comment" && atTop && deltaY > SWITCH_THRESHOLD) {
+        switchTab("entry");
+    }
+});
+
+
+
+
 // 滚动到最顶端（panel-top位置）
 export function scrollToTop() {
     const panel = document.getElementById('floating-panel');
@@ -522,7 +584,7 @@ const SCROLL_CONFIG = {
 };
 
 // 修改滚动相关的DOM选择器和逻辑
-const panelMain = document.querySelector('.panel-main'); // 改为选择 panel-main
+
 const scrollThumb = document.querySelector('.scroll-thumb');
 const scrollTrack = document.querySelector('.scroll-track');
 
