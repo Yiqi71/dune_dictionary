@@ -141,7 +141,7 @@
 }
 
 .panel-bottom section {
-    padding: 32px 32px 0 32px;
+    padding: 32px 64px 0 32px;
 
     display: flex;
     flex-direction: row;
@@ -216,9 +216,9 @@
     padding-top: 160px;
 }
 
-#section-example,
-#section-related-works {
-    border-bottom: #392F17 solid 1px;
+#section-proposers,
+#section-contributors {
+    border-top: #392F17 solid 1px;
 }
 
 
@@ -357,7 +357,32 @@
 
 /* 展开状态下底部section的padding调整 */
 #floating-panel.expanded .panel-bottom .left-title {
-    width: 190px;
+    width: 160px;
+}
+
+#floating-panel.expanded .panel-bottom section {
+    padding: 32px 140px 0 64px;
+}
+#floating-panel.expanded .panel-bottom #section-brief {
+    padding-top: 180px;
+}
+#floating-panel.expanded .panel-bottom #section-example {
+    padding-top: 55px;
+}
+#floating-panel.expanded .panel-bottom #section-proposers {
+    padding-top: 118px;
+}
+#floating-panel.expanded .panel-bottom #section-related-works {
+    /* padding-top:80px; */
+    padding-bottom: 40px;
+}
+
+#floating-panel.expanded .panel-bottom #section-contributors {
+    padding-top: 80px;
+}
+
+#floating-panel.expanded .panel-bottom #section-editors {
+    padding-top: 160px;
 }
 
 /* 展开状态下的图片调整 */
@@ -382,6 +407,14 @@
     font-weight: 450;
     line-height: 28px;
     letter-spacing: 1.2px;
+}
+
+#floating-panel.expanded .panel-bottom .left-title {
+    color: #392F17;
+    font-family: "ChillDINGothic", "ChillDIN";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
 }
 
 #floating-panel.expanded .panel-bottom h2 {

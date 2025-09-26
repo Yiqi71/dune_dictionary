@@ -431,7 +431,7 @@ function renderCommentSection() {
         ${currentWord.comments?.map(c => 
             `<section>
                 <p class="left-title">${c.role}<br>${c.author}<br>${c.background}</p>
-                <div><br><br><br>${c.content}</div>
+                <div><br><br><br><br>${c.content}</div>
             </section>`
         ).join('') || '暂无评论'}
 
