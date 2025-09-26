@@ -6,5 +6,6 @@ export const state = {
   baseGridSize: 100,
   baseWidth: 100,
   baseHeight: 100,
-  scaleThreshold: 20
+  scaleThreshold: 20,
+  currentLang: "zh"
 };

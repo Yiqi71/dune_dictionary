@@ -226,6 +226,8 @@ function allocatePositionsForCountries(wordsByCountry) {
 
 // 优化后的渲染函数
 function renderWordUniverse(wordsData) {
+    const lang = state.currentLang || "zh";
+
     const wordNodesContainer = document.getElementById('word-nodes-container');
     wordNodesContainer.innerHTML = '';
     wordsOnGrid = {};
@@ -269,7 +271,7 @@ function renderWordUniverse(wordsData) {
             node.innerHTML = `
             <div class="detail-title">${String(word.id).padStart(4, '0')}</div>
             <div class="terms">
-                <div class="term-main">${word.term || '未知单词'}</div>
+                <div class="term-main">${word.term?.[lang] || '未知单词'}</div>
                 <div class="term-ori">${word.termOri || '无'}</div>
             </div>
             `;
@@ -345,7 +347,7 @@ function renderWordUniverse(wordsData) {
 
 // 初始化 - 等待DOM加载完成后获取数据
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('data.json')
+    fetch('data copy.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('网络响应不正常');

@@ -301,6 +301,8 @@ export function renderPanelSections() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
 
+    const lang = state.currentLang || "zh";
+
     scrollToTop();
 
     const panel = document.getElementById('floating-panel');
@@ -312,7 +314,7 @@ export function renderPanelSections() {
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
     <img src = "${currentWord.concept_image}" alt = "diagrams[0]"></img> 
     <div>
-    <div class = "term-main"> ${currentWord.term || '未知单词'} </div>
+    <div class = "term-main"> ${currentWord.term?.[lang] || '未知单词'} </div>
     <div class = "term-ori"> ${currentWord.termOri || '无'} </div></div>
     `
 
@@ -339,12 +341,12 @@ export function renderPanelSections() {
     // FIXED: Don't wrap in h2/h3 since JSON already contains HTML tags
     briefSec.innerHTML = `<p class="left-title">简要释义</p>
                        <div>
-                           ${currentWord.brief_definition || '暂无简要释义'}
+                           ${currentWord.brief_definition?.[lang] || '暂无简要释义'}
                            ${
-                            Array.isArray(currentWord.extended_definition)
-                                ? currentWord.extended_definition.join('')
-                                : currentWord.extended_definition 
-                                ? currentWord.extended_definition
+                            Array.isArray(currentWord.extended_definition?.[lang])
+                                ? currentWord.extended_definition?.[lang].join('')
+                                : currentWord.extended_definition?.[lang] 
+                                ? currentWord.extended_definition?.[lang]
                                 : '<h3>暂无扩展释义</h3>'
                             }
                       </div>`;
@@ -352,7 +354,7 @@ export function renderPanelSections() {
     // FIXED: Don't wrap in h3 since JSON already contains HTML tags  
     exampleSec.innerHTML = `<p class="left-title">例句</p>
                         <div>
-                            ${currentWord.example_sentence || '暂无例句'}
+                            ${currentWord.example_sentence?.[lang] || '暂无例句'}
                             <div id="diagram-container"></div>
                         </div>`;
 
@@ -362,7 +364,7 @@ export function renderPanelSections() {
             const block = document.createElement("div");
             block.innerHTML = `
       <img src="${diagram.src}" alt="diagram image">
-      <p class="diagram-caption">${diagram.caption}</p>
+      <p class="diagram-caption">${diagram.caption?.[lang]}</p>
     `;
             diagramContainer.appendChild(block);
         });
@@ -378,9 +380,9 @@ export function renderPanelSections() {
         proposerBlock.innerHTML = `
         <img alt="proposer's img" src=${proposer.image}></img>
         <div>
-            <p class="proposer-name">${proposer.name}</p>
+            <p class="proposer-name">${proposer.name?.[lang]}</p>
             <p class="proposer-year">${proposer.year}</p>
-            <p class="proposer-year">${proposer.role}</p>
+            <p class="proposer-year">${proposer.role?.[lang]}</p>
         </div>
     `;
 
@@ -390,19 +392,19 @@ export function renderPanelSections() {
 
     sourceSec.innerHTML = `<p class="left-title">出处</p>
                         <div>
-                            <p>${currentWord.source || '暂无出处'}</p>
+                            <p>${currentWord.source?.[lang] || '暂无出处'}</p>
                         </div>`;
 
     relatedSec.innerHTML = `<p class="left-title">相关著作</p>
                         <div id="related-works-container">
-                        ${currentWord.related_works.map(work => `<p>${work}</p>`).join('')}
+                        ${currentWord.related_works.map(work => `<p>${work?.[lang]}</p>`).join('')}
                         </div>`;
 
-    contributorsSec.innerHTML = `<p>${currentWord.contributor}</p>`;
+    contributorsSec.innerHTML = `<p>${currentWord.contributor?.[lang]}</p>`;
 
     editorsSec.innerHTML = `<p class="left-title">编辑</p>
                         <div id="editors-container">
-                        ${currentWord.editors.map(editor => `<p>${editor}</p>`).join('')}
+                        ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
     renderScrollMarkers();
 }
@@ -411,6 +413,8 @@ function renderCommentSection() {
     let currentWord = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!currentWord) return;
 
+    const lang = state.currentLang || "zh";
+    
     scrollToTop();
 
     const panel = document.getElementById('floating-panel');
@@ -421,7 +425,7 @@ function renderCommentSection() {
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
     <div>
-    <div class = "term-main"> ${currentWord.term || '未知单词'} </div>
+    <div class = "term-main"> ${currentWord.term?.[lang] || '未知单词'} </div>
     <div class = "term-ori"> ${currentWord.termOri || '无'} </div></div>
     `
 
@@ -430,8 +434,8 @@ function renderCommentSection() {
     contentScroll.innerHTML = `
         ${currentWord.comments?.map(c => 
             `<section>
-                <p class="left-title">${c.role}<br>${c.author}<br>${c.background}</p>
-                <div><br><br><br><br>${c.content}</div>
+                <p class="left-title">${c.role?.[lang]}<br>${c.author?.[lang]}<br>${c.background?.[lang]}</p>
+                <div><br><br><br><br>${c.content?.[lang]}</div>
             </section>`
         ).join('') || '暂无评论'}
 
@@ -442,11 +446,11 @@ function renderCommentSection() {
     const contributorsSec = document.getElementById("section-contributors");
     const editorsSec = document.getElementById("section-editors");
 
-    contributorsSec.innerHTML = `<p>${currentWord.contributor}</p>`;
+    contributorsSec.innerHTML = `<p>${currentWord.contributor?.[lang]}</p>`;
 
     editorsSec.innerHTML = `<p class="left-title">编辑</p>
                         <div id="editors-container">
-                        ${currentWord.editors.map(editor => `<p>${editor}</p>`).join('')}
+                        ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
 
     renderCommentMarkers();

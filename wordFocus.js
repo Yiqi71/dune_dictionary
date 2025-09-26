@@ -228,6 +228,8 @@ export function updateWordDetails() {
     const word = window.allWords.find(w => w.id == state.focusedNodeId);
     if (!word) return;
 
+    const lang = state.currentLang || "zh";
+    
     // 显示details
     const detailDiv = document.getElementById("word-details");
     detailDiv.classList.remove('hidden');
@@ -257,7 +259,7 @@ export function updateWordDetails() {
     imageTitle.textContent = '概念图片';
     if (word.diagrams && word.diagrams.length > 0) {
         imageEl.src = word.concept_image;
-        imageEl.alt = word.term;
+        imageEl.alt = word.term?.[lang];
         imageEl.style.display = 'block';
     } else {
         imageEl.src = '';
@@ -270,9 +272,9 @@ export function updateWordDetails() {
     const proposerImg = document.querySelector('#proposer img');
     proposerTitle.textContent = '提出人';
     if (word.proposers && word.proposers.length>0) {
-        proposerP.textContent = word.proposers[0].name;
+        proposerP.textContent = word.proposers[0].name?.[lang];
         proposerImg.src = word.proposers[0].image;
-        proposerImg.alt = word.proposers[0].name || '';
+        proposerImg.alt = word.proposers[0].name?.[lang] || '';
         proposerImg.style.display = 'block';
     } else {
         proposerP.textContent = '未知';
@@ -286,7 +288,7 @@ export function updateWordDetails() {
     commentTitle.textContent = '笔记';
     if (word.commentAbs) {
         const comment = word.commentAbs;
-        commentContent.innerHTML = `${comment.content} <p>—— ${comment.author}</p>`;
+        commentContent.innerHTML = `${comment.content?.[lang]} <p>—— ${comment.author?.[lang]}</p>`;
     } else {
         commentContent.innerHTML = `<h3>暂无笔记</h3> <p></p>`;
     }
