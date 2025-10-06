@@ -544,6 +544,17 @@ body[data-scale="5"] .detail-title {
     }
 }
 
+#sand-layer {
+    position: absolute; /* 保证覆盖在 universe-view 内 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 不阻挡下方交互 */
+    opacity: 0.25; /* 透明度50% */
+    mix-blend-mode: multiply; /* 可以改成 darken / multiply / lighten / screen 等效果 */
+    z-index: 10; /* 确保比 canvas 下方内容高，但比 panel/menu 低 */
+}
 
 
 #center-dot {
