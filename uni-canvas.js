@@ -187,7 +187,7 @@ export function draw() {
 
 function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
     ctx.save();
-    ctx.fillStyle = "#F0B549";
+    ctx.fillStyle = "#665539";
     ctx.font = `15px ChillDINGothic`;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
@@ -208,7 +208,7 @@ function drawTimezoneLabels(offsetX, offsetY, gridWidth, lonCount) {
 
 // ✅ 高清屏优化版网格绘制
 function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
-    ctx.strokeStyle = "#F0B549";
+    ctx.strokeStyle = "#665539";
     ctx.lineWidth = 1;
 
     // 垂直线
@@ -236,9 +236,9 @@ function drawGrid(offsetX, offsetY, gridWidth, gridHeight, lonCount) {
 function drawSpecialLatLines(offsetX, offsetY, gridHeight, totalWidth, gridWidth) {
     ctx.save();
     const latitudes = [
-        { lat: 0, label: "0°", color: "#F0B549", dash: [], lineWidth: 1 },
-        { lat: 23.5, label: "23.5°N", color: "#F0B549", dash: [], lineWidth: 1 },
-        { lat: -23.5, label: "23.5°S", color: "#F0B549", dash: [], lineWidth: 1 }
+        { lat: 0, label: "0°", color: "#665539", dash: [], lineWidth: 1 },
+        { lat: 23.5, label: "23.5°N", color: "#665539", dash: [], lineWidth: 1 },
+        { lat: -23.5, label: "23.5°S", color: "#665539", dash: [], lineWidth: 1 }
     ];
 
     latitudes.forEach(({ lat, label, color, dash, lineWidth }) => {

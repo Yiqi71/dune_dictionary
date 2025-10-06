@@ -317,7 +317,7 @@ export function renderPanelSections() {
     scrollToTop();
 
     const panel = document.getElementById('floating-panel');
-    panel.style.backgroundColor = "#FFFCF4";
+    panel.style.backgroundColor = "#36322A";
 
     // Upper section
     const title = document.querySelector('.panel-top');
@@ -428,7 +428,7 @@ function renderCommentSection() {
     scrollToTop();
 
     const panel = document.getElementById('floating-panel');
-    panel.style.backgroundColor = "#EEE9DB";
+    panel.style.backgroundColor = "#36322A";
 
     // Upper section
     const title = document.querySelector('.panel-top');
@@ -491,7 +491,7 @@ initTabs();
 // === Tab 边缘切换逻辑 ===
 
 // 阈值（像素），表示一次 scroll 或 touchmove 的力度
-const SWITCH_THRESHOLD = 160;
+const SWITCH_THRESHOLD = 180;
 
 // 当前 tab 状态
 let currentTab = "entry"; // 默认是 entry

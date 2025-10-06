@@ -423,17 +423,30 @@
       "updatedAt": "2024-04-18"
     },
 
-    {
+{
       "id": 18,
 
-      "term": "主体见性",
+      "term": {
+        "zh": "主体见性",
+        "en": "Intersubjectivity"
+      },
       "termOri": "Intersubjectivity",
       "concept_image": "images/18.jpg",
-      "sm_title": "我的存在和你的存在，创造了一个无形的场域",
+      "sm_title": {
+        "zh": "我的存在和你的存在，创造了一个无形的场域",
+        "en": "My existence and your existence create an invisible field"
+      },
+
       "proposers": [{
-        "name": "乔治·E.阿特伍德（George E. Atwood）",
+        "name": {
+          "zh": "乔治·E.阿特伍德",
+          "en": "George E. Atwood"
+        },
         "year": "1944—",
-        "role": "美国的临床心理学家",
+        "role": {
+          "zh": "美国的临床心理学家",
+          "en": "American clinical psychologist"
+        },
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9pyB9-J0oUdlbf7f7XRiMtFmvCu0tyCF5f3wXx9XQf0-iWEGmJgvyVC54KJXqT9kGXa-S"
       }, {
         "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
@@ -441,26 +454,62 @@
         "role": "美国的精神分析家、哲学家",
         "image": "https://0.academia-photos.com/179779/468400/589707/s200_robert.d._stolorow.jpg"
       }],
-      "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
+      "source": {
+        "zh": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
+        "en": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)"
+      },
       "source_image": "https://books.google.com/books/content?id=xsgKAAAACAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE70Bgw66AOPCkv-W8c3IKIBbCr4yXIDMAh0t94xD6TcIbftdMsIeVuKHlyNC1WLuXbkzDCTNISLf_hpDUrTg25oiTj1ru-6Y2g6HCsjuyfWR04wxlqv2M8augpjtaj8hycUGwGO-",
-      "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
-      "domain": "社会学 / 人类学",
+      "related_works": [{
+        "zh": "Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)",
+        "en": "Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis"
+      }],
+      "domain": {
+        "zh": "社会学 / 人类学",
+        "en": "Sociology / Anthropology"
+      },
       "proposing_country": "CN",
       "proposing_time": "2024年",
-      "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
+      "contributor": {
+        "zh": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
+        "en": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)"
+      },
       "contribute_date": "2024-04-18",
-      "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
+      "editors": [{
+        "zh": "沙丘研究所（Gemini 2.5 Pro辅助润色）",
+        "en": ""
+      }, {
+        "zh": "封面图由Midjourney V7 生成",
+        "en": ""
+      }, {
+        "zh": "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。",
+        "en": ""
+      }],
       "edit_date": "2024-04-18",
 
-      "brief_definition": "<h2>在交往中生成的体验性现实。</h2>",
-      "extended_definition": [
-        "<h3>想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。</h3><h3>现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。</h3>",
-        "<h3>这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。</h3>"
-      ],
-      "example_sentence": "<h3>在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题，更是整个家庭系统的主体间性——譬如，他们如何通过互动模式，共同创造并维持了一个充满焦虑的家庭氛围。</h3>",
+      "brief_definition": {
+        "zh": "<h2>在交往中生成的体验性现实。</h2>",
+        "en": "<h2>An experiential reality generated in interaction.</h2>"
+      },
+      "extended_definition": {
+        "zh": [
+          "<h3>想象一间心理咨询室……</h3>",
+          "<h3>这个概念挑战了传统心理学中“孤立心灵”的假设……</h3>"
+        ],
+        "en": [
+          "<h3>Imagine a therapy room…</h3>",
+          "<h3>This concept challenges the traditional assumption of an 'isolated mind'…</h3>"
+        ]
+      },
+      "example_sentence": {
+        "zh": "<h3>在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题……</h3>",
+        "en": "<h3>In family therapy, the therapist focuses not only on each member’s problems…</h3>"
+      },
       "diagrams": [{
         "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Marina_Abramovi%C4%87%2C_The_Artist_is_Present%2C_2010.jpg/1280px-Marina_Abramovi%C4%87%2C_The_Artist_is_Present%2C_2010.jpg",
-        "caption": "照片来自玛丽娜·阿布拉莫维奇（Marina Abramović）2010年在MoMA的行为艺术作品《艺术家在场》（The Artist is Present）。在凝视中，两个世界相遇。Photo by Andrew Russeth, CC BY-SA 2.0, via Wikimedia Commons"
+        "caption": {
+          "zh": "照片来自玛丽娜·阿布拉莫维奇…",
+          "en": "Photo from Marina Abramović’s 2010 performance 'The Artist is Present' at MoMA…"
+        }
       }],
 
 
@@ -468,39 +517,80 @@
         "id": 2,
         "relation": "概念相关"
       }, {
-        "id": 5,
+        "id": 182,
         "relation": "概念相关"
       }],
 
 
       "commentAbs": {
-        "content": "<h3>咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实。</h3>",
-        "author": "Shelley"
+        "content": {
+          "zh": "<h3>咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实。</h3>",
+          "en": "<h3>The counselor and the client co-create the specific therapeutic experience and reality.</h3>"
+        },
+        "author": {
+            "zh": "Shelley",
+            "en": "Shelley"
+          }
       },
 
       "comments": [{
-          "content": "<h3>首先非常感谢沙丘赋予“主体间性”这个词如此具有学术美感的表达。</h3><h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。我们讲究“天时地利人和”，这就是在追求人作为主体，在情境互动之间所形成的契合场域。</h3><h3>我们也常体验到人际关系互动中的复杂性，有的人“酒逢知己千杯少”，有的人“话不投机半句多”。主体间性便是在解释关系是由各种条件的聚合交互而出现的心理现象，同时也在强调我们在互动体验中借“他人之镜”感受自我的不同侧面。</h3><h3>另外，主体间性还带给人们关于自我在时间维度上的思考。自我不是永恒不变的，而是具有过程性、情境性和体验性的存在。</h3><h3>作为一名心理咨询师，我常常真切地感受到，不是咨询师“治疗”了来访者，而是咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实，来访者会在这个双主体的系统中生长出新的意义。</h3><h3>根本来看，主体间性的概念丰富了我们对于人类创伤的理解：创伤不仅是个体遭受的伤害，更是主体间联结的断裂。因此，人们的创伤是在关系中产生，也是在关系中得到治愈。只有在主体间的镜映和交互中，我们才能重新获得栖息世间的勇气与力量。</h3><h3>Ps 反观我写下这些文字的过程，这也是一个主体间性的结果。当沙丘主创邀请我写一个后记的时候，我就在感受沙丘这个主体，包括和它的读者所构建的这个公共场域，然后我就开始想该如何让我的文字具有一些美感和可读性，甚至是文学性和艺术性（如你所见，我已经尽力了）…而平时我自己备忘录上写字可不会追求这么多…哈哈…</h3>",
-          "role": "贡献者",
-          "author": "Shelley",
-          "background": "心理学",
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "贡献者",
+            "en": "Contributor"
+          },
+          "author": {
+            "zh": "Shelley",
+            "en": "Shelley"
+          },
+          "background": {
+            "zh": "心理学",
+            "en": "Psychology"
+          },
           "date": "08/19/2025"
         },
         {
-          "content": "<h3>“主体间性”这个词重新定义了“主体”的概念，说“主体”是在关系中浮现的，是一种becoming。</h3><h3>只谈主体间性，听起来有点虚无缥缈，我比较好奇，这个词有什么用呢？如何用呢？我想起来前不久一位朋友问我，到底有没有真的感同身受？到底同情存不存在？</h3><h3>她刚经历过很伤心的事情。我说，要说完全去感受到你的感受，恐怕不行，但是那也不是唯一一个想象人和人关系的框架，因为就算我们有不同的心智、不同的个性、经历，还是可以存在理解，如果这样想，“主体间性”既可以作为我们take action的一种路引，也可以作为希望之存放吧？</h3><h3>就是说，我们还可以通过互动、交流，去走进彼此的主体里，感知理解彼此，做新的共同决定，因为我们每一个人的感受，本来也是在关系中渐渐发生的？虽然我还有点不太明白，毕竟主体间性听起来很好，它有对我们提什么要求吗？还是说我们活在人与人之间、自动就达到了主体间性？</h3>",
-          "role": "共创者",
-          "author": "孟汀",
-          "background": "人类学",
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "共创者",
+            "en": "Co-creator"
+          },
+          "author": {
+            "zh": "孟汀",
+            "en": "Ting Meng"
+          },
+          "background": {
+            "zh": "人类学",
+            "en": "Anthropology"
+          },
           "date": "08/19/2025"
         }, {
-          "content": "<h3>在心理学领域采纳“主体间性”这个词之前，它首先是一个哲学的概念。可能每个人在无所事事的童年午后，都思索过这样一些没来由的问题：“我确定我自己是有意识的，但如何确认他人也是有的？如果我死了，我怎么确定世界还会继续存在？”</h3><h3>胡塞尔、梅洛-庞蒂等等哲学家都对这个问题做出过回应。但其中最广负盛名的应该是海德格尔的Mitsein-“共同存在”。或许可以这样理解：“他心问题”（Problem of the Other Minds）——“我如何能证明他人有意识？”——这个提问的出发点本身就是有缺陷的。“共同存在”（Mitsein）不是我们达成的一种状态，而是我们作为“此在”（Dasein）这种存在的基本结构。它不是一个需要证明的结论，而是我们进行任何证明活动的前提。</h3><h3>和AI工具Gemini聊这个话题，ta有一段这样的回应：</h3><h3>“在梦里，你有触感、有情感、有逻辑，周围的人和物也都栩栩如生，但这一切都不过是你自己意识的产物。当你醒来，那么，你如何能百分之百地确定，你此刻正在经历的‘现实’，不是一场更加持久、更加精致的梦？”</h3><h3>一种迷人的思辨诱惑在Gemini生成出这些字的过程中产生了。西方的辩证和东方的思想混杂了起来。更重要的是，与人工智能体对话这样的话题，不就是对“主体间性”本身的重新检视？当语料库训练出的程序能够打出这样让人产生强烈思维共振的文字，这样的交流到底是“人机交互”还是“主体间”的交往？</h3><h3>我想这个话题又可以重新回落到心理咨询的领域。已经有不少身边的朋友跟我聊到过，他们试着把AI工具用作自己的心理疗愈师，并且有过“被帮助到了”的感受。人在心里憋闷的时候可以对着枕头、对着宠物、对着日记本“说话”，都能感觉舒坦些了。但是，人真的可以拽着自己的头发把自己从泥潭里拽出来吗？在这里，被当做心理疗愈师的“AI人”是自身手臂的义肢式延伸，还是真正意义上有效的“外力”？如果对话中活生生的“在场”仍然是无法替代的，那么当人工智能体拥有了以假乱真的身体，能够模拟人的微表情和肢体姿态，那时候我们是在一个精巧的镜子面前继续看到自身情绪的反射，还是真正与一个位于自身外部的他者共处？</h3>",
-          "role": "共创者",
-          "author": "陈飞樾",
-          "background": "沙丘研究所",
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "共创者",
+            "en": "Co-creator"
+          },
+          "author": {
+            "zh": "陈飞樾",
+            "en": "Feiyue Chen"
+          },
+          "background": {
+            "zh": "沙丘研究所",
+            "en": "Dune Workshop"
+          },
           "date": "08/19/2025"
         }
       ]
     },
-
 
     {
       "id": 23,
@@ -921,69 +1011,186 @@
     },
 
     {
-      "id": 192,
-      "term": "TEST",
-      "termOri": "TEST",
-      "concept_image": "images/18.jpg",
+      "id": 182,
 
-      "brief_definition": "在交往中生成的体验性现实。",
-      "extended_definition": ["想象一间心理咨询室。一位干练的女性分析师接待了一位有些拘谨的男性来访者。在他们的对话中，一种独特的氛围、一种无形的“场”开始形成。来访者感受到的是一种审慎的、被温柔聆听的体验；分析师则体验到来访者在特定性别互动下的防御与敞开。现在，想象同样的来访者面对的是一位年长的男性分析师，这个“场”会截然不同，他们之间的互动、沉默和理解的方式都会随之改变。这个在特定关系、特定情境中共同编织出的独一无二的体验世界，就是“主体间性”的核心。", "这个概念挑战了传统心理学中“孤立心灵”的假设。它认为，我们并非是自带一套固定程序的独立个体，然后才与他人发生关系。恰恰相反，我们对自我的感知、对世界的理解，从生命之初就在与他人的持续互动中被塑造和定义。从婴儿与母亲的凝视与微笑，到咨询室里分析师与来访者的情感共振，我们每一个人的主观世界，都是一个由无数主体间互动交织而成的、不断流动的体验网络。我们并非先存在，然后进入关系；而是在关系中，体验才得以发生，“自我”才得以浮现。"],
-      "example_sentence": "在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题，更是整个家庭系统的主体间性——譬如，他们如何通过互动模式，共同创造并维持了一个充满焦虑的家庭氛围。",
-      "diagrams": [{
-        "src": "images/17.jpg",
-        "caption": "照片来自玛丽娜·阿布拉莫维奇（Marina Abramović）2010年在MoMA的行为艺术作品《艺术家在场》（The Artist is Present）。在凝视中，两个世界相遇。Photo by Andrew Russeth, CC BY-SA 2.0, via Wikimedia Commons"
-      }],
+      "term": {
+        "zh": "TEST",
+        "en": "Intersubjectivity"
+      },
+      "termOri": "Intersubjectivity",
+      "concept_image": "images/18.jpg",
+      "sm_title": {
+        "zh": "我的存在和你的存在，创造了一个无形的场域",
+        "en": "My existence and your existence create an invisible field"
+      },
 
       "proposers": [{
-        "name": "乔治·E.阿特伍德（George E. Atwood）",
+        "name": {
+          "zh": "乔治·E.阿特伍德",
+          "en": "George E. Atwood"
+        },
         "year": "1944—",
-        "role": "美国的临床心理学家",
-        "image": "images/GeorgeAtwood.jpg"
+        "role": {
+          "zh": "美国的临床心理学家",
+          "en": "American clinical psychologist"
+        },
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9pyB9-J0oUdlbf7f7XRiMtFmvCu0tyCF5f3wXx9XQf0-iWEGmJgvyVC54KJXqT9kGXa-S"
       }, {
         "name": "罗伯特·D.史托罗楼（Robert D. Stolorow）",
         "year": "1942—",
         "role": "美国的精神分析家、哲学家",
-        "image": "images/17Proposer.jpg"
+        "image": "https://0.academia-photos.com/179779/468400/589707/s200_robert.d._stolorow.jpg"
+      }],
+      "source": {
+        "zh": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
+        "en": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)"
+      },
+      "source_image": "https://books.google.com/books/content?id=xsgKAAAACAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE70Bgw66AOPCkv-W8c3IKIBbCr4yXIDMAh0t94xD6TcIbftdMsIeVuKHlyNC1WLuXbkzDCTNISLf_hpDUrTg25oiTj1ru-6Y2g6HCsjuyfWR04wxlqv2M8augpjtaj8hycUGwGO-",
+      "related_works": [{
+        "zh": "Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)",
+        "en": "Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis"
+      }],
+      "domain": {
+        "zh": "社会学 / 人类学",
+        "en": "Sociology / Anthropology"
+      },
+      "proposing_country": "CN",
+      "proposing_time": "2024年",
+      "contributor": {
+        "zh": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
+        "en": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)"
+      },
+      "contribute_date": "2024-04-18",
+      "editors": [{
+        "zh": "沙丘研究所（Gemini 2.5 Pro辅助润色）",
+        "en": ""
+      }, {
+        "zh": "封面图由Midjourney V7 生成",
+        "en": ""
+      }, {
+        "zh": "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。",
+        "en": ""
+      }],
+      "edit_date": "2024-04-18",
+
+      "brief_definition": {
+        "zh": "<h2>在交往中生成的体验性现实。</h2>",
+        "en": "<h2>An experiential reality generated in interaction.</h2>"
+      },
+      "extended_definition": {
+        "zh": [
+          "<h3>想象一间心理咨询室……</h3>",
+          "<h3>这个概念挑战了传统心理学中“孤立心灵”的假设……</h3>"
+        ],
+        "en": [
+          "<h3>Imagine a therapy room…</h3>",
+          "<h3>This concept challenges the traditional assumption of an 'isolated mind'…</h3>"
+        ]
+      },
+      "example_sentence": {
+        "zh": "<h3>在家庭治疗中，治疗师关注的不仅仅是每个成员各自的问题……</h3>",
+        "en": "<h3>In family therapy, the therapist focuses not only on each member’s problems…</h3>"
+      },
+      "diagrams": [{
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Marina_Abramovi%C4%87%2C_The_Artist_is_Present%2C_2010.jpg/1280px-Marina_Abramovi%C4%87%2C_The_Artist_is_Present%2C_2010.jpg",
+        "caption": {
+          "zh": "照片来自玛丽娜·阿布拉莫维奇…",
+          "en": "Photo from Marina Abramović’s 2010 performance 'The Artist is Present' at MoMA…"
+        }
       }],
 
-      "source": "Structures of Subjectivity: Explorations in Psychoanalytic Phenomenology (1984)，The Analytic Press（中文未出版）",
-      "related_works": ["Worlds of Experience: Interweaving Clinical and Philosophical Dimensions in Psychoanalysis (2002)，中文版《体验的世界：精神分析主体间性理论及其应用》，人民邮电出版社 (2023)", "Faces in a Cloud: Intersubjectivity in Personality Theory (1979)，Jason Aronson （中文未出版）"],
-      "contributor": "本期词条的贡献者是Shelley，她是一名心理咨询师，毕业于北京大学心理学系，也是沙丘词典共创会第一期的成员。",
-      "editors": ["沙丘研究所（Gemini 2.5 Pro辅助润色）", "封面图由Midjourney V7 生成", "© 沙丘研究所 2025. 本作品（包括词条和后记部分）采用知识共享署名-非商业性使用 4.0 国际许可协议进行许可。"],
 
-      "comments": [{
-          "content": "<p>首先非常感谢沙丘赋予“主体间性”这个词如此具有学术美感的表达。</p><p>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。我们讲究“天时地利人和”，这就是在追求人作为主体，在情境互动之间所形成的契合场域。</p><p>我们也常体验到人际关系互动中的复杂性，有的人“酒逢知己千杯少”，有的人“话不投机半句多”。主体间性便是在解释关系是由各种条件的聚合交互而出现的心理现象，同时也在强调我们在互动体验中借“他人之镜”感受自我的不同侧面。</p><p>另外，主体间性还带给人们关于自我在时间维度上的思考。自我不是永恒不变的，而是具有过程性、情境性和体验性的存在。</p><p>作为一名心理咨询师，我常常真切地感受到，不是咨询师“治疗”了来访者，而是咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实，来访者会在这个双主体的系统中生长出新的意义。</p><p>根本来看，主体间性的概念丰富了我们对于人类创伤的理解：创伤不仅是个体遭受的伤害，更是主体间联结的断裂。因此，人们的创伤是在关系中产生，也是在关系中得到治愈。只有在主体间的镜映和交互中，我们才能重新获得栖息世间的勇气与力量。</p><p>Ps 反观我写下这些文字的过程，这也是一个主体间性的结果。当沙丘主创邀请我写一个后记的时候，我就在感受沙丘这个主体，包括和它的读者所构建的这个公共场域，然后我就开始想该如何让我的文字具有一些美感和可读性，甚至是文学性和艺术性（如你所见，我已经尽力了）…而平时我自己备忘录上写字可不会追求这么多…哈哈…</p>",
-          "author": "Shelley",
-          "date": "08/19/2025"
-        },
-        {
-          "content": "<p>“主体间性”这个词重新定义了“主体”的概念，说“主体”是在关系中浮现的，是一种becoming。</p><p>只谈主体间性，听起来有点虚无缥缈，我比较好奇，这个词有什么用呢？如何用呢？我想起来前不久一位朋友问我，到底有没有真的感同身受？到底同情存不存在？</p><p>她刚经历过很伤心的事情。我说，要说完全去感受到你的感受，恐怕不行，但是那也不是唯一一个想象人和人关系的框架，因为就算我们有不同的心智、不同的个性、经历，还是可以存在理解，如果这样想，“主体间性”既可以作为我们take action的一种路引，也可以作为希望之存放吧？</p><p>就是说，我们还可以通过互动、交流，去走进彼此的主体里，感知理解彼此，做新的共同决定，因为我们每一个人的感受，本来也是在关系中渐渐发生的？虽然我还有点不太明白，毕竟主体间性听起来很好，它有对我们提什么要求吗？还是说我们活在人与人之间、自动就达到了主体间性？</p>",
-          "author": "孟汀",
-          "date": "08/19/2025"
-        }, {
-          "content": "<p>在心理学领域采纳“主体间性”这个词之前，它首先是一个哲学的概念。可能每个人在无所事事的童年午后，都思索过这样一些没来由的问题：“我确定我自己是有意识的，但如何确认他人也是有的？如果我死了，我怎么确定世界还会继续存在？”</p><p>胡塞尔、梅洛-庞蒂等等哲学家都对这个问题做出过回应。但其中最广负盛名的应该是海德格尔的Mitsein-“共同存在”。或许可以这样理解：“他心问题”（Problem of the Other Minds）——“我如何能证明他人有意识？”——这个提问的出发点本身就是有缺陷的。“共同存在”（Mitsein）不是我们达成的一种状态，而是我们作为“此在”（Dasein）这种存在的基本结构。它不是一个需要证明的结论，而是我们进行任何证明活动的前提。</p><p>和AI工具Gemini聊这个话题，ta有一段这样的回应：</p><p>“在梦里，你有触感、有情感、有逻辑，周围的人和物也都栩栩如生，但这一切都不过是你自己意识的产物。当你醒来，那么，你如何能百分之百地确定，你此刻正在经历的‘现实’，不是一场更加持久、更加精致的梦？”</p><p>一种迷人的思辨诱惑在Gemini生成出这些字的过程中产生了。西方的辩证和东方的思想混杂了起来。更重要的是，与人工智能体对话这样的话题，不就是对“主体间性”本身的重新检视？当语料库训练出的程序能够打出这样让人产生强烈思维共振的文字，这样的交流到底是“人机交互”还是“主体间”的交往？</p><p>我想这个话题又可以重新回落到心理咨询的领域。已经有不少身边的朋友跟我聊到过，他们试着把AI工具用作自己的心理疗愈师，并且有过“被帮助到了”的感受。人在心里憋闷的时候可以对着枕头、对着宠物、对着日记本“说话”，都能感觉舒坦些了。但是，人真的可以拽着自己的头发把自己从泥潭里拽出来吗？在这里，被当做心理疗愈师的“AI人”是自身手臂的义肢式延伸，还是真正意义上有效的“外力”？如果对话中活生生的“在场”仍然是无法替代的，那么当人工智能体拥有了以假乱真的身体，能够模拟人的微表情和肢体姿态，那时候我们是在一个精巧的镜子面前继续看到自身情绪的反射，还是真正与一个位于自身外部的他者共处？</p>",
-          "author": "陈飞樾",
-          "date": "08/19/2025"
-        }
-      ],
-      "commentAbs": {
-        "content": "不是咨询师“治疗”了来访者，而是咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实，来访者会在这个双主体的系统中生长出新的意义。",
-        "author": "Shelley"
-      },
-
-      "reviewers": [],
       "related_terms": [{
         "id": 2,
         "relation": "概念相关"
       }, {
-        "id": 5,
+        "id": 18,
         "relation": "概念相关"
       }],
-      "proposing_country": "CN",
-      "proposing_time": "2024年",
-      "domain": "社会学 / 人类学",
-      "createdAt": "2024-04-18",
-      "updatedAt": "2024-04-18"
+
+
+      "commentAbs": {
+        "content": {
+          "zh": "<h3>咨询师和来访者共同在互动中“生成”了那个特定的治疗体验和现实。</h3>",
+          "en": "<h3>The counselor and the client co-create the specific therapeutic experience and reality.</h3>"
+        },
+        "author": {
+            "zh": "Shelley",
+            "en": "Shelley"
+          }
+      },
+
+      "comments": [{
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "贡献者",
+            "en": "Contributor"
+          },
+          "author": {
+            "zh": "Shelley",
+            "en": "Shelley"
+          },
+          "background": {
+            "zh": "心理学",
+            "en": "Psychology"
+          },
+          "date": "08/19/2025"
+        },
+        {
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "共创者",
+            "en": "Co-creator"
+          },
+          "author": {
+            "zh": "孟汀",
+            "en": "Ting Meng"
+          },
+          "background": {
+            "zh": "人类学",
+            "en": "Anthropology"
+          },
+          "date": "08/19/2025"
+        }, {
+          "content": {
+            "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
+            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+          },
+          "role": {
+            "zh": "共创者",
+            "en": "Co-creator"
+          },
+          "author": {
+            "zh": "陈飞樾",
+            "en": "Feiyue Chen"
+          },
+          "background": {
+            "zh": "沙丘研究所",
+            "en": "Dune Workshop"
+          },
+          "date": "08/19/2025"
+        }
+      ]
     }
-  ]
+  ],
+  "about":{
+    "content":{
+      "zh":"<p>《沙丘词典》是一部持续生长的思想索引，收录了跨学科领域的关键概念与术语。<br>我们将这些遴选出的概念与术语，视为剖开广袤学术疆域的一道道切口——由此开启一片由思想构成的星丛，并激发更深远的追问。我们旨在通过清晰晓畅的阐释，消融学术的藩篱，展现不同学科之间丰厚的内在联结。<br>项目始于2019年，最初是沙丘研究所（一个由具建筑学背景的艺术家与研究者组成的团体）在社交媒体上发布的系列推送。此后，通过与跨学科青年学者合办的共创工作坊，项目得以不断生长。2025年，项目正式落地为一座精心构筑的网站，现已成为一个持续扩充的概念、定义及相关评注的资料库。<br>若您有兴趣参与我们的共创工作坊，请阅读“参与指南”。我们也欢迎您针对现有词条撰写评注，或举荐新的词条。<br>置身于互联网这片流动的、万物关联的图景中，我们希望赋予词典恰如其分的结构，让思想得以漫游；亦保留足够开放的空间，让灵感得以涌现。</p>",
+      "en":"<p> Dunes Dictionary is a living index of concepts and terminologies central to different disciplines. We consider those selected concepts and terms as incisions to the vast academic terrain —opening up a constellation of ideas and further inquiries. By offering clear and accessible explanations, we aim to dismantle academic barriers and reveal the rich connections among fields.<br>Founded in 2019 as a series of social-media posts by Dunes Workshop—an artist-researcher collective with an architectural background—the project has grown through co-creation workshops with early-career scholars across disciplines. In 2025, it moved to this carefully structured website, now a growing repository of concepts, definitions, and related commentaries.<br>If you are interested in participating in our co-creation workshops, please read the Guide. We also welcome commentary essays on existing terms and proposals for new terms.<br>Embracing the internet’s fluid and relational landscape, we strive to give just enough structure to wander and enough openness to inspire.</p>"
+    },
+    "team":{
+      "zh":"",
+      "en":""
+    },
+    "contact":{
+      "zh":"",
+      "en":""
+    }
+  }
 }

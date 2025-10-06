@@ -13,8 +13,8 @@ body {
 body {
     overflow: hidden;
     height: 100vh;
-    background: #625136;
-    color: #544011;
+    background: #1E1C16;
+    color: #414141;
     font-family: "ChillDIN", "Barlow Condensed", "ChillDINGothic";
     transition: opacity 0.8s, transform 0.8s;
 }
@@ -442,7 +442,7 @@ body[data-scale="5"] .detail-title {
 #image {
     min-width: 120px;
     min-height: 150px;
-    background-color: #F0B549;
+    background-color: #E8D8B4;
 }
 
 #image img {
@@ -459,7 +459,7 @@ body[data-scale="5"] .detail-title {
 #proposer {
     width: 260px;
     min-height: 160px;
-    background-color: #D58020;
+    background-color: #E6D9D0;
 }
 
 #proposer img {
@@ -484,7 +484,7 @@ body[data-scale="5"] .detail-title {
 #comment {
     width: 400px;
     min-height: 240px;
-    background-color: #E1D37A;
+    background-color: #B4B596;
 }
 
 #comment h3 {

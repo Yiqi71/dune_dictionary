@@ -410,7 +410,7 @@ function renderWordUniverse(wordsData) {
 
 // 初始化 - 等待DOM加载完成后获取数据
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('data copy.json')
+    fetch('data.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('网络响应不正常');
