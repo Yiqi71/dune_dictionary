@@ -103,7 +103,15 @@
 .panel-top p {
     color: #FAF4E5;
     text-align: center;
-    font-family: "ChillDIN";
+    font-family: "ChillDINGothic";
+    font-size: 20.735px;
+    font-style: normal;
+    font-weight: 600;
+}
+:lang(en) .panel-top p {
+    color: #FAF4E5;
+    text-align: center;
+    font-family: "ChillDINGothic";
     font-size: 20.735px;
     font-style: normal;
     font-weight: 600;
@@ -113,8 +121,19 @@
     margin: 0;
     padding: 0;
     color: #FAF4E5;
-    font-family: "ChillDIN";
-    font-size: 44px;
+    font-family: "ChillDINGothic";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    text-align: center;
+    line-height: 45.553px;
+}
+:lang(en) .panel-top .term-main {
+    margin: 0;
+    padding: 0;
+    color: #FAF4E5;
+    font-family: "ChillDINGothic";
+    font-size: 30px;
     font-style: normal;
     font-weight: 600;
     text-align: center;
@@ -193,7 +212,6 @@
     height: 112px !important;
     object-fit: cover !important;
 
-    background: #D58020;
     /* mix-blend-mode: screen; */
     filter: brightness(1.5) contrast(0.5) sepia(1.8) hue-rotate(0deg) saturate(2.2);
 }
@@ -224,7 +242,7 @@
 
 /* 字 */
 .panel-bottom p {
-    color: #6B624F;
+    color: #FAF4E5;
     font-family: "ChillDINGothic", "ChillDIN";
     font-size: 20px;
     font-style: normal;
@@ -232,21 +250,38 @@
     line-height: 23px;
     letter-spacing: 1px;
 }
+:lang(en) .panel-bottom p {
+    color: #FAF4E5;
+    font-family: "Barlow Condensed","ChillDINGothic";
+    font-size: 21px;
+font-style: normal;
+font-weight: 300;
+line-height: 26px; /* 123.81% */
+letter-spacing: 0.42px;
+}
 
 .panel-bottom h2 {
     color: #FAF4E5;
-    font-family: "ChillDIN";
+    font-family: "ChillDINGothic";
     font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 40px;
     letter-spacing: 2px;
 }
+:lang(en) .panel-bottom h2 {
+    color: #FAF4E5;
+    font-family: "Barlow Condensed";
+font-size: 36px;
+font-style: normal;
+font-weight: 500;
+line-height: 40px;
+}
 
 .panel-bottom h3 {
     color: #FAF4E5;
     text-align: justify;
-    font-family: "ChillDIN";
+    font-family: "ChillDINGothic";
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -264,12 +299,12 @@
 }
 
 .panel-bottom .diagram-caption {
-    color: #6B624F;
+    color: #FAF4E5;
     text-align: justify;
     font-family: "ChillDINGothic", "ChillDIN";
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 325;
     line-height: 20px;
     /* 125% */
     letter-spacing: 0.8px;
@@ -296,13 +331,13 @@
     font-family: "ChillDINGothic", "ChillDIN";
     font-size: 20px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 325;
     line-height: 20px;
     letter-spacing: 1px;
 }
 
 .panel-bottom #editors-container p {
-    color: #6B624F;
+    color: #FAF4E5;
     font-family: "ChillDINGothic", "ChillDIN";
     font-size: 14px;
     font-style: normal;

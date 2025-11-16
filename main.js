@@ -16,13 +16,17 @@ const langBtn = document.getElementById("lang-toggle-btn");
 
 // 点击按钮切换语言
 langBtn.addEventListener("click", () => {
-    if (state.currentLang === "zh") {
-        state.currentLang = "en";
-        langBtn.textContent = "English";
-    } else {
-        state.currentLang = "zh";
-        langBtn.textContent = "中文";
-    }
+    const html = document.documentElement; 
+    html.lang = html.lang.startsWith('en') ? 'zh' : 'en';
+    state.currentLang = html.lang;
+    langBtn.textContent = html.lang;
+    // if (state.currentLang === "zh") {
+    //     state.currentLang = "en";
+    //     langBtn.textContent = "English";
+    // } else {
+    //     state.currentLang = "zh";
+    //     langBtn.textContent = "中文";
+    // }
 
     // 重新渲染节点上的文字
     document.querySelectorAll('.word-node').forEach(node => {
@@ -48,17 +52,17 @@ langBtn.addEventListener("click", () => {
         }
 
         // 切换文字
-        if (button.innerHTML.includes("词条") || button.innerHTML.includes("Brief")) {
-            button.querySelector('span').textContent = state.currentLang === "en" ? "Brief" : "词条";
+        if (button.innerHTML.includes("词条") || button.innerHTML.includes("ENTRY")) {
+            button.querySelector('span').textContent = state.currentLang === "en" ? "ENTRY" : "词条";
         }
-        if (button.innerHTML.includes("笔记") || button.innerHTML.includes("Notes")) {
-            button.querySelector('span').textContent = state.currentLang === "en" ? "Notes" : "笔记";
+        if (button.innerHTML.includes("笔记") || button.innerHTML.includes("NOTES")) {
+            button.querySelector('span').textContent = state.currentLang === "en" ? "NOTES" : "笔记";
         }
 
         // 设置旋转和偏移
         if (state.currentLang === "en") {
             span.style.display = "inline-block"; // 必须有 inline-block 才能旋转
-            span.style.transform = "translateX(-10px) rotate(90deg)";
+            span.style.transform = "translateX(-10px) rotate(-90deg)";
         } else {
             span.style.transform = "rotate(0deg) translateY(0)";
         }

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle World Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000000;
+            overflow: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            position: relative;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            pointer-events: none;
+        }
+        
+        .hero-text {
+            text-align: center;
+            color: #fff;
+            max-width: 800px;
+            pointer-events: auto;
+        }
+        
+        .hero-text h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .hero-text p {
+            font-size: 20px;
+            color: #999;
+            line-height: 1.6;
+        }
+        
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            background: #000000;
+            z-index: 0;
+        }
+        
+        .footer {
+            position: relative;
+            z-index: 10;
+            background: transparent;
+            padding: 60px 20px 100px;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .footer-text {
+            color: #666;
+            margin-top: 40px;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    
+    <div id="loadingIndicator" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 18px; z-index: 100; display: none;">
+        Loading world map...
+    </div>
+    
+    <div class="content">
+        <div class="hero-text">
+            <h1>Interactive Particle Map</h1>
+            <p>The world map formed by particles. Hover to interact!</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-text">
+            <p>Global presence • Hover to explore</p>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        
+        let particles = [];
+        let cachedGeoJSON = null;
+        let isInitialized = false;
+        let mouse = { 
+            x: null, 
+            y: null, 
+            radius1: 50,  // Inner circle - full dispersion
+            radius2: 120,  // Middle circle - moderate dispersion
+            radius3: 250  // Outer circle - subtle dispersion (extended)
+        };
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (canvas.width > 0 && canvas.height > 0) {
+                initParticles();
+            }
+        }
+        
+        // Particle class
+        class Particle {
+            constructor(x, y, opacity) {
+                this.baseX = x;
+                this.baseY = y;
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 1.0 + 0.5; // 稍小的粒子
+                this.density = (Math.random() * 3) + 1;
+                this.vx = 0;
+                this.vy = 0;
+                this.friction = 0.85; // More natural deceleration
+                this.ease = 0.02; // Slightly faster return
+                this.opacity = opacity;
+                // Random drift for idle animation
+                this.driftAngle = Math.random() * Math.PI * 2;
+                this.driftSpeed = Math.random() * 0.3 + 0.1;
+                this.driftRadius = Math.random() * 2 + 1;
+                this.time = Math.random() * 100;
+            }
+            
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.9})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            update() {
+                this.time += 0.02;
+                
+                // Idle floating animation
+                const idleDriftX = Math.cos(this.time * this.driftSpeed + this.driftAngle) * this.driftRadius;
+                const idleDriftY = Math.sin(this.time * this.driftSpeed + this.driftAngle) * this.driftRadius;
+                
+                if (mouse.x !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    let force = 0;
+                    
+                    // More organic dispersion with turbulent flow
+                    if (distance < mouse.radius3) {
+                        // Multi-layered exponential falloff for smooth gradient
+                        const gradient1 = Math.exp(-Math.pow(distance / mouse.radius1, 2) * 2.5) * 4.0;
+                        const gradient2 = Math.exp(-Math.pow(distance / mouse.radius2, 2) * 1.8) * 2.0;
+                        const gradient3 = Math.exp(-Math.pow(distance / mouse.radius3, 2) * 1.2) * 0.8;
+                        
+                        force = gradient1 + gradient2 + gradient3;
+                        
+                        // Simplified turbulence (reduced calculations)
+                        const turbulence = Math.sin(this.time * 0.3 + distance * 0.05) * 0.3;
+                        force *= (0.7 + turbulence);
+                        
+                        // Simplified swirl effect
+                        if (distance < mouse.radius2) {
+                            const perpAngle = Math.atan2(dy, dx) + Math.PI / 2;
+                            const swirl = Math.sin(distance * 0.02 + this.time * 0.5) * 0.2;
+                            this.vx += Math.cos(perpAngle) * force * swirl;
+                            this.vy += Math.sin(perpAngle) * force * swirl;
+                        }
+                    }
+                    
+                    if (force > 0) {
+                        const angle = Math.atan2(dy, dx);
+                        this.vx -= Math.cos(angle) * force * this.density;
+                        this.vy -= Math.sin(angle) * force * this.density;
+                    }
+                }
+                
+                // Return to base position with drift
+                const targetX = this.baseX + idleDriftX;
+                const targetY = this.baseY + idleDriftY;
+                const dxToBase = targetX - this.x;
+                const dyToBase = targetY - this.y;
+                
+                this.vx += dxToBase * this.ease;
+                this.vy += dyToBase * this.ease;
+                
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.draw();
+            }
+        }
+        
+        // Load TopoJSON and convert to GeoJSON
+        async function loadWorldMap() {
+            if (cachedGeoJSON) return cachedGeoJSON;
+            
+            try {
+                const response = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/land-50m.json');
+                const topology = await response.json();
+                
+                // Manual TopoJSON to GeoJSON conversion (simple version)
+                const land = topology.objects.land;
+                const transform = topology.transform;
+                
+                // Decode arcs
+                const arcs = topology.arcs.map(arc => {
+                    let x = 0, y = 0;
+                    return arc.map(([dx, dy]) => {
+                        x += dx;
+                        y += dy;
+                        return [
+                            x * transform.scale[0] + transform.translate[0],
+                            y * transform.scale[1] + transform.translate[1]
+                        ];
+                    });
+                });
+                
+                // Build polygons from arcs
+                const polygons = [];
+                land.geometries.forEach(geom => {
+                    if (geom.type === 'Polygon') {
+                        polygons.push(geom.arcs.map(arcIndexes => 
+                            arcIndexes.map(i => i < 0 ? arcs[~i].slice().reverse() : arcs[i]).flat()
+                        ));
+                    } else if (geom.type === 'MultiPolygon') {
+                        geom.arcs.forEach(polygon => {
+                            polygons.push(polygon.map(arcIndexes =>
+                                arcIndexes.map(i => i < 0 ? arcs[~i].slice().reverse() : arcs[i]).flat()
+                            ));
+                        });
+                    }
+                });
+                
+                cachedGeoJSON = polygons;
+                return polygons;
+            } catch (error) {
+                console.error('Failed to load world map:', error);
+                return null;
+            }
+        }
+        
+        // Simple equirectangular projection (flat map)
+        function project(lon, lat, width, height) {
+            // Longitude: -180 to 180 → 0 to width
+            const x = (lon + 180) * (width / 360);
+            // Latitude: 90 to -90 → 0 to height
+            const y = (90 - lat) * (height / 180);
+            return [x, y];
+        }
+        
+        // Draw world map from GeoJSON
+        function drawWorldMapFromGeoJSON(ctx, polygons, width, height) {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'white';
+            
+            polygons.forEach(polygon => {
+                polygon.forEach(ring => {
+                    ctx.beginPath();
+                    ring.forEach(([lon, lat], i) => {
+                        const [x, y] = project(lon, lat, width, height);
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    });
+                    ctx.closePath();
+                    ctx.fill();
+                });
+            });
+        }
+        
+        // Calculate distance to edge by checking surrounding pixels
+        function getEdgeDistance(pixels, width, height, x, y, checkRadius) {
+            const centerIndex = (y * width + x) * 4;
+            const centerAlpha = pixels[centerIndex + 3];
+            
+            // If current pixel is transparent, it's at edge
+            if (centerAlpha < 128) return 0;
+            
+            let minDistance = checkRadius;
+            
+            // Check in a square around the pixel
+            for (let dy = -checkRadius; dy <= checkRadius; dy++) {
+                for (let dx = -checkRadius; dx <= checkRadius; dx++) {
+                    if (dx === 0 && dy === 0) continue;
+                    
+                    const checkX = x + dx;
+                    const checkY = y + dy;
+                    
+                    // Skip if out of bounds
+                    if (checkX < 0 || checkX >= width || checkY < 0 || checkY >= height) {
+                        continue;
+                    }
+                    
+                    const checkIndex = (checkY * width + checkX) * 4;
+                    const checkAlpha = pixels[checkIndex + 3];
+                    
+                    // If we find a transparent pixel, calculate distance
+                    if (checkAlpha < 128) {
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        minDistance = Math.min(minDistance, distance);
+                    }
+                }
+            }
+            
+            return minDistance;
+        }
+        
+        // Create particles from map with edge fading
+        async function initParticles() {
+            particles = [];
+            
+            if (canvas.width === 0 || canvas.height === 0) {
+                return;
+            }
+            
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            
+            try {
+                // Load world map data
+                const polygons = await loadWorldMap();
+                
+                if (!polygons) {
+                    console.error('Failed to load map data');
+                    loadingIndicator.textContent = 'Failed to load map';
+                    return;
+                }
+                
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                
+                drawWorldMapFromGeoJSON(tempCtx, polygons, tempCanvas.width, tempCanvas.height);
+                
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const pixels = imageData.data;
+                
+                const coreGap = 6;           // Center area gap (increased from 4)
+                const maxEdgeGap = 25;       // Maximum edge gap (increased from 16)
+                const fadeWidth = 25;        // Fade zone width in pixels
+                
+                // Scan with minimum gap, then skip based on edge distance
+                for (let y = 0; y < tempCanvas.height; y += coreGap) {
+                    for (let x = 0; x < tempCanvas.width; x += coreGap) {
+                        const index = (y * tempCanvas.width + x) * 4;
+                        const alpha = pixels[index + 3];
+                        
+                        if (alpha > 128) {
+                            // Calculate distance to edge
+                            const edgeDistance = getEdgeDistance(pixels, tempCanvas.width, tempCanvas.height, x, y, fadeWidth);
+                            
+                            // Calculate dynamic gap based on distance
+                            const distanceRatio = Math.min(edgeDistance / fadeWidth, 1);
+                            const dynamicGap = coreGap + (maxEdgeGap - coreGap) * (1 - distanceRatio);
+                            
+                            // Randomly skip particles based on dynamic gap
+                            const skipProbability = 1 - (coreGap / dynamicGap);
+                            
+                            if (Math.random() > skipProbability) {
+                                const opacity = alpha / 255;
+                                particles.push(new Particle(x, y, opacity));
+                            }
+                        }
+                    }
+                }
+                
+                isInitialized = true;
+                
+                // Log particle count for debugging
+                console.log(`Initialized ${particles.length} particles`);
+            } catch (error) {
+                console.error('Error initializing particles:', error);
+                loadingIndicator.textContent = 'Error loading map';
+            } finally {
+                // Hide loading indicator after a short delay
+                setTimeout(() => {
+                    loadingIndicator.style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        // Animation loop with performance optimization
+        let lastTime = 0;
+        const fps = 60;
+        const frameInterval = 1000 / fps;
+        
+        function animate(currentTime) {
+            const deltaTime = currentTime - lastTime;
+            
+            if (deltaTime >= frameInterval) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Only animate if initialized
+                if (isInitialized) {
+                    for (let i = 0; i < particles.length; i++) {
+                        particles[i].update();
+                    }
+                }
+                
+                lastTime = currentTime - (deltaTime % frameInterval);
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mouse events - track globally
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Touch support
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            mouse.x = touch.clientX;
+            mouse.y = touch.clientY;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Initialize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+        resizeCanvas();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
