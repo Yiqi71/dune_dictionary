@@ -17,6 +17,7 @@ import {
     clampOffsetY,
     updateScaleForNodes
 } from "./uni-canvas.js";
+import { logEvent, startWordView, endWordView } from "./analytics.js";
 
 // 在 menu.js 文件顶部的 import 部分添加
 import { showAboutPanel } from "./detail.js";
@@ -69,6 +70,7 @@ function startDrag(e) {
 function endDrag(e) {
     if (!isDragging) return;
     isDragging = false;
+    logEvent("scale_slider_change", { scaleValue: state.currentScale });
 }
 
 function onDrag(e) {
@@ -127,16 +129,22 @@ export function moveIndicator(scaleValue) {
 // menu
 let dunesIcon = document.getElementById("dunes-icon");
 dunesIcon.addEventListener('click', () => {
+    endWordView("switch");
+    startWordView(17);
     zoomToWord(17, state.scaleThreshold);
     updateWordFocus();
+    logEvent("menu_home_click", { toWordId: 17 });
 });
 
 window.addEventListener('DOMContentLoaded', () => {
     const shuffleIcon = document.getElementById('shuffle-icon');
     shuffleIcon.addEventListener('click', () => {
         const randomId = window.allWords[Math.floor(Math.random() * window.allWords.length)].id;
+        endWordView("switch");
+        startWordView(randomId);
         zoomToWord(randomId, state.scaleThreshold);
         updateWordFocus();
+        logEvent("shuffle_click", { toWordId: randomId });
     });
 });
 
@@ -273,6 +281,8 @@ function endYearDrag(e) {
     
     // Snap to nearest step
     snapYearToStep();
+    const label = yearPeriods[currentYearIndex]?.label || "";
+    logEvent("year_filter_change", { yearIndex: currentYearIndex, yearLabel: label });
 }
 
 function onYearDrag(e) {
@@ -332,7 +342,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const searchIcon = document.getElementById('search-icon');
     if (searchIcon) {
         searchIcon.addEventListener('click', () => {
-            showSearchModal();
+            showSearchModal("icon");
         });
     }
 });
@@ -340,7 +350,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // Search Modal functionality
 let isSearchModalOpen = false;
 
-function showSearchModal() {
+function showSearchModal(source = "icon") {
     const modal = document.getElementById('search-modal');
     const input = document.getElementById('search-input');
     
@@ -348,6 +358,7 @@ function showSearchModal() {
     
     modal.classList.remove('hidden');
     isSearchModalOpen = true;
+    logEvent("search_open", { source });
     
     // Focus the input after a short delay to ensure the modal is visible
     setTimeout(() => {
@@ -367,6 +378,7 @@ function hideSearchModal() {
     modal.classList.add('hidden');
     isSearchModalOpen = false;
     input.value = '';
+    logEvent("search_close", {});
     
     // Clear results
     const resultsContainer = document.getElementById('search-results');
@@ -420,8 +432,11 @@ function displaySearchResults(words) {
         item.addEventListener('click', () => {
             const wordId = parseInt(item.dataset.wordId);
             hideSearchModal();
+            endWordView("switch");
+            startWordView(wordId);
             zoomToWord(wordId, state.scaleThreshold);
             updateWordFocus();
+            logEvent("search_result_click", { wordId });
         });
     });
 }
@@ -463,7 +478,7 @@ document.addEventListener('keydown', (e) => {
         if (isSearchModalOpen) {
             hideSearchModal();
         } else {
-            showSearchModal();
+            showSearchModal("shortcut");
         }
     }
 });

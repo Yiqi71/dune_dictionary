@@ -9,16 +9,28 @@ import {
     updateWordDetails,
     updateWordFocus
 } from "./wordFocus.js";
+import { logEvent, startWordView, endWordView } from "./analytics.js";
 
 import { yearPeriods } from "./menu.js";
+
+let sessionStartTs = null;
+
+function endSession(reason = "unknown") {
+    if (sessionStartTs === null) return;
+    const durationMs = Date.now() - sessionStartTs;
+    logEvent("session_end", { durationMs, reason });
+    sessionStartTs = null;
+}
 
 const langBtn = document.getElementById("language-icon");
 // 点击按钮切换语言
 langBtn.addEventListener("click", () => {
     const html = document.documentElement; 
+    const prevLang = html.lang;
     html.lang = html.lang.startsWith('en') ? 'zh' : 'en';
     state.currentLang = html.lang;
     langBtn.textContent = html.lang;
+    logEvent("lang_toggle", { from: prevLang, to: html.lang });
     // if (state.currentLang === "zh") {
     //     state.currentLang = "en";
     //     langBtn.textContent = "English";
@@ -379,9 +391,12 @@ function renderWordUniverse(wordsData) {
                 // 只有不是拖拽操作时才处理点击
                 if (!isDragging) {
                     if (node.classList.contains('focused')) {} else {
+                        endWordView("switch");
+                        startWordView(node.id);
                         zoomToWord(node.id, state.scaleThreshold);
                         updateWordFocus();
                         renderPanelSections();
+                        logEvent("word_node_click", { wordId: node.id });
                     }
                 }
             });
@@ -411,6 +426,9 @@ function renderWordUniverse(wordsData) {
 
 // 初始化 - 等待DOM加载完成后获取数据
 document.addEventListener('DOMContentLoaded', () => {
+    sessionStartTs = Date.now();
+    logEvent("session_start", {});
+    logEvent("page_loaded", { lang: document.documentElement.lang || "zh" });
     fetch('data.json')
         .then(response => {
             if (!response.ok) {
@@ -421,12 +439,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             window.about = data.about;
             window.allWords = data.words;
+            logEvent("data_loaded", { status: "success", count: data.words ? data.words.length : 0 });
             // 调用渲染函数，传入words数组
             renderWordUniverse(data.words);
             zoomToWord(state.focusedNodeId,state.scaleThreshold);
             updateWordFocus();
         })
         .catch(error => {
+            logEvent("data_loaded", { status: "error" });
             console.error('加载数据失败:', error);
             // 可以在这里添加错误处理UI，比如显示错误信息
             document.getElementById('word-nodes-container').innerHTML =
@@ -443,4 +463,22 @@ document.addEventListener('keydown', (e) => {
     if (e.key.toLowerCase() === 'c') {
         console.log('state.focusedNodeId:', state.focusedNodeId);
     }
+});
+
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        endWordView('page_hidden');
+        endSession('page_hidden');
+    } else if (document.visibilityState === 'visible') {
+        if (sessionStartTs === null) {
+            sessionStartTs = Date.now();
+            logEvent("session_start", {});
+        }
+    }
+});
+
+window.addEventListener('beforeunload', () => {
+    endWordView('unload');
+    endSession('unload');
 });
