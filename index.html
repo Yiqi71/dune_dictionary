@@ -31,19 +31,36 @@
     <!-- <div id="center-dot"></div> -->
 
     <div id="floating-panel" class="hidden">
-        <div class="panel-main">
-            <div class="panel-top"></div>
-            <div class="panel-bottom"></div>
+        <!-- Entry Panel -->
+        <div class="panel-entry active">
+            <div class="panel-main">
+                <div class="panel-top"></div>
+                <div class="panel-bottom"></div>
+            </div>
+            <div class="panel-slide">
+                <div class="scroll-track"></div>
+                <div class="scroll-thumb"></div>
+            </div>
+            <div class="panel-tabs">
+                <button data-tab="entry" class="active">词条</button>
+                <button data-tab="comment" style="opacity:0; pointer-events:none;">笔记</button>
+            </div>
         </div>
 
-        <div class="panel-slide">
-            <div class="scroll-track"></div>
-            <div class="scroll-thumb"></div>
-        </div>
-
-        <div class="panel-tabs">
-            <button data-tab="entry" class="active">词条</button>
-            <button data-tab="comment">笔记</button>
+        <!-- Comment Panel -->
+        <div class="panel-comment">
+            <div class="panel-main">
+                <div class="panel-top"></div>
+                <div class="panel-bottom"></div>
+            </div>
+            <div class="panel-slide">
+                <div class="scroll-track"></div>
+                <div class="scroll-thumb"></div>
+            </div>
+            <div class="panel-tabs">
+                <button data-tab="entry" style="opacity:0; pointer-events:none;">词条</button>
+                <button data-tab="comment" class="active">笔记</button>
+            </div>
         </div>
     </div>
 

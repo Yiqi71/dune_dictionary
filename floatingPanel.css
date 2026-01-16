@@ -13,7 +13,7 @@
     height: 100vh;
     width: 37vw;
     border-radius: 8px 0 0 8px;
-    background: #36322A;
+    background: transparent; /* 改为透明，因为子panel有自己的背景 */
 
     display: flex;
     flex-direction: row;
@@ -23,6 +23,7 @@
     transform: translateX(100%);
     /* overflow: hidden; */
     /* 防止溢出 */
+    /* fixed元素可以作为absolute子元素的定位上下文 */
 }
 
 #floating-panel.hidden {
@@ -35,6 +36,39 @@
     transform: translateX(0);
     opacity: 1;
     pointer-events: auto;
+}
+
+/* Panel容器样式 - 双层叠放 */
+.panel-entry,
+.panel-comment {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out, z-index 0.3s ease-in-out;
+    background: #36322A;
+    border-radius: 8px 0 0 8px;
+}
+
+/* 笔记面板特殊样式 */
+.panel-comment {
+    background: #EEE9DB;
+}
+
+.panel-entry.active,
+.panel-comment.active {
+    z-index: 2;
+    transform: translateX(0);
+}
+
+.panel-entry:not(.active),
+.panel-comment:not(.active) {
+    transform: translateX(-68px);
+    cursor: pointer;
 }
 
 /* 主内容区域 - 包含top和bottom，可整体滚动 */
@@ -67,6 +101,11 @@
     border-bottom: 1px solid #FAF4E5;
     padding: 16px;
     padding-bottom: 70px;
+}
+
+/* 笔记面板的顶部边框颜色 */
+.panel-comment .panel-top {
+    border-bottom: 1px solid #43403B;
 }
 
 .panel-top p {
@@ -117,6 +156,14 @@
     font-weight: 600;
 }
 
+/* 笔记面板的文字颜色 */
+.panel-comment .panel-top p {
+    color: #43403B;
+}
+:lang(en) .panel-comment .panel-top p {
+    color: #43403B;
+}
+
 .panel-top .term-main {
     margin: 0;
     padding: 0;
@@ -140,6 +187,14 @@
     line-height: 45.553px;
 }
 
+/* 笔记面板的term-main颜色 */
+.panel-comment .panel-top .term-main {
+    color: #43403B;
+}
+:lang(en) .panel-comment .panel-top .term-main {
+    color: #43403B;
+}
+
 .panel-top .term-ori {
     margin: 0;
     padding: 0;
@@ -150,6 +205,11 @@
     font-weight: 400;
     text-align: center;
     line-height: 50px;
+}
+
+/* 笔记面板的term-ori颜色 */
+.panel-comment .panel-top .term-ori {
+    color: #43403B;
 }
 
 /* 下半部分：其他标签内容 */
@@ -239,6 +299,12 @@
     border-top: #FAF4E5 solid 1px;
 }
 
+/* 笔记面板的边框颜色 */
+.panel-comment #section-proposers,
+.panel-comment #section-contributors {
+    border-top: #43403B solid 1px;
+}
+
 
 /* 字 */
 .panel-bottom p {
@@ -260,6 +326,14 @@ line-height: 26px; /* 123.81% */
 letter-spacing: 0.42px;
 }
 
+/* 笔记面板的底部文字颜色 */
+.panel-comment .panel-bottom p {
+    color: #43403B;
+}
+:lang(en) .panel-comment .panel-bottom p {
+    color: #43403B;
+}
+
 .panel-bottom h2 {
     color: #FAF4E5;
     font-family: "ChillDINGothic";
@@ -278,6 +352,14 @@ font-weight: 500;
 line-height: 40px;
 }
 
+/* 笔记面板的h2颜色 */
+.panel-comment .panel-bottom h2 {
+    color: #43403B;
+}
+:lang(en) .panel-comment .panel-bottom h2 {
+    color: #43403B;
+}
+
 .panel-bottom h3 {
     color: #FAF4E5;
     text-align: justify;
@@ -290,12 +372,22 @@ line-height: 40px;
     letter-spacing: 0.4px;
 }
 
+/* 笔记面板的h3颜色 */
+.panel-comment .panel-bottom h3 {
+    color: #43403B;
+}
+
 .panel-bottom .left-title {
     color: #FAF4E5;
     font-family: "ChillDINGothic", "ChillDIN";
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
+}
+
+/* 笔记面板的left-title颜色 */
+.panel-comment .panel-bottom .left-title {
+    color: #43403B;
 }
 
 .panel-bottom .diagram-caption {
@@ -308,6 +400,11 @@ line-height: 40px;
     line-height: 20px;
     /* 125% */
     letter-spacing: 0.8px;
+}
+
+/* 笔记面板的diagram-caption颜色 */
+.panel-comment .panel-bottom .diagram-caption {
+    color: #43403B;
 }
 
 .panel-bottom .proposer-name {
@@ -326,6 +423,11 @@ line-height: 40px;
     text-underline-position: from-font;
 }
 
+/* 笔记面板的proposer-name颜色 */
+.panel-comment .panel-bottom .proposer-name {
+    color: #43403B;
+}
+
 .panel-bottom .proposer-year p {
     color: #FAF4E5;
     font-family: "ChillDINGothic", "ChillDIN";
@@ -334,6 +436,11 @@ line-height: 40px;
     font-weight: 325;
     line-height: 20px;
     letter-spacing: 1px;
+}
+
+/* 笔记面板的proposer-year p颜色 */
+.panel-comment .panel-bottom .proposer-year p {
+    color: #43403B;
 }
 
 .panel-bottom #editors-container p {
@@ -348,6 +455,11 @@ line-height: 40px;
 
     margin: 0;
     padding: 0;
+}
+
+/* 笔记面板的editors-container p颜色 */
+.panel-comment .panel-bottom #editors-container p {
+    color: #43403B;
 }
 
 #section-editors {
@@ -479,6 +591,29 @@ line-height: 40px;
     letter-spacing: 1.2px;
 }
 
+/* 展开状态下笔记面板的颜色 */
+#floating-panel.expanded .panel-comment .panel-bottom p {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom .left-title {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom h2 {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom h3 {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom .diagram-caption {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom .proposer-name {
+    color: #43403B;
+}
+#floating-panel.expanded .panel-comment .panel-bottom .proposer-year p {
+    color: #43403B;
+}
+
 
 /* 确保按钮在展开状态下仍然可见 */
 #floating-panel.expanded #expand-btn {
@@ -508,6 +643,7 @@ line-height: 40px;
     display: flex;
     flex-direction: column;
     gap: 45px;
+    z-index: 10; /* 确保tab按钮在panel内容之上 */
 }
 
 .panel-tabs button {
@@ -540,6 +676,16 @@ line-height: 40px;
     background:#36322A ;
 }
 
+/* 笔记面板的tab按钮样式 */
+.panel-comment .panel-tabs button {
+    background: #EEE9DB;
+    color: #43403B;
+}
+
+.panel-comment .panel-tabs button.active {
+    background: #EEE9DB;
+}
+
 /* 自定义滚动条容器 */
 .panel-slide {
     width: 20px;
@@ -548,6 +694,13 @@ line-height: 40px;
     justify-content: center;
     flex-shrink: 0;
     /* 防止被压缩 */
+}
+
+/* 未激活panel的滚动条隐藏 */
+.panel-entry:not(.active) .panel-slide,
+.panel-comment:not(.active) .panel-slide {
+    opacity: 0;
+    pointer-events: none;
 }
 .panel-slide .scroll-track {
     position: absolute;
@@ -571,6 +724,15 @@ line-height: 40px;
     border-radius: 50%;
     border: solid 1px #474132;
     cursor: grab;
+}
+
+/* 笔记面板的滚动条颜色 */
+.panel-comment .panel-slide .scroll-track {
+    background: #43403B;
+}
+.panel-comment .panel-slide .scroll-thumb {
+    background: #43403B;
+    border: solid 1px #43403B;
 }
 .panel-slide .scroll-thumb:active {
     cursor: grabbing;

@@ -96,13 +96,23 @@ export function showFloatingPanel() {
     isPanelVisible = true;
 
     ensureExpandButton();
+    
+    // 同时渲染两个panel的内容
     renderPanelSections();
+    renderCommentSection();
 
-    // 重置 tab 按钮状态
-    const tabs = document.querySelectorAll('.panel-tabs button');
-    tabs.forEach(btn => btn.classList.remove('active'));
-    const entryTab = document.querySelector('.panel-tabs button[data-tab="entry"]');
-    if (entryTab) entryTab.classList.add('active');
+    // 重置 tab 按钮状态和panel状态
+    const allTabs = document.querySelectorAll('.panel-tabs button');
+    allTabs.forEach(btn => btn.classList.remove('active'));
+    const entryTabs = document.querySelectorAll('.panel-tabs button[data-tab="entry"]');
+    entryTabs.forEach(tab => tab.classList.add('active'));
+
+    // 设置默认选中entry panel
+    const entryPanel = document.querySelector('.panel-entry');
+    const commentPanel = document.querySelector('.panel-comment');
+    if (entryPanel) entryPanel.classList.add('active');
+    if (commentPanel) commentPanel.classList.remove('active');
+    currentTab = "entry";
 
     const view = document.getElementById("universe-view");
     view.style.left = "-18vw";
@@ -116,6 +126,11 @@ export function showFloatingPanel() {
     setTimeout(updateRelations, 225);
     setTimeout(updateRelations, 300);
     setTimeout(updateRelations, 600);
+    
+    // 初始化滚动处理器
+    setTimeout(() => {
+        updateScrollHandlers();
+    }, 100);
 }
 
 function ensureExpandButton() {
@@ -271,9 +286,11 @@ export function hideFloatingPanel() {
         expandBtn.remove();
     }
 
-    // 重置tabs显示
-    const tabs = document.querySelector('.panel-tabs');
-    if (tabs) tabs.style.display = 'flex';
+    // 重置tabs显示（显示所有panel的tabs）
+    const allTabs = document.querySelectorAll('.panel-tabs');
+    allTabs.forEach(tabs => {
+        if (tabs) tabs.style.display = 'flex';
+    });
 
     // 重置scroll markers显示
     const scrollTrack = document.querySelector('.scroll-track');
@@ -314,13 +331,13 @@ export function renderPanelSections() {
 
     const lang = state.currentLang || "zh";
 
-    scrollToTop();
+    scrollToTop('entry');
 
-    const panel = document.getElementById('floating-panel');
-    panel.style.backgroundColor = "#36322A";
+    const entryPanel = document.querySelector('.panel-entry');
+    if (!entryPanel) return;
 
     // Upper section
-    const title = document.querySelector('.panel-top');
+    const title = entryPanel.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
     <img src = "${currentWord.concept_image}" alt = "diagrams[0]"></img> 
@@ -330,7 +347,7 @@ export function renderPanelSections() {
     `
 
     // Lower section
-    const bottomDiv = document.querySelector('.panel-bottom');
+    const bottomDiv = entryPanel.querySelector('.panel-bottom');
     bottomDiv.innerHTML = `
         <section id="section-brief"> </section>
         <section id="section-example"> </section>
@@ -365,10 +382,10 @@ export function renderPanelSections() {
     exampleSec.innerHTML = `<p class="left-title">${sectionTitles.example[lang]}</p>
                         <div>
                             ${currentWord.example_sentence?.[lang] || '暂无例句'}
-                            <div id="diagram-container"></div>
+                            <div class="diagram-container"></div>
                         </div>`;
 
-    const diagramContainer = document.getElementById("diagram-container");
+    const diagramContainer = entryPanel.querySelector(".diagram-container");
     if (currentWord.diagrams && currentWord.diagrams.length > 0) {
         currentWord.diagrams.forEach(diagram => {
             const block = document.createElement("div");
@@ -416,7 +433,7 @@ export function renderPanelSections() {
                         <div id="editors-container">
                         ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
-    renderScrollMarkers();
+    renderScrollMarkers('entry');
 }
 
 function renderCommentSection() {
@@ -425,13 +442,13 @@ function renderCommentSection() {
 
     const lang = state.currentLang || "zh";
 
-    scrollToTop();
+    scrollToTop('comment');
 
-    const panel = document.getElementById('floating-panel');
-    panel.style.backgroundColor = "#36322A";
+    const commentPanel = document.querySelector('.panel-comment');
+    if (!commentPanel) return;
 
     // Upper section
-    const title = document.querySelector('.panel-top');
+    const title = commentPanel.querySelector('.panel-top');
     title.innerHTML = `
     <p> ${String(currentWord.id).padStart(4, '0')} </p>
     <div>
@@ -440,7 +457,7 @@ function renderCommentSection() {
     `
 
     // FIXED: Don't wrap in additional tags since JSON already contains HTML
-    const contentScroll = document.querySelector('.panel-bottom');
+    const contentScroll = commentPanel.querySelector('.panel-bottom');
     contentScroll.innerHTML = `
         ${currentWord.comments?.map(c => 
             `<section>
@@ -463,24 +480,19 @@ function renderCommentSection() {
                         ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
 
-    renderCommentMarkers();
+    renderCommentMarkers('comment');
 }
 
 
 // tab 切换逻辑
 function initTabs() {
-    const tabs = document.querySelectorAll('.panel-tabs button');
-    tabs.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // tabs.forEach(b => b.classList.remove('active'));
-            // btn.classList.add('active');
-
-            if (btn.dataset.tab === 'entry') {
-                renderPanelSections();
-                scrollToTop();
-            } else if (btn.dataset.tab === 'comment') {
-                renderCommentSection();
-            }
+    // 为所有panel的tab按钮添加事件监听
+    const allTabs = document.querySelectorAll('.panel-tabs button');
+    allTabs.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止触发panel的点击事件
+            const tabName = btn.dataset.tab;
+            switchTab(tabName);
         });
     });
 }
@@ -496,29 +508,58 @@ const SWITCH_THRESHOLD = 180;
 // 当前 tab 状态
 let currentTab = "entry"; // 默认是 entry
 
-// 监听 tab 按钮，保证 currentTab 同步
-document.querySelectorAll('.panel-tabs button').forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentTab = btn.dataset.tab;
-    });
-});
+// 监听 tab 按钮，保证 currentTab 同步（已在initTabs中处理）
 
 function switchTab(tabName) {
+    const entryPanel = document.querySelector('.panel-entry');
+    const commentPanel = document.querySelector('.panel-comment');
+    
+    // 更新所有panel的tab按钮状态
+    const allTabs = document.querySelectorAll('.panel-tabs button');
+    allTabs.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === tabName) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // 切换panel的active状态
     if (tabName === "entry") {
-        renderPanelSections();
-        scrollToTop();
+        if (entryPanel) entryPanel.classList.add('active');
+        if (commentPanel) commentPanel.classList.remove('active');
     } else if (tabName === "comment") {
-        renderCommentSection();
-        const panel = document.getElementById('floating-panel');
-        const panelMain = panel.querySelector('.panel-main');
-        if (panelMain) panelMain.scrollTop = 0; // 直接设置，不要 smooth
+        if (commentPanel) commentPanel.classList.add('active');
+        if (entryPanel) entryPanel.classList.remove('active');
     }
+    
     currentTab = tabName;
+    
+    // 更新滚动条和markers绑定
+    updateScrollHandlers();
 }
 
-const panelMain = document.querySelector('.panel-main'); // 改为选择 panel-main
-// PC 端滚轮
-panelMain.addEventListener("wheel", (e) => {
+// 在showFloatingPanel中初始化滚动处理器
+
+// 获取当前激活的panel-main
+function getActivePanelMain() {
+    const activePanel = document.querySelector('.panel-entry.active, .panel-comment.active');
+    return activePanel ? activePanel.querySelector('.panel-main') : null;
+}
+
+// PC 端滚轮 - 需要绑定到当前激活的panel
+function setupWheelHandler() {
+    const panelMain = getActivePanelMain();
+    if (!panelMain) return;
+    
+    // 移除旧的监听器（如果存在）
+    panelMain.removeEventListener("wheel", handleWheel);
+    panelMain.addEventListener("wheel", handleWheel);
+}
+
+function handleWheel(e) {
+    const panelMain = getActivePanelMain();
+    if (!panelMain) return;
+    
     const atBottom = panelMain.scrollTop + panelMain.clientHeight >= panelMain.scrollHeight - 2;
     const atTop = panelMain.scrollTop <= 2;
 
@@ -527,15 +568,29 @@ panelMain.addEventListener("wheel", (e) => {
     } else if (currentTab === "comment" && atTop && e.deltaY < -SWITCH_THRESHOLD) {
         switchTab("entry");
     }
-});
+}
 
 // 移动端触摸
 let touchStartY = 0;
-panelMain.addEventListener("touchstart", (e) => {
-    touchStartY = e.touches[0].clientY;
-});
 
-panelMain.addEventListener("touchend", (e) => {
+function setupTouchHandlers() {
+    const panelMain = getActivePanelMain();
+    if (!panelMain) return;
+    
+    panelMain.removeEventListener("touchstart", handleTouchStart);
+    panelMain.removeEventListener("touchend", handleTouchEnd);
+    panelMain.addEventListener("touchstart", handleTouchStart);
+    panelMain.addEventListener("touchend", handleTouchEnd);
+}
+
+function handleTouchStart(e) {
+    touchStartY = e.touches[0].clientY;
+}
+
+function handleTouchEnd(e) {
+    const panelMain = getActivePanelMain();
+    if (!panelMain) return;
+    
     const deltaY = e.changedTouches[0].clientY - touchStartY;
     const atBottom = panelMain.scrollTop + panelMain.clientHeight >= panelMain.scrollHeight - 2;
     const atTop = panelMain.scrollTop <= 2;
@@ -545,16 +600,20 @@ panelMain.addEventListener("touchend", (e) => {
     } else if (currentTab === "comment" && atTop && deltaY > SWITCH_THRESHOLD) {
         switchTab("entry");
     }
-});
+}
 
 
 
 
 // 滚动到最顶端（panel-top位置）
-export function scrollToTop() {
-    const panel = document.getElementById('floating-panel');
+export function scrollToTop(panelType = 'entry') {
+    const panel = panelType === 'entry' 
+        ? document.querySelector('.panel-entry')
+        : document.querySelector('.panel-comment');
+    
+    if (!panel) return;
+    
     const panelMain = panel.querySelector('.panel-main');
-
     if (!panelMain) return;
 
     panelMain.scrollTo({
@@ -597,47 +656,96 @@ const SCROLL_CONFIG = {
     thumbSize: 14 // thumb大小
 };
 
-// 修改滚动相关的DOM选择器和逻辑
+// 更新滚动条和markers绑定到当前激活的panel
+function updateScrollHandlers() {
+    const activePanel = document.querySelector('.panel-entry.active, .panel-comment.active');
+    if (!activePanel) return;
+    
+    const panelMain = activePanel.querySelector('.panel-main');
+    const scrollThumb = activePanel.querySelector('.scroll-thumb');
+    const scrollTrack = activePanel.querySelector('.scroll-track');
+    
+    if (!panelMain || !scrollThumb || !scrollTrack) return;
+    
+    // 移除旧的滚动监听器
+    panelMain.removeEventListener("scroll", handleScroll);
+    // 添加新的滚动监听器
+    panelMain.addEventListener("scroll", handleScroll);
+    
+    // 初始化滚动条位置
+    handleScroll();
+    
+    // 更新拖动功能
+    setupScrollDrag(scrollThumb, panelMain);
+    
+    // 更新wheel和touch事件
+    setupWheelHandler();
+    setupTouchHandlers();
+}
 
-const scrollThumb = document.querySelector('.scroll-thumb');
-const scrollTrack = document.querySelector('.scroll-track');
-
-
-panelMain.addEventListener("scroll", () => {
+// 滚动处理函数
+function handleScroll() {
+    const activePanel = document.querySelector('.panel-entry.active, .panel-comment.active');
+    if (!activePanel) return;
+    
+    const panelMain = activePanel.querySelector('.panel-main');
+    const scrollThumb = activePanel.querySelector('.scroll-thumb');
+    if (!panelMain || !scrollThumb) return;
+    
     const scrollTop = panelMain.scrollTop;
     const contentHeight = panelMain.scrollHeight;
     const visibleHeight = panelMain.clientHeight;
-
 
     const trackHeight = panelMain.clientHeight;
     const thumbHeight = scrollThumb.offsetHeight;
 
     const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2) - thumbHeight;
 
+    if (contentHeight <= visibleHeight) {
+        scrollThumb.style.display = 'none';
+        return;
+    }
+
     const scrollRatio = scrollTop / (contentHeight - visibleHeight);
 
     const thumbTop = SCROLL_CONFIG.thumbMargin + scrollRatio * thumbActiveRange;
     scrollThumb.style.display = 'block';
     scrollThumb.style.top = `${thumbTop}px`;
-});
+}
 
 
 // 拖动功能
 let isDragging = false;
 let startY, startTop;
+let currentScrollThumb = null;
+let currentPanelMain = null;
 
-scrollThumb.addEventListener('mousedown', (e) => {
+function setupScrollDrag(scrollThumb, panelMain) {
+    // 移除旧的监听器
+    if (currentScrollThumb) {
+        currentScrollThumb.removeEventListener('mousedown', handleThumbMouseDown);
+    }
+    
+    currentScrollThumb = scrollThumb;
+    currentPanelMain = panelMain;
+    
+    scrollThumb.addEventListener('mousedown', handleThumbMouseDown);
+}
+
+function handleThumbMouseDown(e) {
+    if (!currentScrollThumb || !currentPanelMain) return;
+    
     isDragging = true;
     startY = e.clientY;
-    startTop = parseFloat(scrollThumb.style.top) || SCROLL_CONFIG.thumbMargin;
+    startTop = parseFloat(currentScrollThumb.style.top) || SCROLL_CONFIG.thumbMargin;
     document.body.style.userSelect = 'none';
-});
+}
 
 document.addEventListener('mousemove', (e) => {
-    if (!isDragging || !panelMain) return;
+    if (!isDragging || !currentPanelMain || !currentScrollThumb) return;
 
     const deltaY = e.clientY - startY;
-    const trackHeight = panelMain.clientHeight;
+    const trackHeight = currentPanelMain.clientHeight;
     const thumbActiveRange = trackHeight - (SCROLL_CONFIG.thumbMargin * 2);
 
     // 计算新的thumb位置（限制在活动范围内）
@@ -646,11 +754,11 @@ document.addEventListener('mousemove', (e) => {
         SCROLL_CONFIG.thumbMargin + thumbActiveRange
     );
 
-    scrollThumb.style.top = `${newTop}px`;
+    currentScrollThumb.style.top = `${newTop}px`;
 
     // 根据thumb位置计算内容滚动比例
     const thumbRatio = (newTop - SCROLL_CONFIG.thumbMargin) / thumbActiveRange;
-    panelMain.scrollTop = thumbRatio * (panelMain.scrollHeight - panelMain.clientHeight);
+    currentPanelMain.scrollTop = thumbRatio * (currentPanelMain.scrollHeight - currentPanelMain.clientHeight);
 });
 
 document.addEventListener('mouseup', () => {
@@ -659,8 +767,17 @@ document.addEventListener('mouseup', () => {
 });
 
 
-function renderScrollMarkers() {
-    if (!panelMain) return;
+function renderScrollMarkers(panelType = 'entry') {
+    const panel = panelType === 'entry' 
+        ? document.querySelector('.panel-entry')
+        : document.querySelector('.panel-comment');
+    
+    if (!panel) return;
+    
+    const panelMain = panel.querySelector('.panel-main');
+    const scrollTrack = panel.querySelector('.scroll-track');
+    
+    if (!panelMain || !scrollTrack) return;
 
     // 清空旧的 marker
     scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
@@ -744,18 +861,30 @@ function renderScrollMarkers() {
         marker.appendChild(tooltip);
 
         marker.addEventListener("click", () => {
-            panelMain.scrollTo({
-                top: scrollTarget,
-                behavior: "smooth"
-            });
+            const currentPanelMain = panel.querySelector('.panel-main');
+            if (currentPanelMain) {
+                currentPanelMain.scrollTo({
+                    top: scrollTarget,
+                    behavior: "smooth"
+                });
+            }
         });
 
         scrollTrack.appendChild(marker);
     });
 }
 
-function renderCommentMarkers() {
-    if (!panelMain) return;
+function renderCommentMarkers(panelType = 'comment') {
+    const panel = panelType === 'comment' 
+        ? document.querySelector('.panel-comment')
+        : document.querySelector('.panel-entry');
+    
+    if (!panel) return;
+    
+    const panelMain = panel.querySelector('.panel-main');
+    const scrollTrack = panel.querySelector('.scroll-track');
+    
+    if (!panelMain || !scrollTrack) return;
 
     // 清空旧的 marker
     scrollTrack.querySelectorAll(".scroll-marker").forEach(el => el.remove());
@@ -795,10 +924,13 @@ function renderCommentMarkers() {
         marker.appendChild(tooltip);
 
         marker.addEventListener("click", () => {
-            panelMain.scrollTo({
-                top: sectionTop,
-                behavior: "smooth"
-            });
+            const currentPanelMain = panel.querySelector('.panel-main');
+            if (currentPanelMain) {
+                currentPanelMain.scrollTo({
+                    top: sectionTop,
+                    behavior: "smooth"
+                });
+            }
         });
 
         scrollTrack.appendChild(marker);
@@ -853,8 +985,45 @@ imageDiv.addEventListener("click", (e) => {
     scrollToTop();
 });
 
+// 添加下层panel边缘点击事件
+function initPanelClickHandlers() {
+    const entryPanel = document.querySelector('.panel-entry');
+    const commentPanel = document.querySelector('.panel-comment');
+    
+    // 点击entry panel的可见边缘切换到entry
+    if (entryPanel) {
+        entryPanel.addEventListener('click', (e) => {
+            // 只在未激活状态下点击时切换
+            if (!entryPanel.classList.contains('active')) {
+                // 检查点击位置是否在可见的边缘区域（左侧50px内）
+                const rect = entryPanel.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < 100) { // 允许点击左侧100px区域
+                    switchTab('entry');
+                }
+            }
+        });
+    }
+    
+    // 点击comment panel的可见边缘切换到comment
+    if (commentPanel) {
+        commentPanel.addEventListener('click', (e) => {
+            // 只在未激活状态下点击时切换
+            if (!commentPanel.classList.contains('active')) {
+                // 检查点击位置是否在可见的边缘区域（左侧50px内）
+                const rect = commentPanel.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < 100) { // 允许点击左侧100px区域
+                    switchTab('comment');
+                }
+            }
+        });
+    }
+}
+
 // 初始化浮窗功能
 initClickOutsideHandler();
+initPanelClickHandlers();
 
 
 // 显示About页面的浮窗
@@ -866,23 +1035,39 @@ export function showAboutPanel() {
     ensureExpandButton();
     renderAboutContent();
 
-    // 隐藏tabs
-    const tabs = document.querySelector('.panel-tabs');
-    if (tabs) tabs.style.display = 'none';
+    // 隐藏tabs（隐藏所有panel的tabs）
+    const allTabs = document.querySelectorAll('.panel-tabs');
+    allTabs.forEach(tabs => {
+        if (tabs) tabs.style.display = 'none';
+    });
 
     // 隐藏scroll markers
-    const scrollTrack = document.querySelector('.scroll-track');
-    const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
-    scrollMarkers.forEach(marker => marker.style.display = 'none');
+    const entryPanel = document.querySelector('.panel-entry');
+    if (entryPanel) {
+        const scrollTrack = entryPanel.querySelector('.scroll-track');
+        if (scrollTrack) {
+            const scrollMarkers = scrollTrack.querySelectorAll('.scroll-marker');
+            scrollMarkers.forEach(marker => marker.style.display = 'none');
+        }
+    }
 }
 
 // 渲染About页面内容
 function renderAboutContent() {
     let lang = state.currentLang;
+    // 使用entry panel来显示About内容
+    const entryPanel = document.querySelector('.panel-entry');
+    if (!entryPanel) return;
+    
+    // 确保entry panel是激活的
+    entryPanel.classList.add('active');
+    const commentPanel = document.querySelector('.panel-comment');
+    if (commentPanel) commentPanel.classList.remove('active');
+    
     // 上半部分
-    const title = document.querySelector('.panel-top');
+    const title = entryPanel.querySelector('.panel-top');
     // 下半部分 - 留空给你填写内容
-    const bottomDiv = document.querySelector('.panel-bottom');
+    const bottomDiv = entryPanel.querySelector('.panel-bottom');
     
     if(lang == "en"){
         title.innerHTML = `
