@@ -41,11 +41,18 @@
     align-items: center;
     z-index: 11000;
     gap: 12px;
+    min-width: 366px;
 
     user-select: none;
 }
 
-
+#language-icon{
+    width: 22px;
+    height: 22px;
+    margin: 0 0 0 0;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
 #shuffle-icon{
     width: 24px;
     height: 24px;
@@ -114,10 +121,10 @@
 
 
 #lower-menu {
-    width: 313px;
+    width: 366px;
     height: 37px;
     display: flex;
-    gap:16px;
+    gap:20px;
     align-items: center;
     justify-content: center;
     border-radius: 22.733px;
@@ -126,7 +133,7 @@
 
 #scaleContainer {
     position: relative;
-    width: 200px;
+    width: 255px;
     height: 32px;
     flex-shrink: 0;
 }
@@ -144,7 +151,7 @@
 .scale-numbers,
 .scale-ticks {
     position: absolute;
-    top: 35%;
+    top: 28%;
     /* 对数字可调 */
     left: 0;
     width: 100%;
@@ -182,7 +189,7 @@
 .scale-ticks div {
     position: absolute;
     width: 1.37px;
-    height: 10px;
+    height: 8px;
     background-color: black;
     top: 50%;
     /* 放在横线上方 */
@@ -202,7 +209,7 @@
 
 /* Year Filter Slide Bar */
 #year-menu {
-    width: 313px;
+    width: 366px;
     height: 37px;
     display: flex;
     align-items: center;
@@ -214,7 +221,7 @@
 
 #yearContainer {
     position: relative;
-    width: 313px;
+    width: 366px;
     height: 37px;
     flex-shrink: 0;
     border-radius: 37px;

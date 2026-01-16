@@ -12,8 +12,7 @@ import {
 
 import { yearPeriods } from "./menu.js";
 
-const langBtn = document.getElementById("lang-toggle-btn");
-
+const langBtn = document.getElementById("language-icon");
 // 点击按钮切换语言
 langBtn.addEventListener("click", () => {
     const html = document.documentElement; 
