@@ -102,7 +102,7 @@ canvas.addEventListener("mouseleave", () => {
 });
 
 // 缩放事件监听
-canvas.addEventListener("wheel", (e) => {
+export function handleZoomWheel(e) {
     e.preventDefault();
 
     let scale = state.currentScale;
@@ -147,7 +147,9 @@ canvas.addEventListener("wheel", (e) => {
     hideFloatingPanel();
 
     updateScaleForNodes(newScale);
-}, { passive: false });
+}
+
+canvas.addEventListener("wheel", handleZoomWheel, { passive: false });
 
 // 辅助函数：获取 snapped scale 级别
 function getSnappedScale(scale) {

@@ -1,6 +1,6 @@
 // 状态变量
 import { state } from "./state.js";
-import { draw, updateWordNodeTransforms, updateScaleForNodes } from "./uni-canvas.js";
+import { draw, updateWordNodeTransforms, updateScaleForNodes, handleZoomWheel } from "./uni-canvas.js";
 import { country_bounding_boxes } from "./countryBoundingBoxes.js";
 import { renderPanelSections } from "./detail.js";
 import {updateRelations} from "./relationManager.js";
@@ -363,12 +363,10 @@ function renderWordUniverse(wordsData) {
             const key = `${Math.round(leftPercent)},${Math.round(topPercent)}`;
             wordsOnGrid[key] = node.id;
 
-            node.addEventListener('wheel', function (e) {
-                e.stopPropagation(); // 不让滚轮事件向上传播
-                e.preventDefault(); // 不让自己滚动
-            }, {
-                passive: false
-            });
+            node.addEventListener('wheel', (e) => {
+                e.stopPropagation();
+                handleZoomWheel(e);
+            }, { passive: false });
             
             // 添加点击事件处理浮窗显示
             // 修改单词节点的点击事件
