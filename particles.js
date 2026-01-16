@@ -1,6 +1,9 @@
 // particles.js - 独立的粒子世界地图模块
 // 在 index.html 的 </body> 前添加: <script type="module" src="particles.js"></script>
 
+import { state } from "./state.js";
+import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
+
 (function() {
     'use strict';
     
@@ -16,6 +19,7 @@
         z-index: -1;
         background: #1E1C16;
         pointer-events: none;
+        transform-origin: 0 0;
     `;
     document.body.insertBefore(particleCanvas, document.body.firstChild);
     
@@ -33,6 +37,10 @@
         radius2: 120,
         radius3: 250
     };
+
+    let currentParticleScale = 1;
+    let currentParticleOffsetX = 0;
+    let currentParticleOffsetY = 0;
     
     // ============ Canvas 设置 ============
     function resizeCanvas() {
@@ -303,10 +311,31 @@
     const fps = 60;
     const frameInterval = 1000 / fps;
     
+    function syncParticleTransform() {
+        const worldScale = state.currentScale;
+        const particleScale = 1 + (worldScale - 1) * 0.15;
+        const offsetX = clampOffsetX(state.panX);
+        const offsetY = clampOffsetY(state.panY);
+
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const worldX = (centerX - offsetX) / worldScale;
+        const worldY = (centerY - offsetY) / worldScale;
+        const particleOffsetX = centerX - worldX * particleScale;
+        const particleOffsetY = centerY - worldY * particleScale;
+
+        currentParticleScale = particleScale;
+        currentParticleOffsetX = particleOffsetX;
+        currentParticleOffsetY = particleOffsetY;
+
+        particleCanvas.style.transform = `translate(${particleOffsetX}px, ${particleOffsetY}px) scale(${particleScale})`;
+    }
+
     function animate(currentTime) {
         const deltaTime = currentTime - lastTime;
-        
+
         if (deltaTime >= frameInterval) {
+            syncParticleTransform();
             // 清空画布，使用沙丘背景色
             ctx.fillStyle = '#1E1C16';
             ctx.fillRect(0, 0, particleCanvas.width, particleCanvas.height);
@@ -325,8 +354,8 @@
     
     // ============ 全局鼠标事件监听 ============
     document.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
+        mouse.x = (e.clientX - currentParticleOffsetX) / currentParticleScale;
+        mouse.y = (e.clientY - currentParticleOffsetY) / currentParticleScale;
     });
     
     document.addEventListener('mouseleave', () => {
@@ -337,8 +366,8 @@
     // 触摸支持
     document.addEventListener('touchmove', (e) => {
         const touch = e.touches[0];
-        mouse.x = touch.clientX;
-        mouse.y = touch.clientY;
+        mouse.x = (touch.clientX - currentParticleOffsetX) / currentParticleScale;
+        mouse.y = (touch.clientY - currentParticleOffsetY) / currentParticleScale;
     }, { passive: true });
     
     document.addEventListener('touchend', () => {

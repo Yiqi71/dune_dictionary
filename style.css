@@ -554,6 +554,7 @@ body[data-scale="5"] .detail-title {
     opacity: 0.25; /* 透明度50% */
     mix-blend-mode: multiply; /* 可以改成 darken / multiply / lighten / screen 等效果 */
     z-index: 10; /* 确保比 canvas 下方内容高，但比 panel/menu 低 */
+    transform-origin: 0 0;
 }
 
 
