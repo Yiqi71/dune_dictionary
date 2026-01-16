@@ -144,7 +144,7 @@ function ensureExpandButton() {
         // 添加样式
         expandBtn.style.cssText = `
             position: absolute;
-            left: -2.5vw;
+            left: -6.5vw;
             top: 20px;
             background: none;
             border: none;
@@ -480,7 +480,14 @@ function renderCommentSection() {
                         ${currentWord.editors.map(editor => `<p>${editor?.[lang]}</p>`).join('')}
                         </div>`
 
-    renderCommentMarkers('comment');
+    // 为每个note section添加折叠/展开功能
+    const noteSections = contentScroll.querySelectorAll('section:not(#section-contributors):not(#section-editors)');
+    noteSections.forEach(section => {
+        section.addEventListener('click', () => {
+            // 切换展开/折叠状态
+            section.classList.toggle('note-expanded');
+        });
+    });
 }
 
 

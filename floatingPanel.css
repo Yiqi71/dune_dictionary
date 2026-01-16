@@ -104,9 +104,9 @@
 }
 
 /* 笔记面板的顶部边框颜色 */
-.panel-comment .panel-top {
+/* .panel-comment .panel-top {
     border-bottom: 1px solid #43403B;
-}
+} */
 
 .panel-top p {
     margin: 0;
@@ -224,6 +224,27 @@
 
     display: flex;
     flex-direction: row;
+}
+
+/* 笔记panel的section默认折叠 */
+.panel-comment .panel-bottom section {
+    max-height: 260px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 -4px 4px 0 rgba(0, 0, 0, 0.10);
+}
+
+/* 展开状态 */
+.panel-comment .panel-bottom section.note-expanded {
+    max-height: none;
+}
+
+/* 排除contributors和editors section，它们不需要折叠 */
+.panel-comment .panel-bottom section#section-contributors,
+.panel-comment .panel-bottom section#section-editors {
+    max-height: none;
+    cursor: default;
 }
 
 .panel-bottom section * {
@@ -701,6 +722,11 @@ line-height: 40px;
 .panel-comment:not(.active) .panel-slide {
     opacity: 0;
     pointer-events: none;
+}
+
+/* 笔记panel完全隐藏滚动条 */
+.panel-comment .panel-slide {
+    display: none;
 }
 .panel-slide .scroll-track {
     position: absolute;
