@@ -33,8 +33,8 @@ import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
     let mouse = { 
         x: null, 
         y: null, 
-        radius1: 50,
-        radius2: 120,
+        radius1: 5,
+        radius2: 50,
         radius3: 250
     };
 
@@ -62,8 +62,8 @@ import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
             this.density = (Math.random() * 3) + 1;
             this.vx = 0;
             this.vy = 0;
-            this.friction = 0.85;
-            this.ease = 0.02;
+            this.friction = 0.80;
+            this.ease = 0.01;
             this.opacity = opacity;
             this.driftAngle = Math.random() * Math.PI * 2;
             this.driftSpeed = Math.random() * 0.3 + 0.1;
@@ -94,29 +94,41 @@ import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
                 
                 let force = 0;
                 
-                if (distance < mouse.radius3) {
-                    const gradient1 = Math.exp(-Math.pow(distance / mouse.radius1, 2) * 2.5) * 4.0;
-                    const gradient2 = Math.exp(-Math.pow(distance / mouse.radius2, 2) * 1.8) * 2.0;
-                    const gradient3 = Math.exp(-Math.pow(distance / mouse.radius3, 2) * 1.2) * 0.8;
-                    
-                    force = gradient1 + gradient2 + gradient3;
-                    
-                    const turbulence = Math.sin(this.time * 0.3 + distance * 0.05) * 0.3;
-                    force *= (0.7 + turbulence);
-                    
-                    if (distance < mouse.radius2) {
-                        const perpAngle = Math.atan2(dy, dx) + Math.PI / 2;
-                        const swirl = Math.sin(distance * 0.02 + this.time * 0.5) * 0.2;
-                        this.vx += Math.cos(perpAngle) * force * swirl;
-                        this.vy += Math.sin(perpAngle) * force * swirl;
-                    }
+                const r1 = mouse.radius1;
+                const r2 = mouse.radius2;
+                const r3 = mouse.radius3;
+
+                // 0..1：中心强，边缘弱，并在 r3 处平滑到 0
+                const t = 1 - smoothstep(r3 * 0.75, r3, distance); // 0.75 这段就是“羽化宽度”，越小越软
+
+                if (t > 0) {
+                const gradient1 = Math.exp(-Math.pow(distance / r1, 2) * 2.5) * 4.0;
+                const gradient2 = Math.exp(-Math.pow(distance / r2, 2) * 1.8) * 2.0;
+                const gradient3 = Math.exp(-Math.pow(distance / r3, 2) * 1.2) * 0.8;
+
+                force = (gradient1 + gradient2 + gradient3) * t; // 关键：整体乘羽化系数
+                force *= 0.4;
+
+                const turbulence = Math.sin(this.time * 0.3 + distance * 0.05) * 0.3;
+                force *= (0.7 + turbulence);
+
+                // swirl 也做羽化，避免在 r2 上出现一圈硬边
+                const swirlT = 1 - smoothstep(r2 * 0.6, r2, distance);
+                if (swirlT > 0) {
+                    const perpAngle = Math.atan2(dy, dx) + Math.PI / 2;
+                    const swirl = Math.sin(distance * 0.02 + this.time * 0.5) * 0.2;
+                    this.vx += Math.cos(perpAngle) * force * swirl * swirlT;
+                    this.vy += Math.sin(perpAngle) * force * swirl * swirlT;
                 }
-                
+                }
+
                 if (force > 0) {
-                    const angle = Math.atan2(dy, dx);
-                    this.vx -= Math.cos(angle) * force * this.density;
-                    this.vy -= Math.sin(angle) * force * this.density;
+                const angle = Math.atan2(dy, dx);
+                this.vx -= Math.cos(angle) * force * this.density;
+                this.vy -= Math.sin(angle) * force * this.density;
                 }
+                                
+                
             }
             
             const targetX = this.baseX + idleDriftX;
@@ -274,9 +286,9 @@ import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
             const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
             const pixels = imageData.data;
             
-            const coreGap = 5;
-            const maxEdgeGap = 18;
-            const fadeWidth = 25;
+            const coreGap = 8;
+            const maxEdgeGap = 20;
+            const fadeWidth = 75;
             
             for (let y = 0; y < tempCanvas.height; y += coreGap) {
                 for (let x = 0; x < tempCanvas.width; x += coreGap) {
@@ -382,3 +394,9 @@ import { clampOffsetX, clampOffsetY } from "./uni-canvas.js";
     
     console.log('✓ Particle world map module loaded');
 })();
+
+
+function smoothstep(edge0, edge1, x) {
+  const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+  return t * t * (3 - 2 * t);
+}
