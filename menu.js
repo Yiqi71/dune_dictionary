@@ -358,7 +358,6 @@ function showSearchModal(source = "icon") {
     
     modal.classList.remove('hidden');
     isSearchModalOpen = true;
-    logEvent("search_open", { source });
     
     // Focus the input after a short delay to ensure the modal is visible
     setTimeout(() => {
@@ -436,7 +435,6 @@ function displaySearchResults(words) {
             startWordView(wordId);
             zoomToWord(wordId, state.scaleThreshold);
             updateWordFocus();
-            logEvent("search_result_click", { wordId });
         });
     });
 }

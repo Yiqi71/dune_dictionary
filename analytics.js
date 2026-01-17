@@ -15,6 +15,7 @@ function getSessionId() {
 export function logEvent(name, data = {}) {
   try {
     const events = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
     const event = {
       id: `e_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       name,
@@ -22,11 +23,26 @@ export function logEvent(name, data = {}) {
       sessionId: getSessionId(),
       data
     };
+
+    // 1) 仍然写本地（防断网丢）
     events.push(event);
     if (events.length > MAX_EVENTS) {
       events.splice(0, events.length - MAX_EVENTS);
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+
+    // 2) 同时上报到后端
+    // - keepalive: 页面关闭/跳转时也尽量发出去
+    // - 不阻塞 UI：不 await
+    fetch("/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(event),
+      keepalive: true
+    }).catch(() => {
+      // 这里先静默，避免控制台刷屏；需要调试再 console.log
+    });
+
   } catch (err) {
     console.error("logEvent failed", err);
   }

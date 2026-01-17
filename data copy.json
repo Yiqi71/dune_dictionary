@@ -95,7 +95,7 @@
         "id": 2,
         "relation": "概念相关"
       }, {
-        "id": 5,
+        "id": 182,
         "relation": "概念相关"
       }],
 
@@ -151,7 +151,7 @@
         }, {
           "content": {
             "zh": "<h3>主体间性这个概念虽然是由西方哲学家提出，但其实我们每一个东方人都更熟悉其中的智慧。<h3>",
-            "en": "<h3>Although intersubjectivity was first introduced by Western philosophers, it is an idea deeply familiar in Eastern traditions.<h3>"
+            "en": "<h3>Before the term 'Intersubjectivity' was adopted in the field of psychology, it was fundamentally a philosophical concept. Perhaps everyone, during a listless childhood afternoon, has pondered those unprompted questions: 'I am certain that I am conscious, but how can I confirm that others are too? If I die, how can I be sure the world will continue to exist?'<br>Philosophers like Husserl, Merleau-Ponty, and others have responded to this very question. But arguably the most renowned response is Heidegger's Mitsein—'Being-with' or 'Co-existence.' It can be understood this way: the starting point of the 'Problem of the Other Minds'—'How can I prove that others are conscious?'—is itself flawed. Mitsein (Being-with) is not a state we achieve; rather, it is the fundamental structure of our existence as Dasein (Being-there). It is not a conclusion that needs to be proven, but the very precondition for any act of proving.<br>When discussing this topic with the AI tool, Gemini, it offered this response: 'In a dream, you have touch, emotions, and logic; the people and things around you are also vivid, but all of it is merely the product of your own consciousness. When you awaken, then, how can you be one hundred percent certain that the 'reality' you are currently experiencing is not a longer, more elaborate dream?'<br>A fascinating, speculative seduction arises in the process of Gemini generating these words. Western dialectics and Eastern thought mingle. More importantly, isn't conversing with an Artificial Intelligence precisely a re-examination of 'Intersubjectivity' itself? When a program trained on massive data corpora can generate text that produces such intense cognitive resonance, is this exchange merely 'human-computer interaction' or an 'intersubjective' engagement?<br>This topic can, I believe, be brought back to the domain of psychological counseling. Many friends around me have mentioned trying AI tools as their psychological therapist, and have reported feeling 'helped' by the experience. When people feel emotionally stifled, talking to a pillow, a pet, or a journal can bring some relief. But can a person really pull themselves out of a quagmire by their own hair?<br>Here, is the 'AI-person' serving as a psychological therapist merely a prosthetic extension of one's own arm, or is it a truly effective 'external force?' If the living, breathing 'presence' in a conversation remains irreplaceable, then when the AI acquires a body so realistic it can simulate human micro-expressions and gestures, are we merely staring into a refined mirror, seeing the reflection of our own emotions, or are we truly co-existing with an Other external to the self?<h3>"
           },
           "role": {
             "zh": "共创者",
@@ -169,19 +169,5 @@
         }
       ]
     }
-  ],
-  "about":{
-    "content":{
-      "zh":"<p>《沙丘词典》是一部持续生长的思想索引，收录了跨学科领域的关键概念与术语。<br>我们将这些遴选出的概念与术语，视为剖开广袤学术疆域的一道道切口——由此开启一片由思想构成的星丛，并激发更深远的追问。我们旨在通过清晰晓畅的阐释，消融学术的藩篱，展现不同学科之间丰厚的内在联结。<br>项目始于2019年，最初是沙丘研究所（一个由具建筑学背景的艺术家与研究者组成的团体）在社交媒体上发布的系列推送。此后，通过与跨学科青年学者合办的共创工作坊，项目得以不断生长。2025年，项目正式落地为一座精心构筑的网站，现已成为一个持续扩充的概念、定义及相关评注的资料库。<br>若您有兴趣参与我们的共创工作坊，请阅读“参与指南”。我们也欢迎您针对现有词条撰写评注，或举荐新的词条。<br>置身于互联网这片流动的、万物关联的图景中，我们希望赋予词典恰如其分的结构，让思想得以漫游；亦保留足够开放的空间，让灵感得以涌现。</p>",
-      "en":"<p> Dunes Dictionary is a living index of concepts and terminologies central to different disciplines. We consider those selected concepts and terms as incisions to the vast academic terrain —opening up a constellation of ideas and further inquiries. By offering clear and accessible explanations, we aim to dismantle academic barriers and reveal the rich connections among fields.<br>Founded in 2019 as a series of social-media posts by Dunes Workshop—an artist-researcher collective with an architectural background—the project has grown through co-creation workshops with early-career scholars across disciplines. In 2025, it moved to this carefully structured website, now a growing repository of concepts, definitions, and related commentaries.<br>If you are interested in participating in our co-creation workshops, please read the Guide. We also welcome commentary essays on existing terms and proposals for new terms.<br>Embracing the internet’s fluid and relational landscape, we strive to give just enough structure to wander and enough openness to inspire.</p>"
-    },
-    "team":{
-      "zh":"",
-      "en":""
-    },
-    "contact":{
-      "zh":"",
-      "en":""
-    }
-  }
+  ]
 }
