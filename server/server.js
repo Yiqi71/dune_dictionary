@@ -292,3 +292,12 @@ app.get("/api/terms", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server listening on http://localhost:3000");
 });
+
+
+
+
+app.use("/api/content", require("./routes/content"));
+app.use("/content", express.static(path.join(process.cwd(), "public", "content")));
+
+
+app.use("/draft", express.static(path.join(process.cwd(), "content", "draft")));
